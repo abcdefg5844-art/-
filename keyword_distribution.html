@@ -19,26 +19,33 @@ body { font-family: 'Malgun Gothic', '맑은 고딕', Arial, sans-serif; backgro
 .step-btn.done { background: #22c55e; color: white; }
 .step-btn .step-num { font-size: 18px; font-weight: 800; }
 .step-btn .step-label { font-size: 10px; text-align: center; line-height: 1.3; }
-.card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 18px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+
+/* 카드 */
+.card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 18px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); position: relative; }
 .card h2 { font-size: 16px; font-weight: 700; color: #1a3a6e; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #e9edf5; display: flex; align-items: center; gap: 8px; }
 .card h2 .badge { background: #2563eb; color: white; border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 600; }
+
+/* 도움말 버튼 */
+.help-btn { position: absolute; top: 18px; right: 20px; width: 28px; height: 28px; border-radius: 50%; background: #e0e7ff; border: none; cursor: pointer; font-size: 14px; font-weight: 800; color: #3730a3; display: flex; align-items: center; justify-content: center; transition: all 0.15s; z-index: 10; }
+.help-btn:hover { background: #2563eb; color: white; }
+.help-panel { display: none; background: #f0f6ff; border: 1.5px solid #bfdbfe; border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; font-size: 12px; color: #1e3a8a; line-height: 1.8; }
+.help-panel.open { display: block; }
+.help-panel ol { padding-left: 18px; }
+.help-panel li { margin-bottom: 4px; }
+.help-panel strong { color: #1d4ed8; }
+
 .form-row { display: flex; gap: 16px; align-items: flex-end; margin-bottom: 14px; flex-wrap: wrap; }
 .form-group { display: flex; flex-direction: column; gap: 5px; }
 .form-group label { font-size: 12px; font-weight: 600; color: #444; }
 .form-group input, .form-group select, .form-group textarea { padding: 8px 12px; border: 1.5px solid #d0d8e8; border-radius: 7px; font-size: 13px; font-family: inherit; outline: none; transition: border 0.2s; background: #fafbfe; }
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #2563eb; background: white; }
 .btn { padding: 9px 20px; border: none; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
-.btn-primary { background: #2563eb; color: white; }
-.btn-primary:hover { background: #1d4ed8; }
-.btn-success { background: #22c55e; color: white; }
-.btn-success:hover { background: #16a34a; }
-.btn-warning { background: #f59e0b; color: white; }
-.btn-warning:hover { background: #d97706; }
-.btn-danger { background: #ef4444; color: white; }
-.btn-danger:hover { background: #dc2626; }
-.btn-secondary { background: #6b7280; color: white; }
-.btn-secondary:hover { background: #4b5563; }
-.btn-sm { padding: 5px 12px; font-size: 11px; }
+.btn-primary { background: #2563eb; color: white; } .btn-primary:hover { background: #1d4ed8; }
+.btn-success { background: #22c55e; color: white; } .btn-success:hover { background: #16a34a; }
+.btn-warning { background: #f59e0b; color: white; } .btn-warning:hover { background: #d97706; }
+.btn-danger { background: #ef4444; color: white; } .btn-danger:hover { background: #dc2626; }
+.btn-secondary { background: #6b7280; color: white; } .btn-secondary:hover { background: #4b5563; }
+.btn-outline { background: white; color: #2563eb; border: 1.5px solid #2563eb; } .btn-outline:hover { background: #eff6ff; }
 .file-upload-area { border: 2.5px dashed #aab; border-radius: 10px; padding: 28px; text-align: center; cursor: pointer; transition: all 0.2s; background: #fafbfe; }
 .file-upload-area:hover, .file-upload-area.dragover { border-color: #2563eb; background: #eff6ff; }
 .file-upload-area .icon { font-size: 36px; margin-bottom: 8px; }
@@ -48,13 +55,7 @@ body { font-family: 'Malgun Gothic', '맑은 고딕', Arial, sans-serif; backgro
 .stat-box .num { font-size: 22px; font-weight: 800; color: #2563eb; }
 .stat-box .label { font-size: 11px; color: #666; margin-top: 2px; }
 .stat-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0; }
-.progress-bar-wrap { background: #e9edf5; border-radius: 8px; height: 8px; overflow: hidden; margin: 6px 0; }
-.progress-bar { height: 100%; border-radius: 8px; background: linear-gradient(90deg, #2563eb, #60a5fa); transition: width 0.5s; }
 .log { background: #1a1a2e; color: #a0f0a0; border-radius: 8px; padding: 14px; font-size: 11px; font-family: 'Courier New', monospace; max-height: 200px; overflow-y: auto; margin: 10px 0; line-height: 1.7; }
-.log .info { color: #60d4f5; }
-.log .success { color: #a0f0a0; }
-.log .warn { color: #f5e060; }
-.log .error { color: #f56060; }
 .table-wrap { overflow-x: auto; max-height: 420px; overflow-y: auto; border-radius: 8px; border: 1px solid #e9edf5; }
 table { width: 100%; border-collapse: collapse; font-size: 12px; }
 table th { background: #1a3a6e; color: white; padding: 8px 10px; text-align: center; position: sticky; top: 0; white-space: nowrap; font-weight: 600; }
@@ -64,19 +65,9 @@ table tr:nth-child(even) td { background: #fafbfe; }
 table tr:nth-child(even):hover td { background: #eff6ff; }
 .badge-ctr { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; border-radius: 4px; padding: 1px 7px; font-size: 10px; font-weight: 700; }
 .badge-steady { background: #dcfce7; color: #166534; border: 1px solid #86efac; border-radius: 4px; padding: 1px 7px; font-size: 10px; font-weight: 700; }
-.operator-list { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; }
-.operator-tag { display: flex; align-items: center; gap: 6px; background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 8px; padding: 6px 12px; }
-.operator-tag span { font-size: 12px; font-weight: 600; color: #1d4ed8; }
-.operator-tag .cnt { background: #2563eb; color: white; border-radius: 12px; padding: 1px 8px; font-size: 11px; font-weight: 700; }
-.operator-tag button { background: none; border: none; cursor: pointer; color: #ef4444; font-size: 14px; line-height: 1; }
-.dist-result-wrap { display: flex; flex-direction: column; gap: 16px; }
-.dist-card { border: 1.5px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
-.dist-card-header { background: linear-gradient(90deg, #1a3a6e, #2563eb); color: white; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; }
-.dist-card-header .op-name { font-size: 14px; font-weight: 700; }
-.dist-card-header .op-stats { font-size: 11px; opacity: 0.85; display: flex; gap: 12px; }
 .section-page { display: none; }
 .section-page.active { display: block; }
-.alert { padding: 10px 14px; border-radius: 8px; font-size: 12px; margin: 8px 0; display: flex; align-items: center; gap: 8px; }
+.alert { padding: 10px 14px; border-radius: 8px; font-size: 12px; margin: 8px 0; display: flex; align-items: flex-start; gap: 8px; }
 .alert-info { background: #eff6ff; border-left: 4px solid #2563eb; color: #1e40af; }
 .alert-success { background: #f0fdf4; border-left: 4px solid #22c55e; color: #166534; }
 .alert-warning { background: #fffbeb; border-left: 4px solid #f59e0b; color: #92400e; }
@@ -89,36 +80,88 @@ table tr:nth-child(even):hover td { background: #eff6ff; }
 .loading { display: inline-flex; align-items: center; gap: 8px; color: #2563eb; font-weight: 600; }
 .spinner { width: 18px; height: 18px; border: 3px solid #e2e8f0; border-top-color: #2563eb; border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.tag { display: inline-block; padding: 1px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; }
-.tag-blue { background: #dbeafe; color: #1e40af; }
-.tag-green { background: #dcfce7; color: #166534; }
-.tag-orange { background: #ffedd5; color: #9a3412; }
-.tag-gray { background: #f1f5f9; color: #475569; }
 input[type="file"] { display: none; }
-.prev-kw-area { display: flex; gap: 10px; align-items: flex-start; }
-.prev-kw-area textarea { flex: 1; min-height: 100px; font-size: 12px; }
 .tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 16px; }
 .tab { padding: 8px 18px; cursor: pointer; font-size: 13px; font-weight: 600; color: #666; border-bottom: 3px solid transparent; margin-bottom: -2px; }
 .tab.active { color: #2563eb; border-bottom-color: #2563eb; }
-.flex { display: flex; }
-.flex-between { display: flex; justify-content: space-between; align-items: center; }
-.gap-8 { gap: 8px; }
-.mt-8 { margin-top: 8px; }
-.mt-12 { margin-top: 12px; }
+.mt-8 { margin-top: 8px; } .mt-12 { margin-top: 12px; }
 .export-options { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
-/* 배분 결과 per operator */
 .dist-per-op { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
 .op-result-card { border: 1.5px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
 .op-result-header { background: linear-gradient(90deg, #1a3a6e, #1e40af); color: white; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; }
 .op-result-header .op-name { font-size: 14px; font-weight: 700; }
 .op-result-header .op-date { font-size: 11px; opacity: 0.8; }
 .op-result-header .op-cnt { background: rgba(255,255,255,0.2); border-radius: 12px; padding: 2px 10px; font-size: 12px; font-weight: 700; }
-/* sticky col */
-.sticky-col { position: sticky; left: 0; background: white; z-index: 1; }
-table th.sticky-col { background: #1a3a6e; }
+
+/* 배분 설정 박스 */
+.config-box { background: #f8faff; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; margin: 12px 0; }
+.config-box .box-title { font-size: 12px; font-weight: 700; color: #1a3a6e; margin-bottom: 12px; }
+.count-inputs { display: flex; gap: 14px; align-items: flex-end; flex-wrap: wrap; }
+.count-inputs .form-group input { width: 100px; }
+.total-badge { background: linear-gradient(135deg, #1a3a6e, #2563eb); color: white; border-radius: 10px; padding: 10px 20px; font-size: 15px; font-weight: 800; display: flex; flex-direction: column; align-items: center; min-width: 100px; }
+.total-badge .badge-sub { font-size: 10px; opacity: 0.8; margin-top: 3px; font-weight: 400; }
+
+/* 요일 칩 */
+.day-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.day-label-txt { font-size: 12px; font-weight: 700; color: #444; white-space: nowrap; }
+.day-chip { width: 38px; height: 38px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; user-select: none; border: 2px solid #bfdbfe; background: white; color: #1d4ed8; }
+.day-chip.on { background: #2563eb; border-color: #2563eb; color: white; box-shadow: 0 2px 6px rgba(37,99,235,0.3); }
+.day-chip.off { background: #f1f5f9; border-color: #cbd5e1; color: #94a3b8; }
+.day-summary { font-size: 12px; color: #444; margin-left: 6px; }
+.day-summary strong { color: #2563eb; font-size: 13px; }
+.adj-highlight { display: inline-flex; align-items: center; background: #fef3c7; border: 1px solid #fcd34d; border-radius: 6px; padding: 3px 10px; font-size: 12px; font-weight: 700; color: #92400e; }
+
+/* ===== 운영자 카드 리스트 ===== */
+.op-card-list { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; max-width: 600px; }
+.op-card-item { display: flex; align-items: center; gap: 10px; background: #fff; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; transition: box-shadow 0.15s; flex-wrap: wrap; }
+.op-card-item:hover { box-shadow: 0 2px 8px rgba(37,99,235,0.10); border-color: #bfdbfe; }
+.op-card-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: white; flex-shrink: 0; }
+.op-card-name { font-size: 14px; font-weight: 700; color: #1e3a8a; min-width: 60px; }
+.op-card-counts { display: flex; align-items: center; gap: 6px; flex: 1; }
+.op-cnt-input { width: 70px; padding: 4px 8px; border: 1.5px solid #d0d8e8; border-radius: 6px; font-size: 12px; font-family: inherit; text-align: center; background: #f8faff; outline: none; transition: border 0.15s; }
+.op-cnt-input:focus { border-color: #2563eb; background: white; }
+.op-cnt-label { font-size: 11px; color: #64748b; white-space: nowrap; }
+.op-cnt-total { font-size: 12px; font-weight: 700; color: #1d4ed8; background: #eff6ff; border-radius: 6px; padding: 3px 10px; white-space: nowrap; }
+.op-card-del { background: none; border: none; cursor: pointer; color: #cbd5e1; font-size: 16px; line-height: 1; padding: 2px 4px; border-radius: 4px; transition: color 0.15s; margin-left: auto; }
+.op-card-del:hover { color: #ef4444; }
+
+/* 운영자 추가 행 */
+.op-add-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.op-add-row select { padding: 8px 12px; border: 1.5px solid #d0d8e8; border-radius: 7px; font-size: 13px; font-family: inherit; background: #fafbfe; outline: none; }
+.op-add-row select:focus { border-color: #2563eb; }
+.btn-add-op { padding: 8px 18px; background: white; border: 1.5px solid #f59e0b; border-radius: 7px; color: #b45309; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 5px; }
+.btn-add-op:hover { background: #fffbeb; border-color: #d97706; }
+
+/* 모달 */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:1000; align-items:center; justify-content:center; }
+.modal-overlay.open { display:flex; }
+.modal { background:white; border-radius:14px; padding:28px 32px; max-width:580px; width:92%; box-shadow:0 8px 32px rgba(0,0,0,0.18); position:relative; max-height:85vh; overflow-y:auto; }
+.modal h3 { font-size:16px; font-weight:800; color:#1a3a6e; margin-bottom:4px; }
+.modal-step-label { font-size:11px; color:#94a3b8; margin-bottom:16px; padding-bottom:12px; border-bottom:1.5px solid #e9edf5; }
+.modal-close { position:absolute; top:14px; right:16px; background:none; border:none; cursor:pointer; font-size:20px; color:#94a3b8; }
+.modal-close:hover { color:#ef4444; }
+.help-section { margin-bottom:18px; }
+.help-section-title { font-size:12px; font-weight:800; color:#1d4ed8; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+.help-step-list { display:flex; flex-direction:column; gap:8px; }
+.help-step-row { display:flex; gap:10px; align-items:flex-start; }
+.help-step-num { width:22px; height:22px; border-radius:50%; background:#2563eb; color:white; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+.help-step-text { font-size:12px; color:#334155; line-height:1.7; }
+.help-step-text strong { color:#1d4ed8; }
+.help-note { background:#fef3c7; border-left:3px solid #f59e0b; border-radius:0 6px 6px 0; padding:8px 12px; font-size:11px; color:#92400e; margin-top:10px; line-height:1.6; }
+.help-note-green { background:#f0fdf4; border-left:3px solid #22c55e; border-radius:0 6px 6px 0; padding:8px 12px; font-size:11px; color:#166534; margin-top:10px; line-height:1.6; }
 </style>
 </head>
 <body>
+
+<!-- 도움말 모달 -->
+<div class="modal-overlay" id="helpModal" onclick="if(event.target===this)closeHelp()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeHelp()">✕</button>
+    <h3 id="helpTitle">도움말</h3>
+    <div class="modal-step-label" id="helpStepLabel"></div>
+    <div id="helpContent"></div>
+  </div>
+</div>
 
 <div class="header">
   <div>
@@ -128,104 +171,67 @@ table th.sticky-col { background: #1a3a6e; }
 </div>
 
 <div class="container">
-  <!-- 단계 네비게이션 -->
   <div class="steps-nav">
-    <button class="step-btn active" onclick="goStep(1)" id="nav-1">
-      <span class="step-num">①</span>
-      <span class="step-label">파일 업로드<br>& 기본 필터</span>
-    </button>
-    <button class="step-btn" onclick="goStep(2)" id="nav-2">
-      <span class="step-num">②</span>
-      <span class="step-label">전주 키워드<br>중복 제거</span>
-    </button>
-    <button class="step-btn" onclick="goStep(3)" id="nav-3">
-      <span class="step-num">③</span>
-      <span class="step-label">CTR/Steady<br>유형 분류</span>
-    </button>
-    <button class="step-btn" onclick="goStep(4)" id="nav-4">
-      <span class="step-num">④</span>
-      <span class="step-label">배분 설정<br>운영자</span>
-    </button>
-    <button class="step-btn" onclick="goStep(5)" id="nav-5">
-      <span class="step-num">⑤</span>
-      <span class="step-label">최종 배분<br>& 다운로드</span>
-    </button>
+    <button class="step-btn active" onclick="goStep(1)" id="nav-1"><span class="step-num">①</span><span class="step-label">파일 업로드<br>&amp; 기본 필터</span></button>
+    <button class="step-btn" onclick="goStep(2)" id="nav-2"><span class="step-num">②</span><span class="step-label">전주 키워드<br>중복 제거</span></button>
+    <button class="step-btn" onclick="goStep(3)" id="nav-3"><span class="step-num">③</span><span class="step-label">CTR/Steady<br>유형 분류</span></button>
+    <button class="step-btn" onclick="goStep(4)" id="nav-4"><span class="step-num">④</span><span class="step-label">배분 설정<br>운영자</span></button>
+    <button class="step-btn" onclick="goStep(5)" id="nav-5"><span class="step-num">⑤</span><span class="step-label">최종 배분<br>&amp; 다운로드</span></button>
   </div>
 
-  <!-- ===== STEP 1: 파일 업로드 & 기본 필터 ===== -->
+  <!-- STEP 1 -->
   <div class="section-page active" id="step-1">
     <div class="card">
+      <button class="help-btn" onclick="openHelp(1)" title="도움말">?</button>
       <h2>📂 엑셀 파일 업로드 <span class="badge">STEP 1</span></h2>
-      <div class="alert alert-info">💡 다운로드한 검색로그 엑셀 파일을 업로드하세요. 6행(검색횟수_2회이하) 자동 제거, 키워드 25자 이상 자동 제거, 결과유무 O 자동 필터가 적용됩니다.</div>
       <label for="xlsxInput">
         <div class="file-upload-area" id="dropZone">
           <div class="icon">📊</div>
           <p><strong>클릭하거나 파일을 드래그</strong>하여 업로드</p>
-          <p style="margin-top:6px; font-size:11px; color:#999;">searchlog_YYYYMMDD_YYYYMMDD.xlsx 형식</p>
+          <p style="margin-top:6px;font-size:11px;color:#999;">searchlog_YYYYMMDD_YYYYMMDD.xlsx 형식</p>
         </div>
       </label>
       <input type="file" id="xlsxInput" accept=".xlsx,.xls" onchange="handleFile(event)">
       <div id="fileInfo" style="display:none;" class="alert alert-success mt-8"></div>
     </div>
-
     <div class="card" id="filterSettingCard" style="display:none;">
       <h2>⚙️ 필터 설정</h2>
       <div class="filter-settings">
-        <div class="filter-item">
-          <label>키워드 최대 글자수 (이하만 허용)</label>
-          <input type="number" id="maxKeyLen" value="24" min="1" max="100">
-        </div>
-        <div class="filter-item">
-          <label>결과유무 필터 (O만 허용)</label>
-          <input type="text" value="O (고정)" readonly style="background:#f0f0f0;">
-        </div>
+        <div class="filter-item"><label>키워드 최대 글자수 (이하만 허용)</label><input type="number" id="maxKeyLen" value="24" min="1" max="100"></div>
+        <div class="filter-item"><label>결과유무 필터 (O만 허용)</label><input type="text" value="O (고정)" readonly style="background:#f0f0f0;"></div>
       </div>
-      <button class="btn btn-primary" onclick="processData()" id="processBtn">
-        <span>🚀 데이터 처리 시작</span>
-      </button>
+      <button class="btn btn-primary" onclick="processData()"><span>🚀 데이터 처리 시작</span></button>
     </div>
-
     <div class="card" id="step1Result" style="display:none;">
       <h2>📊 처리 결과</h2>
       <div class="log" id="processLog"></div>
       <div class="stat-row" id="step1Stats"></div>
-      <div class="mt-12">
-        <button class="btn btn-primary" onclick="goStep(2)" id="toStep2Btn" style="display:none;">
-          다음 단계: 전주 키워드 중복 제거 →
-        </button>
-      </div>
+      <div class="mt-12"><button class="btn btn-primary" onclick="goStep(2)" id="toStep2Btn" style="display:none;">다음 단계: 전주 키워드 중복 제거 →</button></div>
     </div>
   </div>
 
-  <!-- ===== STEP 2: 전주 키워드 중복 제거 ===== -->
+  <!-- STEP 2 -->
   <div class="section-page" id="step-2">
     <div class="card">
+      <button class="help-btn" onclick="openHelp(2)" title="도움말">?</button>
       <h2>🗑️ 검수한 키워드 중복 제거 <span class="badge">STEP 2</span></h2>
-      <div class="alert alert-info">💡 검수했던 키워드와 이번주 모니터링 할 키워드를 자동으로 중복을 제거합니다.</div>
-
       <div class="tabs">
         <div class="tab active" onclick="switchPrevTab('text')">텍스트 직접 입력</div>
         <div class="tab" onclick="switchPrevTab('file')">이전 엑셀 파일 업로드</div>
       </div>
-
       <div id="prevTabText">
-        <div class="form-group">
-          <label>이전 주 키워드 목록 (한 줄에 하나씩 입력)</label>
-          <textarea id="prevKeywords" rows="8" placeholder="예시:&#10;노트북&#10;모니터&#10;ssd&#10;ddr5 16gb&#10;..."></textarea>
-        </div>
+        <div class="form-group"><label>이전 주 키워드 목록 (한 줄에 하나씩 입력)</label>
+          <textarea id="prevKeywords" rows="8" placeholder="예시:&#10;노트북&#10;모니터&#10;ssd&#10;ddr5 16gb&#10;..."></textarea></div>
       </div>
       <div id="prevTabFile" style="display:none;">
         <label for="prevXlsxInput">
-          <div class="file-upload-area" style="padding:20px;">
-            <div class="icon">📋</div>
+          <div class="file-upload-area" style="padding:20px;"><div class="icon">📋</div>
             <p><strong>이전 주 배분 엑셀 파일 업로드</strong></p>
-            <p style="font-size:11px; color:#999; margin-top:4px;">키워드 컬럼이 있는 엑셀 파일</p>
-          </div>
+            <p style="font-size:11px;color:#999;margin-top:4px;">키워드 컬럼이 있는 엑셀 파일</p></div>
         </label>
         <input type="file" id="prevXlsxInput" accept=".xlsx,.xls,.csv" onchange="handlePrevFile(event)">
         <div id="prevFileInfo" style="display:none;" class="alert alert-success mt-8"></div>
       </div>
-
       <div class="form-row mt-12">
         <button class="btn btn-warning" onclick="applyDedup()">🔄 중복 제거 실행</button>
         <button class="btn btn-secondary" onclick="skipDedup()">⏭️ 건너뛰기 (중복 제거 없음)</button>
@@ -238,29 +244,16 @@ table th.sticky-col { background: #1a3a6e; }
     </div>
   </div>
 
-  <!-- ===== STEP 3: CTR/Steady 분류 ===== -->
+  <!-- STEP 3 -->
   <div class="section-page" id="step-3">
     <div class="card">
+      <button class="help-btn" onclick="openHelp(3)" title="도움말">?</button>
       <h2>🏷️ CTR / Steady 유형 자동 분류 <span class="badge">STEP 3</span></h2>
-      <div class="alert alert-info">
-        💡 CTR 분류 조건을 설정하고 실행하세요. 조건을 만족하면 <span class="badge-ctr">ctr</span>, 나머지는 <span class="badge-steady">steady</span>로 분류됩니다.
-      </div>
       <div class="filter-settings" style="margin-bottom:16px;">
-        <div class="filter-item">
-          <label>유입률(전체) 최대 (이하)</label>
-          <input type="number" id="inflowMax" value="100" min="0">
-        </div>
-        <div class="filter-item">
-          <label>검색횟수(전체) 최소 (이상)</label>
-          <input type="number" id="searchMin" value="7" min="0">
-        </div>
-        <div class="filter-item">
-          <label>🔽 검색횟수(전체) 정렬</label>
-          <select id="sortSearch">
-            <option value="desc" selected>내림차순 ↓ (기본)</option>
-            <option value="asc">오름차순 ↑</option>
-          </select>
-        </div>
+        <div class="filter-item"><label>유입률(전체) 최대 (이하)</label><input type="number" id="inflowMax" value="100" min="0"></div>
+        <div class="filter-item"><label>검색횟수(전체) 최소 (이상)</label><input type="number" id="searchMin" value="7" min="0"></div>
+        <div class="filter-item"><label>🔽 검색횟수(전체) 정렬</label>
+          <select id="sortSearch"><option value="desc" selected>내림차순 ↓ (기본)</option><option value="asc">오름차순 ↑</option></select></div>
       </div>
       <button class="btn btn-primary" onclick="runCtrClassify()">🏷️ CTR/Steady 자동 분류 실행</button>
       <div id="ctrResult" style="display:none;" class="mt-12">
@@ -272,56 +265,86 @@ table th.sticky-col { background: #1a3a6e; }
     </div>
   </div>
 
-  <!-- ===== STEP 4: 배분 설정 ===== -->
+  <!-- STEP 4 -->
   <div class="section-page" id="step-4">
     <div class="card">
+      <button class="help-btn" onclick="openHelp(4)" title="도움말">?</button>
       <h2>👥 배분 설정 <span class="badge">STEP 4</span></h2>
-      <div class="alert alert-info">💡 운영자를 추가하고 각 운영자에게 배분할 키워드 개수를 설정하세요.</div>
 
-      <div class="alert alert-info" style="margin-bottom:14px;">
-        💡 <strong>배분 방식:</strong> 인당 배분개수 × 운영자 수 만큼 <span class="badge-ctr">CTR</span>을 먼저 추출하고, 초과분 CTR은 <span class="badge-steady">STEADY</span>로 전환합니다. 이후 STEADY도 동일 개수 추출하여 배분합니다.<br>
-        <span style="color:#92400e;">📌 예) 4명 × 170개 = ① CTR 680개 추출 + STEADY 680개 추출 → ② CTR 아래 STEADY 붙이기(총 1360개) → ③ <strong>키워드 오름차순 → 유형 내림차순</strong> 전체 정렬 → ④ 앞에서부터 340개씩 4명에게 순서대로 배분</span>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>운영자 이름</label>
-          <input type="text" id="opName" placeholder="홍길동" style="width:140px;">
+      <!-- 배분 개수 설정 -->
+      <div class="config-box">
+        <div class="box-title">📊 인당 배분 개수 설정 <small style="color:#888;font-weight:400;">(주 5일 풀타임 기준)</small></div>
+        <div class="count-inputs">
+          <div class="form-group">
+            <label>CTR 개수 <small style="color:#888;">(인당·5일 기준)</small></label>
+            <input type="number" id="ctrCount" value="425" min="1" oninput="recalcCounts()">
+          </div>
+          <div class="form-group">
+            <label>STEADY 개수 <small style="color:#888;">(인당·5일 기준)</small></label>
+            <input type="number" id="steadyCount" value="425" min="1" oninput="recalcCounts()">
+          </div>
+          <div class="total-badge">
+            <div id="totalBadgeNum">850개</div>
+            <div class="badge-sub">5일 기준 인당 합계</div>
+          </div>
         </div>
-        <div class="form-group">
-          <label>인당 배분 개수 <small style="color:#888;font-weight:400;">(CTR·STEADY 각각)</small></label>
-          <input type="number" id="opCount" value="170" min="1" style="width:110px;">
-        </div>
-        <div class="form-group">
-          <label>작업일</label>
-          <input type="date" id="opDate" style="width:150px;">
-        </div>
-        <div class="form-group">
-          <label>수집일 <small style="color:#888;font-weight:400;">(예: 3월 1주차)</small></label>
-          <input type="text" id="opCollectDate" placeholder="3월 2주차" style="width:130px;">
-        </div>
-        <button class="btn btn-success" onclick="addOperator()" style="margin-top:20px;">+ 운영자 추가</button>
       </div>
 
-      <div id="operatorList" class="operator-list mt-8"></div>
+      <!-- 요일 설정 -->
+      <div class="config-box" style="margin-top:0;">
+        <div class="box-title">📅 작업 요일 설정 <small style="color:#888;font-weight:400;">— 쉬는 날 클릭하여 해제하면 개수 자동 조정</small></div>
+        <div class="day-row">
+          <span class="day-label-txt">작업 요일 :</span>
+          <div class="day-chip on" id="chip-mon" onclick="toggleDay('mon')">월</div>
+          <div class="day-chip on" id="chip-tue" onclick="toggleDay('tue')">화</div>
+          <div class="day-chip on" id="chip-wed" onclick="toggleDay('wed')">수</div>
+          <div class="day-chip on" id="chip-thu" onclick="toggleDay('thu')">목</div>
+          <div class="day-chip on" id="chip-fri" onclick="toggleDay('fri')">금</div>
+          <span class="day-summary" id="daySummary"></span>
+        </div>
+      </div>
+
+      <!-- 운영자 카드 리스트 -->
+      <div style="margin-top:16px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="font-size:12px;font-weight:700;color:#444;">👤 운영자 목록</span>
+          <button onclick="resetOperators()" style="padding:3px 10px;background:#f1f5f9;border:1.5px solid #cbd5e1;border-radius:6px;font-size:11px;font-weight:600;color:#64748b;cursor:pointer;" title="디폴트 4명으로 초기화">↺ 초기화</button>
+        </div>
+        <div class="op-card-list" id="opCardList"></div>
+        <!-- 추가 행 -->
+        <div class="op-add-row" id="opAddRow" style="margin-top:10px;">
+          <select id="opNameSelect" onchange="onOpSelectChange(this)">
+            <option value="">-- 운영자 선택 --</option>
+            <option value="장혁준">장혁준</option>
+            <option value="하장훈">하장훈</option>
+            <option value="신대환">신대환</option>
+            <option value="__custom__">✏️ 직접 입력...</option>
+          </select>
+          <input type="text" id="opNameCustom" placeholder="이름 직접 입력" style="display:none;padding:8px 12px;border:1.5px solid #f59e0b;border-radius:7px;font-size:13px;width:130px;font-family:inherit;outline:none;">
+          <button class="btn-add-op" onclick="addOperator()">+ 추가</button>
+        </div>
+      </div>
 
       <div class="alert alert-warning mt-8" id="totalDistInfo" style="display:none;"></div>
-
+      <div style="margin-top:10px;">
+        <div class="form-group" style="max-width:220px;">
+          <label>수집일 <small style="color:#888;font-weight:400;">(예: 3월 2주차)</small></label>
+          <input type="text" id="opCollectDate" placeholder="3월 2주차">
+        </div>
+      </div>
       <button class="btn btn-primary mt-12" onclick="goStep(5)">다음 단계: 최종 배분 →</button>
     </div>
   </div>
 
-  <!-- ===== STEP 5: 최종 배분 & 다운로드 ===== -->
+  <!-- STEP 5 -->
   <div class="section-page" id="step-5">
     <div class="card">
-      <h2>📤 최종 배분 & 다운로드 <span class="badge">STEP 5</span></h2>
-
-      <!-- 배분 파일 업로드 -->
+      <button class="help-btn" onclick="openHelp(5)" title="도움말">?</button>
+      <h2>📤 최종 배분 &amp; 다운로드 <span class="badge">STEP 5</span></h2>
       <div style="margin-bottom:16px;">
-        <div class="alert alert-info" style="margin-bottom:10px;">
-          📂 <strong>기존 배분 파일 업로드</strong> (선택사항) — 업로드 시 해당 파일 형식 그대로 데이터를 뒤에 이어붙입니다.
-        </div>
+        <div class="alert alert-info" style="margin-bottom:10px;">📂 <strong>기존 배분 파일 업로드</strong> (선택사항) — 업로드 시 해당 파일 형식 그대로 데이터를 뒤에 이어붙입니다.</div>
         <label for="templateInput">
-          <div class="file-upload-area" style="padding:16px;" id="templateDropZone">
+          <div class="file-upload-area" style="padding:16px;">
             <div class="icon" style="font-size:24px;">📋</div>
             <p><strong>기존 배분 엑셀 파일 클릭 또는 드래그</strong></p>
             <p style="font-size:11px;color:#999;margin-top:4px;">인기키워드검수_*.xlsx 형식</p>
@@ -330,26 +353,16 @@ table th.sticky-col { background: #1a3a6e; }
         <input type="file" id="templateInput" accept=".xlsx,.xls" onchange="handleTemplateFile(event)">
         <div id="templateInfo" style="display:none;" class="alert alert-success mt-8"></div>
       </div>
-
       <button class="btn btn-primary" onclick="runFinalDistribution()">⚡ 최종 배분 실행</button>
       <div id="finalResult" style="display:none;" class="mt-12">
         <div class="log" id="finalLog"></div>
         <div class="stat-row" id="finalStats"></div>
-
-        <!-- 탭: 통합보기 / 운영자별 -->
         <div class="tabs mt-12">
           <div class="tab active" onclick="switchFinalTab('all')">📋 통합 데이터</div>
           <div class="tab" onclick="switchFinalTab('byop')">👥 운영자별 보기</div>
         </div>
-
-        <div id="finalTabAll">
-          <div id="finalTableWrap"></div>
-          <div class="pagination" id="finalPagination"></div>
-        </div>
-        <div id="finalTabByop" style="display:none;">
-          <div id="byopResultWrap"></div>
-        </div>
-
+        <div id="finalTabAll"><div id="finalTableWrap"></div><div class="pagination" id="finalPagination"></div></div>
+        <div id="finalTabByop" style="display:none;"><div id="byopResultWrap"></div></div>
         <div class="export-options">
           <button class="btn btn-success" onclick="exportAppendedExcel()">📅 배분파일에 이어붙이기 다운로드 (권장)</button>
           <button class="btn btn-warning" onclick="exportAllExcel()">📥 새 엑셀로 다운로드</button>
@@ -362,816 +375,532 @@ table th.sticky-col { background: #1a3a6e; }
 
 <script>
 // ===== 전역 상태 =====
-let rawData = [];           // 원본 필터 후 데이터
-let dedupData = [];         // 중복 제거 후 데이터
-let classifiedData = [];    // CTR/Steady 분류 후 데이터
-let finalData = [];         // 최종 배분 데이터
-let operators = [];         // 운영자 목록
-let currentPage = 1;
-const PAGE_SIZE = 100;
-let prevKeywordsSet = new Set();
+let rawData=[], dedupData=[], classifiedData=[], finalData=[], operators=[];
+let currentPage=1;
+const PAGE_SIZE=100;
+let prevKeywordsSet=new Set();
+let dayState={mon:true,tue:true,wed:true,thu:true,fri:true};
 
-// 카테고리 ID 매핑
-const CATEGORY_ID_MAP = {
-  'PC 주요 부품': 2, '주변기기': 3, '멀티미디어/네트워크': 4, '복합기/SW': 5,
-  '문구/사무': 6, '주방가전': 7, '생활가전': 8, '계절가전': 9,
-  '건강/실버': 10, '영상음향': 11, '디카': 12, '태블릿/휴대폰': 13,
-  '게임': 14, '자동차 용품': 15, '취미': 16, '스포츠/레저': 17,
-  '골프': 18, '의류': 19, '화장품': 20, '패션잡화': 21,
-  '유아/완구': 22, '가구/침구': 23, '생활/주방': 24, '식품': 25,
-  '도서': 26, '기타': 27, '공구/산업기계': 29
+const DEFAULT_OPERATORS=['김태현','김종현','이승연','김다안'];
+const OP_COLORS=['#818cf8','#f472b6','#34d399','#fb923c','#60a5fa','#a78bfa','#f87171'];
+
+const CATEGORY_ID_MAP={
+  'PC 주요 부품':2,'주변기기':3,'멀티미디어/네트워크':4,'복합기/SW':5,'문구/사무':6,
+  '주방가전':7,'생활가전':8,'계절가전':9,'건강/실버':10,'영상음향':11,'디카':12,
+  '태블릿/휴대폰':13,'게임':14,'자동차 용품':15,'취미':16,'스포츠/레저':17,'골프':18,
+  '의류':19,'화장품':20,'패션잡화':21,'유아/완구':22,'가구/침구':23,'생활/주방':24,
+  '식품':25,'도서':26,'기타':27,'공구/산업기계':29
 };
 
-// 오늘 날짜 설정
-document.addEventListener('DOMContentLoaded', () => {
-  const today = new Date();
-  document.getElementById('opDate').value = today.toISOString().slice(0,10);
-  setupDrop();
-});
+// ===== 도움말 내용 =====
+const HELP_DATA = {
+  1: {
+    title: '파일 업로드 & 기본 필터',
+    label: 'STEP 1 — 검색로그 엑셀을 업로드하고 기본 필터를 적용합니다',
+    content: `
+      <div class="help-section">
+        <div class="help-section-title">📋 사용 방법</div>
+        <div class="help-step-list">
+          <div class="help-step-row"><div class="help-step-num">1</div><div class="help-step-text">다나와에서 다운로드한 검색로그 엑셀 파일(<strong>searchlog_YYYYMMDD_YYYYMMDD.xlsx</strong>)을 업로드 영역에 <strong>드래그하거나 클릭</strong>해서 선택합니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">2</div><div class="help-step-text">파일이 로드되면 하단에 <strong>필터 설정 카드</strong>가 나타납니다. 키워드 최대 글자수를 조정할 수 있습니다 (기본값 24자).</div></div>
+          <div class="help-step-row"><div class="help-step-num">3</div><div class="help-step-text"><strong>🚀 데이터 처리 시작</strong> 버튼을 클릭합니다. 자동 필터링이 실행되고 처리 결과가 표시됩니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">4</div><div class="help-step-text">처리 완료 후 결과를 확인하고 <strong>다음 단계 버튼</strong>을 클릭해 Step 2로 이동합니다.</div></div>
+        </div>
+        <div class="help-note">📌 <strong>자동 제거 조건 3가지</strong><br>① 6행 제거 — 검색횟수 2회 이하 통계 행<br>② 키워드 25자 이상 제거<br>③ 결과유무가 O가 아닌 행 제거</div>
+      </div>`
+  },
+  2: {
+    title: '전주 키워드 중복 제거',
+    label: 'STEP 2 — 지난주에 검수한 키워드를 이번 주 목록에서 제거합니다',
+    content: `
+      <div class="help-section">
+        <div class="help-section-title">📋 사용 방법</div>
+        <div class="help-step-list">
+          <div class="help-step-row"><div class="help-step-num">1</div><div class="help-step-text">입력 방식을 선택합니다.<br>· <strong>텍스트 직접 입력</strong> — 지난주 키워드를 한 줄에 하나씩 붙여넣기<br>· <strong>이전 엑셀 파일 업로드</strong> — 지난주 배분 엑셀을 올리면 키워드 자동 추출</div></div>
+          <div class="help-step-row"><div class="help-step-num">2</div><div class="help-step-text"><strong>🔄 중복 제거 실행</strong>을 클릭합니다. 지난주와 겹치는 키워드가 이번 주 목록에서 제거됩니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">3</div><div class="help-step-text">전주 키워드가 없거나 중복 제거 없이 진행하려면 <strong>건너뛰기</strong>를 클릭합니다.</div></div>
+        </div>
+        <div class="help-note">📌 대소문자 구분 없이 중복 체크됩니다.</div>
+      </div>`
+  },
+  3: {
+    title: 'CTR / Steady 유형 분류',
+    label: 'STEP 3 — 키워드를 CTR과 Steady 두 가지 유형으로 자동 분류합니다',
+    content: `
+      <div class="help-section">
+        <div class="help-section-title">📋 사용 방법</div>
+        <div class="help-step-list">
+          <div class="help-step-row"><div class="help-step-num">1</div><div class="help-step-text"><strong>유입률(전체) 최대</strong> 값을 설정합니다. 이 값 이하인 키워드가 CTR 후보가 됩니다 (기본 100 = 전체).</div></div>
+          <div class="help-step-row"><div class="help-step-num">2</div><div class="help-step-text"><strong>검색횟수(전체) 최소</strong> 값을 설정합니다. 이 값 이상인 키워드만 CTR 대상이 됩니다 (기본 7회).</div></div>
+          <div class="help-step-row"><div class="help-step-num">3</div><div class="help-step-text"><strong>🏷️ 자동 분류 실행</strong>을 클릭합니다. 두 조건을 모두 만족하면 CTR, 나머지는 Steady로 분류됩니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">4</div><div class="help-step-text">분류 결과와 상위 30개 미리보기를 확인한 뒤 다음 단계로 이동합니다.</div></div>
+        </div>
+        <div class="help-note">📌 <strong>CTR</strong> — 클릭 유도가 필요한 키워드 (광고 효율 중심)<br>📌 <strong>Steady</strong> — 꾸준한 검색량을 가진 키워드 (안정적 노출 중심)</div>
+      </div>`
+  },
+  4: {
+    title: '배분 설정',
+    label: 'STEP 4 — 운영자별 배분 개수와 작업 요일을 설정합니다',
+    content: `
+      <div class="help-section">
+        <div class="help-section-title">📊 배분 개수 설정</div>
+        <div class="help-step-list">
+          <div class="help-step-row"><div class="help-step-num">1</div><div class="help-step-text"><strong>CTR 개수 / STEADY 개수</strong>에 주 5일 풀타임 기준 인당 배분량을 입력합니다 (기본 각 425개 = 합계 850개).</div></div>
+          <div class="help-step-row"><div class="help-step-num">2</div><div class="help-step-text">작업 요일에서 <strong>쉬는 날 버튼을 클릭해 OFF</strong>하면 개수가 자동 계산됩니다.<br>예) 4일 근무 시 → 425 × 4/5 = 340개로 자동 조정</div></div>
+        </div>
+      </div>
+      <div class="help-section">
+        <div class="help-section-title">👤 운영자 관리</div>
+        <div class="help-step-list">
+          <div class="help-step-row"><div class="help-step-num">3</div><div class="help-step-text">김태현·김종현·이승연·김다안 4명이 기본 등록되어 있습니다. <strong>↺ 초기화</strong> 버튼으로 언제든 복원할 수 있습니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">4</div><div class="help-step-text">각 운영자 카드의 <strong>CTR / STEADY 숫자 칸을 직접 수정</strong>할 수 있습니다. 반차 등 특수한 경우에 개별 조정하세요.</div></div>
+          <div class="help-step-row"><div class="help-step-num">5</div><div class="help-step-text">추가 운영자가 필요하면 드롭다운에서 선택하거나 <strong>✏️ 직접 입력</strong> 후 + 추가를 클릭합니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">6</div><div class="help-step-text">운영자 카드 오른쪽의 <strong>✕</strong> 버튼으로 개별 제거할 수 있습니다.</div></div>
+        </div>
+        <div class="help-note-green">✅ 배분 방식: CTR 풀 추출 → 초과분 STEADY 전환 → STEADY 풀 추출 → steady→ctr 순 정렬 → 인당 개수씩 순서대로 슬라이싱</div>
+      </div>`
+  },
+  5: {
+    title: '최종 배분 & 다운로드',
+    label: 'STEP 5 — 배분을 실행하고 결과를 엑셀로 다운로드합니다',
+    content: `
+      <div class="help-section">
+        <div class="help-section-title">📋 사용 방법</div>
+        <div class="help-step-list">
+          <div class="help-step-row"><div class="help-step-num">1</div><div class="help-step-text"><strong>기존 배분 파일 업로드</strong> (선택사항) — 이전 주 배분 엑셀을 올리면 이번 주 데이터를 그 파일 뒤에 이어붙여서 다운로드할 수 있습니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">2</div><div class="help-step-text"><strong>⚡ 최종 배분 실행</strong>을 클릭합니다. 운영자별로 키워드가 자동 배분됩니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">3</div><div class="help-step-text"><strong>통합 데이터</strong> 탭에서 전체 배분 결과를, <strong>운영자별 보기</strong> 탭에서 개인별 결과를 확인합니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">4</div><div class="help-step-text">다운로드 방식을 선택합니다.<br>· <strong>배분파일에 이어붙이기 (권장)</strong> — 기존 엑셀 형식 그대로 유지<br>· <strong>새 엑셀로 다운로드</strong> — 전체 시트 + 운영자별 시트 포함<br>· <strong>CSV 다운로드</strong> — 간단한 텍스트 형식</div></div>
+        </div>
+        <div class="help-note">📌 이어붙이기 기능을 쓰려면 반드시 <strong>기존 배분 파일을 먼저 업로드</strong>해야 합니다.</div>
+      </div>`
+  }
+};
 
-function setupDrop() {
-  const zone = document.getElementById('dropZone');
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
-  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
-  zone.addEventListener('drop', e => {
-    e.preventDefault(); zone.classList.remove('dragover');
-    const file = e.dataTransfer.files[0];
-    if (file) processFile(file);
+function openHelp(step) {
+  const d = HELP_DATA[step];
+  document.getElementById('helpTitle').textContent = d.title;
+  document.getElementById('helpStepLabel').textContent = d.label;
+  document.getElementById('helpContent').innerHTML = d.content;
+  document.getElementById('helpModal').classList.add('open');
+}
+function closeHelp() { document.getElementById('helpModal').classList.remove('open'); }
+
+document.addEventListener('DOMContentLoaded',()=>{ setupDrop(); initDefaultOperators(); recalcCounts(); });
+
+// ===== 디폴트 운영자 =====
+function initDefaultOperators() {
+  const {ac,as_}=getAdj();
+  operators=DEFAULT_OPERATORS.map(name=>({name,ctrCount:ac,steadyCount:as_,collectDate:''}));
+  renderOpCards();
+}
+
+// ===== 요일 토글 =====
+function toggleDay(day) {
+  dayState[day]=!dayState[day];
+  const chip=document.getElementById('chip-'+day);
+  chip.className='day-chip '+(dayState[day]?'on':'off');
+  recalcCounts();
+}
+
+// ===== 개수 계산 =====
+function getAdj() {
+  const bc=parseInt(document.getElementById('ctrCount').value)||425;
+  const bs=parseInt(document.getElementById('steadyCount').value)||425;
+  const active=Object.values(dayState).filter(Boolean).length;
+  return {bc,bs,active,ac:Math.floor(bc*active/5),as_:Math.floor(bs*active/5)};
+}
+
+function recalcCounts() {
+  const {bc,bs,active,ac,as_}=getAdj();
+  document.getElementById('totalBadgeNum').textContent=(bc+bs)+'개';
+  const adjTotal=ac+as_, changed=active<5;
+  document.getElementById('daySummary').innerHTML=
+    '작업일 <strong>'+active+'일</strong> / 기준 <strong>'+(bc+bs)+'개</strong> → 실제 인당 '
+    +(changed?'<span class="adj-highlight">':' <strong>')+adjTotal+'개'+(changed?'</span>':'</strong>')
+    +' <span style="color:#888;font-size:11px;">(CTR '+ac+' + STEADY '+as_+')</span>';
+  operators.forEach(op=>{op.ctrCount=ac;op.steadyCount=as_;});
+  renderOpCards();
+}
+
+// ===== 운영자 카드 렌더 =====
+function renderOpCards() {
+  const list=document.getElementById('opCardList');
+  if(!operators.length){list.innerHTML='<div style="color:#94a3b8;font-size:12px;padding:8px 0;">운영자가 없습니다</div>';return;}
+  list.innerHTML=operators.map((op,i)=>`
+    <div class="op-card-item">
+      <div class="op-card-num" style="background:${OP_COLORS[i%OP_COLORS.length]}">${i+1}</div>
+      <div class="op-card-name">${op.name}</div>
+      <div class="op-card-counts">
+        <span class="op-cnt-label">CTR</span>
+        <input class="op-cnt-input" type="number" min="0" value="${op.ctrCount}"
+          oninput="updateOpCount('${op.name}','ctr',this.value)" title="CTR 개수 직접 수정">
+        <span class="op-cnt-label">STEADY</span>
+        <input class="op-cnt-input" type="number" min="0" value="${op.steadyCount}"
+          oninput="updateOpCount('${op.name}','steady',this.value)" title="STEADY 개수 직접 수정">
+        <span class="op-cnt-total" id="op-total-${i}">${op.ctrCount+op.steadyCount}개</span>
+      </div>
+      <button class="op-card-del" onclick="removeOperator('${op.name}')" title="제거">✕</button>
+    </div>`).join('');
+
+  // 드롭다운 옵션 중 이미 추가된 이름 비활성화
+  const sel=document.getElementById('opNameSelect');
+  Array.from(sel.options).forEach(opt=>{
+    if(!opt.value||opt.value==='__custom__') return;
+    opt.disabled=!!operators.find(o=>o.name===opt.value);
   });
+
+  // 총계 정보
+  const info=document.getElementById('totalDistInfo');
+  const tc=operators.reduce((s,o)=>s+o.ctrCount,0),ts=operators.reduce((s,o)=>s+o.steadyCount,0);
+  const ca=classifiedData.filter(d=>d.type==='ctr').length,sa=classifiedData.filter(d=>d.type==='steady').length;
+  info.style.display='flex';
+  info.innerHTML=`📊 운영자 <strong>${operators.length}명</strong> | 총 필요: <strong>CTR ${tc} + STEADY ${ts} = ${tc+ts}개</strong> | CTR 가용: <strong style="color:${ca>=tc?'#166534':'#dc2626'}">${ca}개</strong> | STEADY 가용: <strong>${sa}개</strong>`;
 }
 
-function goStep(n) {
-  document.querySelectorAll('.section-page').forEach(p => p.classList.remove('active'));
-  document.getElementById('step-'+n).classList.add('active');
-  document.querySelectorAll('.step-btn').forEach((b,i) => {
-    b.classList.remove('active');
-    if (i+1 < n) b.classList.add('done');
-    else b.classList.remove('done');
-  });
-  document.getElementById('nav-'+n).classList.add('active');
+function updateOpCount(name, field, val) {
+  const op = operators.find(o=>o.name===name);
+  if(!op) return;
+  const v = parseInt(val)||0;
+  if(field==='ctr') op.ctrCount=v;
+  else op.steadyCount=v;
+  // 합계 뱃지만 즉시 갱신 (리렌더 없이)
+  const idx = operators.indexOf(op);
+  const totalEl = document.getElementById('op-total-'+idx);
+  if(totalEl) totalEl.textContent=(op.ctrCount+op.steadyCount)+'개';
+  // totalDistInfo 갱신
+  const info=document.getElementById('totalDistInfo');
+  const tc=operators.reduce((s,o)=>s+o.ctrCount,0),ts=operators.reduce((s,o)=>s+o.steadyCount,0);
+  const ca=classifiedData.filter(d=>d.type==='ctr').length,sa=classifiedData.filter(d=>d.type==='steady').length;
+  info.style.display='flex';
+  info.innerHTML=`📊 운영자 <strong>${operators.length}명</strong> | 총 필요: <strong>CTR ${tc} + STEADY ${ts} = ${tc+ts}개</strong> | CTR 가용: <strong style="color:${ca>=tc?'#166534':'#dc2626'}">${ca}개</strong> | STEADY 가용: <strong>${sa}개</strong>`;
 }
 
-function addLog(id, msg, type='info') {
-  const el = document.getElementById(id);
-  const colors = {info:'#60d4f5', success:'#a0f0a0', warn:'#f5e060', error:'#f56060'};
-  const ts = new Date().toLocaleTimeString('ko-KR');
-  el.innerHTML += `<span style="color:${colors[type]}">[${ts}] ${msg}</span>\n`;
-  el.scrollTop = el.scrollHeight;
-}
-
-// ===== STEP 1: 파일 처리 =====
-function handleFile(event) {
-  const file = event.target.files[0];
-  if (file) processFile(file);
-}
-
-function processFile(file) {
-  const info = document.getElementById('fileInfo');
-  info.style.display = 'flex';
-  info.innerHTML = `<span class="loading"><span class="spinner"></span> 파일 읽는 중... (${(file.size/1024/1024).toFixed(1)}MB, 시간이 걸릴 수 있습니다)</span>`;
-  document.getElementById('filterSettingCard').style.display = 'none';
-
-  setTimeout(() => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        info.innerHTML = `<span class="loading"><span class="spinner"></span> 데이터 파싱 중...</span>`;
-        setTimeout(() => {
-          const wb = XLSX.read(e.target.result, {type:'binary', cellDates:false});
-          const sheetName = wb.SheetNames[0];
-          const ws = wb.Sheets[sheetName];
-          const jsonData = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
-
-          info.style.display = 'flex';
-          info.innerHTML = `✅ 파일 로드 완료: <strong>${file.name}</strong> (${(file.size/1024/1024).toFixed(1)}MB, ${jsonData.length}행)`;
-          document.getElementById('filterSettingCard').style.display = 'block';
-          window._rawJsonData = jsonData;
-          addLog('processLog', `파일 로드: ${file.name}, 총 ${jsonData.length}행`, 'success');
-
-          // ── 파일명에서 날짜 파싱 → 수집일 자동 계산 ──
-          // 패턴: _YYMMDD_ (예: _260309_ → 26년 03월 09일 → 3월2주차)
-          const dateMatch = file.name.match(/_(\d{2})(\d{2})(\d{2})[_\.]/i);
-          if (dateMatch) {
-            const mm   = parseInt(dateMatch[2], 10);  // 월
-            const dd   = parseInt(dateMatch[3], 10);  // 일
-            const week = Math.ceil(dd / 7);            // 주차
-            const autoCollect = `${mm}월${week}주차`;
-            const colEl = document.getElementById('opCollectDate');
-            if (colEl && !colEl.value) colEl.value = autoCollect;
-            addLog('processLog', `📅 수집일 자동 계산: ${autoCollect} (파일명 기준)`, 'success');
-          }
-        }, 50);
-      } catch(err) {
-        info.innerHTML = `❌ 오류: ${err.message}`;
-      }
-    };
-    reader.readAsBinaryString(file);
-  }, 100);
-}
-
-function processData() {
-  const logEl = document.getElementById('processLog');
-  logEl.innerHTML = '';
-  document.getElementById('step1Result').style.display = 'block';
-
-  const jsonData = window._rawJsonData;
-  if (!jsonData) { addLog('processLog','파일을 먼저 업로드하세요','error'); return; }
-
-  const maxLen = parseInt(document.getElementById('maxKeyLen').value) || 24;
-  addLog('processLog', `총 ${jsonData.length}행 데이터 처리 시작`, 'info');
-
-  // 헤더 찾기 (5행 = index 4)
-  let headerRow = -1;
-  for (let i=0; i<Math.min(10, jsonData.length); i++) {
-    if (jsonData[i] && String(jsonData[i][0]).includes('순위')) { headerRow = i; break; }
-  }
-  if (headerRow < 0) {
-    // 헤더를 못찾으면 index 4로 고정
-    headerRow = 4;
-  }
-  addLog('processLog', `헤더 행: ${headerRow+1}행`, 'info');
-
-  const headers = jsonData[headerRow];
-  addLog('processLog', `컬럼: ${headers.slice(0,10).join(', ')}...`, 'info');
-
-  // 컬럼 인덱스 찾기
-  const findCol = (keywords) => {
-    for (const kw of keywords) {
-      const idx = headers.findIndex(h => String(h).includes(kw));
-      if (idx >= 0) return idx;
-    }
-    return -1;
-  };
-
-  const colRank = findCol(['순위']);
-  const colKw = findCol(['키워드']);
-  const colSearchTotal = findCol(['검색 횟수(전체)', '검색횟수(전체)']);
-  const colSearchPC = findCol(['검색 횟수(PC)', '검색횟수(PC)']);
-  const colSearchMobile = findCol(['검색 횟수(Mobile)', '검색횟수(Mobile)']);
-  const colCategory = findCol(['대분류 카테고리', '대분류카테고리']);
-  const colResult = findCol(['결과 유무', '결과유무']);
-  const colClickTotal = findCol(['상품 클릭수(전체)', '상품클릭수(전체)']);
-  const colClickPC = findCol(['상품 클릭수(PC)', '상품클릭수(PC)']);
-  const colClickMobile = findCol(['상품 클릭수(Mobile)', '상품클릭수(Mobile)']);
-  const colInflowTotal = findCol(['유입률(전체)']);
-  const colInflowPC = findCol(['유입률(PC)']);
-  const colInflowMobile = findCol(['유입률(Mobile)','유입률(mobile)']);
-
-  addLog('processLog', `컬럼 매핑: 순위=${colRank} 키워드=${colKw} 검색(전체)=${colSearchTotal} 결과유무=${colResult} 유입률=${colInflowTotal}`, 'info');
-
-  let total = 0, filtered = 0, longKw = 0, noResult = 0, isRow6 = 0;
-
-  rawData = [];
-  // 데이터는 headerRow+1 부터 (6행=headerRow+2 제거)
-  const dataStart = headerRow + 1;
-  for (let i = dataStart; i < jsonData.length; i++) {
-    const row = jsonData[i];
-    if (!row || (row[0] === '' && row[1] === '')) continue;
-    total++;
-
-    // 6행 제거: 첫번째 데이터행 (검색횟수_2회이하_상품클릭X)
-    if (i === dataStart) { isRow6++; continue; }
-
-    const kw = String(row[colKw] || '').trim();
-    if (!kw) continue;
-
-    // 키워드 길이 필터
-    if (kw.length > maxLen) { longKw++; continue; }
-
-    // 결과유무 O 필터
-    const resultVal = String(row[colResult] || '').trim().toUpperCase();
-    if (resultVal !== 'O') { noResult++; continue; }
-
-    const toNum = (v) => {
-      if (v === '' || v === null || v === undefined) return 0;
-      return parseFloat(v) || 0;
-    };
-
-    rawData.push({
-      keyword: kw,
-      type: 'steady',
-      category: String(row[colCategory] || '').trim(),
-      search_total: toNum(row[colSearchTotal]),
-      search_pc: toNum(row[colSearchPC]),
-      search_mobile: toNum(row[colSearchMobile]),
-      click_total: toNum(row[colClickTotal]),
-      click_pc: toNum(row[colClickPC]),
-      click_mobile: toNum(row[colClickMobile]),
-      inflow_total: toNum(row[colInflowTotal]),
-      inflow_pc: toNum(row[colInflowPC]),
-      inflow_mobile: toNum(row[colInflowMobile]),
-      rank: toNum(row[colRank]),
-      category_id: CATEGORY_ID_MAP[String(row[colCategory] || '').trim()] || ''
-    });
-    filtered++;
-  }
-
-  addLog('processLog', `전체 행: ${total}`, 'info');
-  addLog('processLog', `6행(통계제외) 제거: ${isRow6}건`, 'warn');
-  addLog('processLog', `키워드 ${maxLen+1}자 이상 제거: ${longKw}건`, 'warn');
-  addLog('processLog', `결과유무 X 제거: ${noResult}건`, 'warn');
-  addLog('processLog', `✅ 최종 추출: ${filtered}개 키워드`, 'success');
-
-  const statsEl = document.getElementById('step1Stats');
-  statsEl.innerHTML = `
-    <div class="stat-box"><span class="num">${total.toLocaleString()}</span><span class="label">전체 행</span></div>
-    <div class="stat-box"><span class="num" style="color:#f59e0b">${longKw.toLocaleString()}</span><span class="label">긴 키워드 제거</span></div>
-    <div class="stat-box"><span class="num" style="color:#ef4444">${noResult.toLocaleString()}</span><span class="label">결과없음 제거</span></div>
-    <div class="stat-box"><span class="num" style="color:#22c55e">${filtered.toLocaleString()}</span><span class="label">최종 키워드</span></div>
-  `;
-
-  document.getElementById('toStep2Btn').style.display = 'inline-flex';
-  document.getElementById('nav-1').classList.add('done');
-}
-
-// ===== STEP 2: 전주 중복 제거 =====
-function switchPrevTab(tab) {
-  document.querySelectorAll('#step-2 .tab').forEach((t,i) => t.classList.toggle('active', (i===0&&tab==='text')||(i===1&&tab==='file')));
-  document.getElementById('prevTabText').style.display = tab==='text' ? 'block' : 'none';
-  document.getElementById('prevTabFile').style.display = tab==='file' ? 'block' : 'none';
-}
-
-function handlePrevFile(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const wb = XLSX.read(e.target.result, {type:'binary'});
-    const ws = wb.Sheets[wb.SheetNames[0]];
-    const jsonData = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
-    // 키워드 컬럼 찾기
-    let kwCol = -1;
-    for (let i=0; i<Math.min(10, jsonData.length); i++) {
-      const idx = jsonData[i].findIndex(h => String(h).includes('키워드'));
-      if (idx >= 0) { kwCol = idx; break; }
-    }
-    const keywords = [];
-    jsonData.forEach(row => {
-      if (kwCol >= 0 && row[kwCol]) keywords.push(String(row[kwCol]).trim());
-    });
-    document.getElementById('prevKeywords').value = keywords.join('\n');
-    document.getElementById('prevFileInfo').style.display = 'flex';
-    document.getElementById('prevFileInfo').innerHTML = `✅ ${file.name}: 키워드 ${keywords.length}개 로드`;
-  };
-  reader.readAsBinaryString(file);
-}
-
-function applyDedup() {
-  const logEl = document.getElementById('dedupLog');
-  logEl.innerHTML = '';
-  document.getElementById('dedupResult').style.display = 'block';
-
-  const prevText = document.getElementById('prevKeywords').value.trim();
-  prevKeywordsSet = new Set();
-  if (prevText) {
-    prevText.split('\n').forEach(kw => {
-      const k = kw.trim();
-      if (k) prevKeywordsSet.add(k.toLowerCase());
-    });
-  }
-
-  addLog('dedupLog', `전주 키워드: ${prevKeywordsSet.size}개`, 'info');
-  addLog('dedupLog', `현재 키워드: ${rawData.length}개`, 'info');
-
-  if (prevKeywordsSet.size === 0) {
-    dedupData = [...rawData];
-    addLog('dedupLog', '전주 키워드 없음 - 중복 제거 생략', 'warn');
+function onOpSelectChange(sel) {
+  const customInput = document.getElementById('opNameCustom');
+  if(sel.value === '__custom__') {
+    customInput.style.display = 'inline-block';
+    customInput.focus();
   } else {
-    const before = rawData.length;
-    dedupData = rawData.filter(d => !prevKeywordsSet.has(d.keyword.toLowerCase()));
-    const removed = before - dedupData.length;
-    addLog('dedupLog', `중복 제거: ${removed}개`, 'warn');
-    addLog('dedupLog', `✅ 남은 키워드: ${dedupData.length}개`, 'success');
+    customInput.style.display = 'none';
+    customInput.value = '';
   }
-
-  const statsEl = document.getElementById('dedupStats');
-  statsEl.innerHTML = `
-    <div class="stat-box"><span class="num">${rawData.length.toLocaleString()}</span><span class="label">중복제거 전</span></div>
-    <div class="stat-box"><span class="num" style="color:#ef4444">${(rawData.length-dedupData.length).toLocaleString()}</span><span class="label">중복 제거</span></div>
-    <div class="stat-box"><span class="num" style="color:#22c55e">${dedupData.length.toLocaleString()}</span><span class="label">남은 키워드</span></div>
-  `;
-  document.getElementById('nav-2').classList.add('done');
 }
 
-function skipDedup() {
-  dedupData = [...rawData];
-  document.getElementById('dedupResult').style.display = 'block';
-  const logEl = document.getElementById('dedupLog');
-  logEl.innerHTML = '';
-  addLog('dedupLog', '중복 제거 건너뜀 - 전체 데이터 유지', 'warn');
-  addLog('dedupLog', `키워드 수: ${dedupData.length}개`, 'success');
-  document.getElementById('dedupStats').innerHTML = `
-    <div class="stat-box"><span class="num" style="color:#22c55e">${dedupData.length.toLocaleString()}</span><span class="label">전체 키워드</span></div>
-  `;
-  document.getElementById('nav-2').classList.add('done');
-}
-
-// ===== STEP 3: CTR/Steady 분류 =====
-function runCtrClassify() {
-  const logEl = document.getElementById('ctrLog');
-  logEl.innerHTML = '';
-  document.getElementById('ctrResult').style.display = 'block';
-
-  const inflowMax = parseFloat(document.getElementById('inflowMax').value) || 100;
-  const searchMin = parseFloat(document.getElementById('searchMin').value) || 7;
-  const sortSearchDir = (document.getElementById('sortSearch') || {value:'desc'}).value;
-  const searchLabel = sortSearchDir === 'desc' ? '내림차순 ↓' : '오름차순 ↑';
-
-  addLog('ctrLog', `분류 기준: 유입률(전체) ≤ ${inflowMax} AND 검색횟수(전체) ≥ ${searchMin}`, 'info');
-  addLog('ctrLog', `정렬 기준: 검색횟수(전체) ${searchLabel}`, 'info');
-  addLog('ctrLog', `데이터: ${dedupData.length}개 키워드 분류 시작`, 'info');
-
-  // 1. 검색횟수(전체) 기준으로만 정렬
-  const sorted = [...dedupData].sort((a,b) => {
-    return sortSearchDir === 'desc'
-      ? b.search_total - a.search_total
-      : a.search_total - b.search_total;
-  });
-
-  // 2. CTR 조건 적용
-  let ctrCount = 0, steadyCount = 0;
-  classifiedData = sorted.map(d => {
-    const isCtr = d.inflow_total <= inflowMax && d.search_total >= searchMin;
-    if (isCtr) { ctrCount++; return {...d, type:'ctr'}; }
-    else { steadyCount++; return {...d, type:'steady'}; }
-  });
-
-  addLog('ctrLog', `CTR 키워드: ${ctrCount}개`, 'warn');
-  addLog('ctrLog', `Steady 키워드: ${steadyCount}개`, 'success');
-  addLog('ctrLog', `✅ 분류 완료`, 'success');
-
-  const statsEl = document.getElementById('ctrStats');
-  statsEl.innerHTML = `
-    <div class="stat-box"><span class="num">${classifiedData.length.toLocaleString()}</span><span class="label">전체</span></div>
-    <div class="stat-box"><span class="num" style="color:#f59e0b">${ctrCount.toLocaleString()}</span><span class="label">CTR</span></div>
-    <div class="stat-box"><span class="num" style="color:#22c55e">${steadyCount.toLocaleString()}</span><span class="label">Steady</span></div>
-  `;
-
-  // 미리보기 (CTR 상위 30개)
-  const ctrSamples = classifiedData.filter(d=>d.type==='ctr').slice(0,30);
-  const steadySamples = classifiedData.filter(d=>d.type==='steady').slice(0,20);
-
-  document.getElementById('ctrPreviewWrap').innerHTML = `
-    <div class="alert alert-warning">📌 CTR 키워드 상위 30개 미리보기</div>
-    <div class="table-wrap" style="max-height:250px;">
-      <table>
-        <thead><tr><th>키워드</th><th>유입률(전체)</th><th>검색횟수(전체)</th><th>카테고리</th><th>유형</th></tr></thead>
-        <tbody>${ctrSamples.map(d=>`<tr><td>${d.keyword}</td><td>${d.inflow_total}</td><td>${d.search_total.toLocaleString()}</td><td>${d.category}</td><td><span class="badge-ctr">ctr</span></td></tr>`).join('')}</tbody>
-      </table>
-    </div>
-  `;
-  document.getElementById('nav-3').classList.add('done');
-}
-
-// ===== STEP 4: 운영자 설정 =====
 function addOperator() {
-  const name = document.getElementById('opName').value.trim();
-  const count = parseInt(document.getElementById('opCount').value) || 170;
-  const date = document.getElementById('opDate').value;
-  const collectDate = document.getElementById('opCollectDate').value.trim();
-  if (!name) { alert('운영자 이름을 입력하세요'); return; }
-  if (operators.find(o=>o.name===name)) { alert('이미 추가된 운영자입니다'); return; }
-  operators.push({name, count, date, collectDate});
-  document.getElementById('opName').value = '';
-  renderOperators();
+  const sel = document.getElementById('opNameSelect');
+  const customInput = document.getElementById('opNameCustom');
+  let name = '';
+  if(sel.value === '__custom__') {
+    name = customInput.value.trim();
+    if(!name){ alert('이름을 입력하세요'); customInput.focus(); return; }
+  } else {
+    name = sel.value;
+    if(!name){ alert('운영자를 선택하거나 직접 입력하세요'); return; }
+  }
+  if(operators.find(o=>o.name===name)){ alert('이미 추가된 운영자입니다'); return; }
+  const {ac,as_}=getAdj();
+  const cd=document.getElementById('opCollectDate').value.trim();
+  operators.push({name,ctrCount:ac,steadyCount:as_,collectDate:cd});
+  sel.value='';
+  customInput.style.display='none';
+  customInput.value='';
+  renderOpCards();
 }
 
 function removeOperator(name) {
-  operators = operators.filter(o=>o.name!==name);
-  renderOperators();
+  operators=operators.filter(o=>o.name!==name);
+  renderOpCards();
 }
 
-function renderOperators() {
-  const el = document.getElementById('operatorList');
-  if (operators.length === 0) { el.innerHTML = '<span style="color:#999;font-size:12px;">운영자를 추가하세요</span>'; }
-  else {
-    el.innerHTML = operators.map(op => `
-      <div class="operator-tag">
-        <span>${op.name}</span>
-        <span class="cnt" title="CTR ${op.count}개 + STEADY ${op.count}개 = 총 ${op.count*2}개">인당 ${op.count*2}개 (CTR+STEADY)</span>
-        <small style="color:#666;font-size:11px;">작업일: ${op.date || '-'} / 수집: ${op.collectDate || '-'}</small>
-        <button onclick="removeOperator('${op.name}')" title="제거">✕</button>
-      </div>
-    `).join('');
-  }
-  const infoEl = document.getElementById('totalDistInfo');
-  if (operators.length > 0) {
-    infoEl.style.display = 'flex';
-    const opCnt = operators.length;
-    const totalPerType = operators.reduce((s,o)=>s+o.count,0);
-    const ctrAvail = classifiedData ? classifiedData.filter(d=>d.type==='ctr').length : 0;
-    const steadyAvail = classifiedData ? classifiedData.filter(d=>d.type==='steady').length : 0;
-    infoEl.innerHTML = `📊 운영자: <strong>${opCnt}명</strong> | 인당 배분: <strong>CTR ${operators[0]?.count}개 + STEADY ${operators[0]?.count}개 = 인당 ${(operators[0]?.count||0)*2}개</strong> | 전체 풀: <strong>${totalPerType*2}개</strong> (CTR ${totalPerType} + STEADY ${totalPerType}) | CTR 가용: <strong style=\"color:${ctrAvail>=totalPerType?'#166534':'#dc2626'}\">${ctrAvail}개</strong> | STEADY 가용: <strong>${steadyAvail}개</strong>`;
-  }
+function resetOperators() {
+  const {ac,as_}=getAdj();
+  operators=DEFAULT_OPERATORS.map(name=>({name,ctrCount:ac,steadyCount:as_,collectDate:''}));
+  document.getElementById('opNameSelect').value='';
+  document.getElementById('opNameCustom').style.display='none';
+  document.getElementById('opNameCustom').value='';
+  renderOpCards();
 }
 
-// ===== STEP 5: 최종 배분 =====
+// ===== 공통 =====
+function setupDrop() {
+  const z=document.getElementById('dropZone');
+  z.addEventListener('dragover',e=>{e.preventDefault();z.classList.add('dragover');});
+  z.addEventListener('dragleave',()=>z.classList.remove('dragover'));
+  z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('dragover');const f=e.dataTransfer.files[0];if(f)processFile(f);});
+}
+function goStep(n) {
+  document.querySelectorAll('.section-page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('step-'+n).classList.add('active');
+  document.querySelectorAll('.step-btn').forEach((b,i)=>{b.classList.remove('active');if(i+1<n)b.classList.add('done');else b.classList.remove('done');});
+  document.getElementById('nav-'+n).classList.add('active');
+}
+function addLog(id,msg,type='info') {
+  const el=document.getElementById(id);
+  const c={info:'#60d4f5',success:'#a0f0a0',warn:'#f5e060',error:'#f56060'};
+  el.innerHTML+=`<span style="color:${c[type]}">[${new Date().toLocaleTimeString('ko-KR')}] ${msg}</span>\n`;
+  el.scrollTop=el.scrollHeight;
+}
+
+// ===== STEP 1 =====
+function handleFile(e){const f=e.target.files[0];if(f)processFile(f);}
+function processFile(file) {
+  const info=document.getElementById('fileInfo');
+  info.style.display='flex';info.innerHTML=`<span class="loading"><span class="spinner"></span> 파일 읽는 중... (${(file.size/1024/1024).toFixed(1)}MB)</span>`;
+  document.getElementById('filterSettingCard').style.display='none';
+  setTimeout(()=>{
+    const reader=new FileReader();
+    reader.onload=(e)=>{
+      try{
+        info.innerHTML=`<span class="loading"><span class="spinner"></span> 파싱 중...</span>`;
+        setTimeout(()=>{
+          const wb=XLSX.read(e.target.result,{type:'binary',cellDates:false});
+          const jsonData=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
+          info.innerHTML=`✅ 파일 로드 완료: <strong>${file.name}</strong> (${(file.size/1024/1024).toFixed(1)}MB, ${jsonData.length}행)`;
+          document.getElementById('filterSettingCard').style.display='block';
+          window._rawJsonData=jsonData;
+          addLog('processLog',`파일 로드: ${file.name}, 총 ${jsonData.length}행`,'success');
+          const dm=file.name.match(/_(\d{2})(\d{2})(\d{2})[_\.]/i);
+          if(dm){const ac=`${parseInt(dm[2],10)}월${Math.ceil(parseInt(dm[3],10)/7)}주차`;const el=document.getElementById('opCollectDate');if(el&&!el.value)el.value=ac;addLog('processLog',`📅 수집일 자동: ${ac}`,'success');}
+        },50);
+      }catch(err){info.innerHTML=`❌ 오류: ${err.message}`;}
+    };
+    reader.readAsBinaryString(file);
+  },100);
+}
+function processData() {
+  const logEl=document.getElementById('processLog');logEl.innerHTML='';
+  document.getElementById('step1Result').style.display='block';
+  const jsonData=window._rawJsonData;if(!jsonData){addLog('processLog','파일을 먼저 업로드하세요','error');return;}
+  const maxLen=parseInt(document.getElementById('maxKeyLen').value)||24;
+  addLog('processLog',`총 ${jsonData.length}행 처리 시작`,'info');
+  let hRow=-1;
+  for(let i=0;i<Math.min(10,jsonData.length);i++){if(jsonData[i]&&String(jsonData[i][0]).includes('순위')){hRow=i;break;}}
+  if(hRow<0)hRow=4;
+  const h=jsonData[hRow];
+  const fc=(kws)=>{for(const k of kws){const i=h.findIndex(x=>String(x).includes(k));if(i>=0)return i;}return -1;};
+  const cR=fc(['순위']),cK=fc(['키워드']),cST=fc(['검색 횟수(전체)','검색횟수(전체)']),cSP=fc(['검색 횟수(PC)','검색횟수(PC)']),cSM=fc(['검색 횟수(Mobile)','검색횟수(Mobile)']),cCat=fc(['대분류 카테고리','대분류카테고리']),cRes=fc(['결과 유무','결과유무']),cCT=fc(['상품 클릭수(전체)','상품클릭수(전체)']),cCP=fc(['상품 클릭수(PC)','상품클릭수(PC)']),cCM=fc(['상품 클릭수(Mobile)','상품클릭수(Mobile)']),cIT=fc(['유입률(전체)']),cIP=fc(['유입률(PC)']),cIM=fc(['유입률(Mobile)','유입률(mobile)']);
+  addLog('processLog',`헤더 ${hRow+1}행 | 키워드=${cK} 검색(전체)=${cST} 결과유무=${cRes}`,'info');
+  let total=0,filtered=0,longKw=0,noResult=0,skip6=0;
+  rawData=[];
+  const ds=hRow+1;
+  for(let i=ds;i<jsonData.length;i++){
+    const row=jsonData[i];if(!row||(row[0]===''&&row[1]===''))continue;total++;
+    if(i===ds){skip6++;continue;}
+    const kw=String(row[cK]||'').trim();if(!kw)continue;
+    if(kw.length>maxLen){longKw++;continue;}
+    if(String(row[cRes]||'').trim().toUpperCase()!=='O'){noResult++;continue;}
+    const n=v=>(v===''||v===null||v===undefined)?0:(parseFloat(v)||0);
+    rawData.push({keyword:kw,type:'steady',category:String(row[cCat]||'').trim(),
+      search_total:n(row[cST]),search_pc:n(row[cSP]),search_mobile:n(row[cSM]),
+      click_total:n(row[cCT]),click_pc:n(row[cCP]),click_mobile:n(row[cCM]),
+      inflow_total:n(row[cIT]),inflow_pc:n(row[cIP]),inflow_mobile:n(row[cIM]),
+      rank:n(row[cR]),category_id:CATEGORY_ID_MAP[String(row[cCat]||'').trim()]||''});
+    filtered++;
+  }
+  addLog('processLog',`전체:${total} / 6행제거:${skip6} / 긴키워드:${longKw} / 결과X:${noResult}`,'warn');
+  addLog('processLog',`✅ 최종 추출: ${filtered}개 키워드`,'success');
+  document.getElementById('step1Stats').innerHTML=`
+    <div class="stat-box"><span class="num">${total.toLocaleString()}</span><span class="label">전체 행</span></div>
+    <div class="stat-box"><span class="num" style="color:#f59e0b">${longKw.toLocaleString()}</span><span class="label">긴 키워드 제거</span></div>
+    <div class="stat-box"><span class="num" style="color:#ef4444">${noResult.toLocaleString()}</span><span class="label">결과없음 제거</span></div>
+    <div class="stat-box"><span class="num" style="color:#22c55e">${filtered.toLocaleString()}</span><span class="label">최종 키워드</span></div>`;
+  document.getElementById('toStep2Btn').style.display='inline-flex';
+  document.getElementById('nav-1').classList.add('done');
+}
+
+// ===== STEP 2 =====
+function switchPrevTab(tab) {
+  document.querySelectorAll('#step-2 .tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&tab==='text')||(i===1&&tab==='file')));
+  document.getElementById('prevTabText').style.display=tab==='text'?'block':'none';
+  document.getElementById('prevTabFile').style.display=tab==='file'?'block':'none';
+}
+function handlePrevFile(event) {
+  const file=event.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=(e)=>{
+    const wb=XLSX.read(e.target.result,{type:'binary'});const ws=wb.Sheets[wb.SheetNames[0]];
+    const jd=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+    let kc=-1;for(let i=0;i<Math.min(10,jd.length);i++){const idx=jd[i].findIndex(h=>String(h).includes('키워드'));if(idx>=0){kc=idx;break;}}
+    const kws=[];jd.forEach(row=>{if(kc>=0&&row[kc])kws.push(String(row[kc]).trim());});
+    document.getElementById('prevKeywords').value=kws.join('\n');
+    document.getElementById('prevFileInfo').style.display='flex';
+    document.getElementById('prevFileInfo').innerHTML=`✅ ${file.name}: 키워드 ${kws.length}개 로드`;
+  };reader.readAsBinaryString(file);
+}
+function applyDedup() {
+  document.getElementById('dedupResult').style.display='block';
+  const logEl=document.getElementById('dedupLog');logEl.innerHTML='';
+  const prevText=document.getElementById('prevKeywords').value.trim();
+  prevKeywordsSet=new Set();
+  if(prevText)prevText.split('\n').forEach(kw=>{const k=kw.trim();if(k)prevKeywordsSet.add(k.toLowerCase());});
+  addLog('dedupLog',`전주 키워드: ${prevKeywordsSet.size}개`,'info');
+  if(!prevKeywordsSet.size){dedupData=[...rawData];addLog('dedupLog','전주 키워드 없음','warn');}
+  else{dedupData=rawData.filter(d=>!prevKeywordsSet.has(d.keyword.toLowerCase()));addLog('dedupLog',`중복 제거: ${rawData.length-dedupData.length}개`,'warn');}
+  addLog('dedupLog',`✅ 남은 키워드: ${dedupData.length}개`,'success');
+  document.getElementById('dedupStats').innerHTML=`
+    <div class="stat-box"><span class="num">${rawData.length.toLocaleString()}</span><span class="label">중복제거 전</span></div>
+    <div class="stat-box"><span class="num" style="color:#ef4444">${(rawData.length-dedupData.length).toLocaleString()}</span><span class="label">중복 제거</span></div>
+    <div class="stat-box"><span class="num" style="color:#22c55e">${dedupData.length.toLocaleString()}</span><span class="label">남은 키워드</span></div>`;
+  document.getElementById('nav-2').classList.add('done');
+}
+function skipDedup() {
+  dedupData=[...rawData];document.getElementById('dedupResult').style.display='block';
+  document.getElementById('dedupLog').innerHTML='';
+  addLog('dedupLog','중복 제거 건너뜀','warn');addLog('dedupLog',`키워드 수: ${dedupData.length}개`,'success');
+  document.getElementById('dedupStats').innerHTML=`<div class="stat-box"><span class="num" style="color:#22c55e">${dedupData.length.toLocaleString()}</span><span class="label">전체 키워드</span></div>`;
+  document.getElementById('nav-2').classList.add('done');
+}
+
+// ===== STEP 3 =====
+function runCtrClassify() {
+  document.getElementById('ctrResult').style.display='block';
+  const logEl=document.getElementById('ctrLog');logEl.innerHTML='';
+  const im=parseFloat(document.getElementById('inflowMax').value)||100;
+  const sm=parseFloat(document.getElementById('searchMin').value)||7;
+  const sd=document.getElementById('sortSearch').value;
+  addLog('ctrLog',`분류 기준: 유입률 ≤ ${im} AND 검색횟수 ≥ ${sm}`,'info');
+  const sorted=[...dedupData].sort((a,b)=>sd==='desc'?b.search_total-a.search_total:a.search_total-b.search_total);
+  let cc=0,sc=0;
+  classifiedData=sorted.map(d=>{const ok=d.inflow_total<=im&&d.search_total>=sm;if(ok){cc++;return{...d,type:'ctr'};}sc++;return{...d,type:'steady'};});
+  addLog('ctrLog',`CTR: ${cc}개 / Steady: ${sc}개`,'success');addLog('ctrLog','✅ 분류 완료','success');
+  document.getElementById('ctrStats').innerHTML=`
+    <div class="stat-box"><span class="num">${classifiedData.length.toLocaleString()}</span><span class="label">전체</span></div>
+    <div class="stat-box"><span class="num" style="color:#f59e0b">${cc.toLocaleString()}</span><span class="label">CTR</span></div>
+    <div class="stat-box"><span class="num" style="color:#22c55e">${sc.toLocaleString()}</span><span class="label">Steady</span></div>`;
+  const smp=classifiedData.filter(d=>d.type==='ctr').slice(0,30);
+  document.getElementById('ctrPreviewWrap').innerHTML=`
+    <div class="alert alert-warning">📌 CTR 키워드 상위 30개 미리보기</div>
+    <div class="table-wrap" style="max-height:250px;"><table>
+      <thead><tr><th>키워드</th><th>유입률(전체)</th><th>검색횟수(전체)</th><th>카테고리</th><th>유형</th></tr></thead>
+      <tbody>${smp.map(d=>`<tr><td>${d.keyword}</td><td>${d.inflow_total}</td><td>${d.search_total.toLocaleString()}</td><td>${d.category}</td><td><span class="badge-ctr">ctr</span></td></tr>`).join('')}</tbody>
+    </table></div>`;
+  document.getElementById('nav-3').classList.add('done');
+  renderOpCards();
+}
+
+// ===== STEP 5 배분 =====
 function runFinalDistribution() {
-  const logEl = document.getElementById('finalLog');
-  logEl.innerHTML = '';
-  document.getElementById('finalResult').style.display = 'block';
-
-  if (operators.length === 0) {
-    addLog('finalLog', '운영자를 먼저 추가해주세요!', 'error'); return;
-  }
-  if (classifiedData.length === 0) {
-    addLog('finalLog', '분류된 데이터가 없습니다. Step 3을 먼저 실행하세요.', 'error'); return;
-  }
-
-  addLog('finalLog', `▶ 배분 시작: 운영자 ${operators.length}명`, 'info');
-
-  // ── 1. 전체 필요 수량 계산 ──
-  const totalNeeded = operators.reduce((s,o) => s + o.count, 0);
-  addLog('finalLog', `총 필요량: CTR ${totalNeeded}개, STEADY ${totalNeeded}개 (운영자 ${operators.length}명 × 인당 ${operators[0].count}개)`, 'info');
-
-  // ── 2. CTR 목록: 검색횟수(전체) 내림차순 정렬 ──
-  const ctrAll = classifiedData
-    .filter(d => d.type === 'ctr')
-    .sort((a,b) => b.search_total - a.search_total);
-  addLog('finalLog', `CTR 원본: ${ctrAll.length}개`, 'info');
-
-  // ── 3. CTR 상위 totalNeeded 개 추출 → 배분용 CTR ──
-  const distribCtr = ctrAll.slice(0, totalNeeded);
-  const convertedToSteady = ctrAll.slice(totalNeeded).map(d => ({...d, type:'steady'}));
-  addLog('finalLog', `CTR 배분 추출: ${distribCtr.length}개`, 'warn');
-  if (convertedToSteady.length > 0)
-    addLog('finalLog', `CTR→STEADY 전환: ${convertedToSteady.length}개 (${totalNeeded+1}번째~)`, 'warn');
-
-  // ── 4. STEADY 풀: 원본 steady + 전환된 CTR → 검색횟수 내림차순 ──
-  const steadyAll = [
-    ...classifiedData.filter(d => d.type === 'steady'),
-    ...convertedToSteady
-  ].sort((a,b) => b.search_total - a.search_total);
-  addLog('finalLog', `STEADY 풀: ${steadyAll.length}개 (원본 ${classifiedData.filter(d=>d.type==='steady').length} + 전환 ${convertedToSteady.length})`, 'info');
-
-  // ── 5. STEADY 상위 totalNeeded 개 추출 ──
-  const distribSteady = steadyAll.slice(0, totalNeeded);
-  addLog('finalLog', `STEADY 배분 추출: ${distribSteady.length}개`, 'warn');
-
-  // ── 6. CTR 붙이고 밑에 STEADY 붙이기 ──
-  const mergedPool = [
-    ...distribCtr.map(d => ({...d, type:'ctr'})),
-    ...distribSteady.map(d => ({...d, type:'steady'}))
-  ];
-  addLog('finalLog', `CTR(${distribCtr.length}) + STEADY(${distribSteady.length}) 합치기 완료 → 총 ${mergedPool.length}개`, 'info');
-
-  // ── 7. 유형 내림차순만 적용 (steady 먼저 → ctr 나중) ──
-  mergedPool.sort((a, b) => {
-    if (a.type === b.type) return 0;
-    return a.type === 'steady' ? -1 : 1;  // steady > ctr
+  document.getElementById('finalResult').style.display='block';
+  const logEl=document.getElementById('finalLog');logEl.innerHTML='';
+  if(!operators.length){addLog('finalLog','운영자를 먼저 추가해주세요!','error');return;}
+  if(!classifiedData.length){addLog('finalLog','분류된 데이터가 없습니다. Step 3을 먼저 실행하세요.','error');return;}
+  addLog('finalLog',`▶ 배분 시작: 운영자 ${operators.length}명`,'info');
+  const tcn=operators.reduce((s,o)=>s+o.ctrCount,0),tsn=operators.reduce((s,o)=>s+o.steadyCount,0);
+  addLog('finalLog',`총 필요: CTR ${tcn}개, STEADY ${tsn}개`,'info');
+  const ctrAll=classifiedData.filter(d=>d.type==='ctr').sort((a,b)=>b.search_total-a.search_total);
+  const dCtr=ctrAll.slice(0,tcn),conv=ctrAll.slice(tcn).map(d=>({...d,type:'steady'}));
+  addLog('finalLog',`CTR 추출: ${dCtr.length}개`+(conv.length?` / CTR→STEADY: ${conv.length}개`:''),'warn');
+  const sAll=[...classifiedData.filter(d=>d.type==='steady'),...conv].sort((a,b)=>b.search_total-a.search_total);
+  const dSteady=sAll.slice(0,tsn);
+  addLog('finalLog',`STEADY 추출: ${dSteady.length}개`,'warn');
+  const pool=[...dCtr.map(d=>({...d,type:'ctr'})),...dSteady.map(d=>({...d,type:'steady'}))];
+  pool.sort((a,b)=>a.type===b.type?0:a.type==='steady'?-1:1);
+  addLog('finalLog','✅ 정렬 완료 (steady→ctr)','info');
+  finalData=[];let pi=0;
+  const cd=document.getElementById('opCollectDate').value.trim();
+  operators.forEach(op=>{
+    const cnt=op.ctrCount+op.steadyCount;
+    const kws=pool.slice(pi,pi+cnt).map((d,idx)=>({...d,operator:op.name,collectDate:op.collectDate||cd,ctrCount:op.ctrCount,steadyCount:op.steadyCount,row_num:idx+1,category_id:CATEGORY_ID_MAP[d.category]||''}));
+    pi+=cnt;finalData.push(...kws);
+    addLog('finalLog',`${op.name}: ${kws.length}개 (CTR ${kws.filter(k=>k.type==='ctr').length} / STEADY ${kws.filter(k=>k.type==='steady').length})`,'success');
   });
-  addLog('finalLog', `✅ 정렬 완료 — 유형 내림차순(steady → ctr)`, 'info');
-
-  // ── 8. 정렬된 통합 pool을 운영자에게 순서대로 슬라이싱 ──
-  // 인당 배분 개수 = count(CTR) + count(STEADY) = cnt * 2
-  finalData = [];
-  let poolIdx = 0;
-
-  operators.forEach(op => {
-    const cnt = op.count * 2;   // CTR count + STEADY count
-
-    const opKws = mergedPool.slice(poolIdx, poolIdx + cnt).map((d, idx) => ({
-      ...d,
-      operator:     op.name,
-      dist_date:    op.date,
-      collectDate:  op.collectDate,
-      dist_count:   op.count,
-      row_num:      idx + 1,
-      category_id:  CATEGORY_ID_MAP[d.category] || ''
-    }));
-    poolIdx += cnt;
-
-    const ctrCnt    = opKws.filter(k => k.type === 'ctr').length;
-    const steadyCnt = opKws.filter(k => k.type === 'steady').length;
-
-    finalData.push(...opKws);
-    addLog('finalLog',
-      `${op.name}: 총 ${opKws.length}개 (CTR ${ctrCnt} / STEADY ${steadyCnt}) 배분 완료`, 'success');
-  });
-
-  const totalCtr = finalData.filter(d=>d.type==='ctr').length;
-  const totalSteady = finalData.filter(d=>d.type==='steady').length;
-  addLog('finalLog', `✅ 최종 배분 완료: 총 ${finalData.length}개 (CTR: ${totalCtr}, STEADY: ${totalSteady})`, 'success');
-
-  const statsEl = document.getElementById('finalStats');
-  statsEl.innerHTML = `
+  const tc=finalData.filter(d=>d.type==='ctr').length,ts=finalData.filter(d=>d.type==='steady').length;
+  addLog('finalLog',`✅ 최종 배분 완료: 총 ${finalData.length}개 (CTR:${tc}, STEADY:${ts})`,'success');
+  document.getElementById('finalStats').innerHTML=`
     <div class="stat-box"><span class="num">${finalData.length.toLocaleString()}</span><span class="label">총 배분</span></div>
-    <div class="stat-box"><span class="num" style="color:#f59e0b">${totalCtr.toLocaleString()}</span><span class="label">CTR</span></div>
-    <div class="stat-box"><span class="num" style="color:#22c55e">${totalSteady.toLocaleString()}</span><span class="label">STEADY</span></div>
-    <div class="stat-box"><span class="num" style="color:#7c3aed">${operators.length}</span><span class="label">운영자 수</span></div>
-    <div class="stat-box"><span class="num" style="color:#0891b2">${operators[0]?.count||0}</span><span class="label">인당 각 개수</span></div>
-  `;
-
-  renderFinalTable();
-  renderByOpResults();
+    <div class="stat-box"><span class="num" style="color:#f59e0b">${tc.toLocaleString()}</span><span class="label">CTR</span></div>
+    <div class="stat-box"><span class="num" style="color:#22c55e">${ts.toLocaleString()}</span><span class="label">STEADY</span></div>
+    <div class="stat-box"><span class="num" style="color:#7c3aed">${operators.length}</span><span class="label">운영자 수</span></div>`;
+  renderFinalTable();renderByOpResults();
   document.getElementById('nav-5').classList.add('done');
 }
 
 function renderFinalTable(page=1) {
-  currentPage = page;
-  const start = (page-1)*PAGE_SIZE;
-  const pageData = finalData.slice(start, start+PAGE_SIZE);
-
-  const html = `
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>번호</th><th>운영자</th><th>날짜</th><th>키워드</th><th>유형</th><th>카테고리ID</th>
-            <th>카테고리</th><th>검색(전체)</th><th>검색(PC)</th><th>검색(모바일)</th>
-            <th>클릭(전체)</th><th>클릭(PC)</th><th>클릭(모바일)</th>
-            <th>유입률(전체)</th><th>유입률(PC)</th><th>유입률(모바일)</th><th>순위</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${pageData.map(d=>`
-            <tr>
-              <td style="text-align:center">${d.row_num}</td>
-              <td style="font-weight:600">${d.operator}</td>
-              <td>${d.dist_date}</td>
-              <td style="font-weight:600">${d.keyword}</td>
-              <td style="text-align:center"><span class="badge-${d.type}">${d.type}</span></td>
-              <td style="text-align:center">${d.category_id}</td>
-              <td>${d.category}</td>
-              <td style="text-align:right">${d.search_total.toLocaleString()}</td>
-              <td style="text-align:right">${d.search_pc.toLocaleString()}</td>
-              <td style="text-align:right">${d.search_mobile.toLocaleString()}</td>
-              <td style="text-align:right">${d.click_total.toLocaleString()}</td>
-              <td style="text-align:right">${d.click_pc.toLocaleString()}</td>
-              <td style="text-align:right">${d.click_mobile.toLocaleString()}</td>
-              <td style="text-align:right">${d.inflow_total}</td>
-              <td style="text-align:right">${d.inflow_pc}</td>
-              <td style="text-align:right">${d.inflow_mobile}</td>
-              <td style="text-align:right">${d.rank}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-  `;
-  document.getElementById('finalTableWrap').innerHTML = html;
-
-  // 페이지네이션
-  const totalPages = Math.ceil(finalData.length / PAGE_SIZE);
-  const pages = [];
+  currentPage=page;const start=(page-1)*PAGE_SIZE,pd=finalData.slice(start,start+PAGE_SIZE);
+  document.getElementById('finalTableWrap').innerHTML=`
+    <div class="table-wrap"><table>
+      <thead><tr><th>번호</th><th>운영자</th><th>키워드</th><th>유형</th><th>카테고리ID</th><th>카테고리</th><th>검색(전체)</th><th>검색(PC)</th><th>검색(모바일)</th><th>클릭(전체)</th><th>클릭(PC)</th><th>클릭(모바일)</th><th>유입률(전체)</th><th>유입률(PC)</th><th>유입률(모바일)</th><th>순위</th></tr></thead>
+      <tbody>${pd.map(d=>`<tr><td style="text-align:center">${d.row_num}</td><td style="font-weight:600">${d.operator}</td><td style="font-weight:600">${d.keyword}</td><td style="text-align:center"><span class="badge-${d.type}">${d.type}</span></td><td style="text-align:center">${d.category_id}</td><td>${d.category}</td><td style="text-align:right">${d.search_total.toLocaleString()}</td><td style="text-align:right">${d.search_pc.toLocaleString()}</td><td style="text-align:right">${d.search_mobile.toLocaleString()}</td><td style="text-align:right">${d.click_total.toLocaleString()}</td><td style="text-align:right">${d.click_pc.toLocaleString()}</td><td style="text-align:right">${d.click_mobile.toLocaleString()}</td><td style="text-align:right">${d.inflow_total}</td><td style="text-align:right">${d.inflow_pc}</td><td style="text-align:right">${d.inflow_mobile}</td><td style="text-align:right">${d.rank}</td></tr>`).join('')}</tbody>
+    </table></div>`;
+  const tp=Math.ceil(finalData.length/PAGE_SIZE),pages=[];
   pages.push(`<button class="page-btn" onclick="renderFinalTable(1)">◀◀</button>`);
   pages.push(`<button class="page-btn" onclick="renderFinalTable(${Math.max(1,page-1)})">◀</button>`);
-  const start_p = Math.max(1, page-3), end_p = Math.min(totalPages, page+3);
-  for (let p=start_p; p<=end_p; p++) {
-    pages.push(`<button class="page-btn${p===page?' active':''}" onclick="renderFinalTable(${p})">${p}</button>`);
-  }
-  pages.push(`<button class="page-btn" onclick="renderFinalTable(${Math.min(totalPages,page+1)})">▶</button>`);
-  pages.push(`<button class="page-btn" onclick="renderFinalTable(${totalPages})">▶▶</button>`);
-  pages.push(`<span style="font-size:11px;color:#666;margin-left:8px;">${finalData.length.toLocaleString()}개 중 ${start+1}-${Math.min(start+PAGE_SIZE,finalData.length)}개 표시</span>`);
-  document.getElementById('finalPagination').innerHTML = pages.join('');
+  for(let p=Math.max(1,page-3);p<=Math.min(tp,page+3);p++)pages.push(`<button class="page-btn${p===page?' active':''}" onclick="renderFinalTable(${p})">${p}</button>`);
+  pages.push(`<button class="page-btn" onclick="renderFinalTable(${Math.min(tp,page+1)})">▶</button>`);
+  pages.push(`<button class="page-btn" onclick="renderFinalTable(${tp})">▶▶</button>`);
+  pages.push(`<span style="font-size:11px;color:#666;margin-left:8px;">${finalData.length.toLocaleString()}개 중 ${start+1}-${Math.min(start+PAGE_SIZE,finalData.length)}개</span>`);
+  document.getElementById('finalPagination').innerHTML=pages.join('');
 }
-
 function renderByOpResults() {
-  const wrap = document.getElementById('byopResultWrap');
-  wrap.innerHTML = '<div class="dist-per-op">' + operators.map(op => {
-    const opData = finalData.filter(d=>d.operator===op.name);
-    const ctrCnt = opData.filter(d=>d.type==='ctr').length;
-    const steadyCnt = opData.filter(d=>d.type==='steady').length;
-    return `
-      <div class="op-result-card">
-        <div class="op-result-header">
-          <div>
-            <div class="op-name">👤 ${op.name}</div>
-            <div class="op-date">${op.date}</div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
-            <span class="op-cnt">총 ${opData.length}개</span>
-            <span style="font-size:10px;opacity:0.8;">CTR:${ctrCnt} / Steady:${steadyCnt}</span>
-          </div>
-        </div>
-        <div class="table-wrap" style="max-height:300px;">
-          <table>
-            <thead><tr><th>#</th><th>키워드</th><th>유형</th><th>카테고리ID</th><th>카테고리</th><th>검색수</th><th>유입률</th></tr></thead>
-            <tbody>${opData.map(d=>`
-              <tr>
-                <td style="text-align:center">${d.row_num}</td>
-                <td style="font-weight:600">${d.keyword}</td>
-                <td style="text-align:center"><span class="badge-${d.type}">${d.type}</span></td>
-                <td style="text-align:center">${d.category_id}</td>
-                <td>${d.category}</td>
-                <td style="text-align:right">${d.search_total.toLocaleString()}</td>
-                <td style="text-align:right">${d.inflow_total}</td>
-              </tr>
-            `).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    `;
-  }).join('') + '</div>';
+  document.getElementById('byopResultWrap').innerHTML='<div class="dist-per-op">'+operators.map(op=>{
+    const od=finalData.filter(d=>d.operator===op.name);
+    const cc=od.filter(d=>d.type==='ctr').length,sc=od.filter(d=>d.type==='steady').length;
+    return `<div class="op-result-card"><div class="op-result-header"><div><div class="op-name">👤 ${op.name}</div><div class="op-date">수집: ${op.collectDate||'-'}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;"><span class="op-cnt">총 ${od.length}개</span><span style="font-size:10px;opacity:0.8;">CTR:${cc} / Steady:${sc}</span></div></div>
+    <div class="table-wrap" style="max-height:300px;"><table><thead><tr><th>#</th><th>키워드</th><th>유형</th><th>카테고리ID</th><th>카테고리</th><th>검색수</th><th>유입률</th></tr></thead>
+    <tbody>${od.map(d=>`<tr><td style="text-align:center">${d.row_num}</td><td style="font-weight:600">${d.keyword}</td><td style="text-align:center"><span class="badge-${d.type}">${d.type}</span></td><td style="text-align:center">${d.category_id}</td><td>${d.category}</td><td style="text-align:right">${d.search_total.toLocaleString()}</td><td style="text-align:right">${d.inflow_total}</td></tr>`).join('')}</tbody></table></div></div>`;
+  }).join('')+'</div>';
 }
-
 function switchFinalTab(tab) {
-  document.querySelectorAll('#step-5 .tab').forEach((t,i) => t.classList.toggle('active',(i===0&&tab==='all')||(i===1&&tab==='byop')));
-  document.getElementById('finalTabAll').style.display = tab==='all' ? 'block' : 'none';
-  document.getElementById('finalTabByop').style.display = tab==='byop' ? 'block' : 'none';
+  document.querySelectorAll('#step-5 .tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&tab==='all')||(i===1&&tab==='byop')));
+  document.getElementById('finalTabAll').style.display=tab==='all'?'block':'none';
+  document.getElementById('finalTabByop').style.display=tab==='byop'?'block':'none';
 }
 
-// ===== 엑셀 내보내기 =====
+// ===== 내보내기 =====
 function exportAllExcel() {
-  if (!finalData.length) { alert('배분 데이터가 없습니다'); return; }
-  const wb = XLSX.utils.book_new();
-
-  // 전체 시트
-  const allRows = [
-    ['번호','운영자','날짜','배분개수','키워드','키워드유형','카테고리ID','카테고리',
-     '검색횟수(전체)','검색횟수(PC)','검색횟수(Mobile)',
-     '상품클릭수(전체)','상품클릭수(PC)','상품클릭수(Mobile)',
-     '유입률(전체)','유입률(PC)','유입률(Mobile)','순위'],
-    ...finalData.map(d => [
-      d.row_num, d.operator, d.dist_date, d.dist_count, d.keyword, d.type, d.category_id, d.category,
-      d.search_total, d.search_pc, d.search_mobile,
-      d.click_total, d.click_pc, d.click_mobile,
-      d.inflow_total, d.inflow_pc, d.inflow_mobile, d.rank
-    ])
-  ];
-  const wsAll = XLSX.utils.aoa_to_sheet(allRows);
-  wsAll['!cols'] = [8,10,12,8,20,8,8,15,10,10,10,10,10,10,10,10,10,6].map(w=>({wch:w}));
-  XLSX.utils.book_append_sheet(wb, wsAll, '전체배분');
-
-  // 운영자별 시트
-  operators.forEach(op => {
-    const opData = finalData.filter(d=>d.operator===op.name);
-    const rows = [
-      ['번호','개수','운영자','날짜','키워드','키워드유형','카테고리ID','카테고리',
-       '검색횟수(전체)','검색횟수(PC)','검색횟수(Mobile)',
-       '상품클릭수(전체)','상품클릭수(PC)','상품클릭수(Mobile)',
-       '유입률(전체)','유입률(PC)','유입률(Mobile)','순위'],
-      ...opData.map(d => [
-        d.row_num, d.dist_count, d.operator, d.dist_date, d.keyword, d.type, d.category_id, d.category,
-        d.search_total, d.search_pc, d.search_mobile,
-        d.click_total, d.click_pc, d.click_mobile,
-        d.inflow_total, d.inflow_pc, d.inflow_mobile, d.rank
-      ])
-    ];
-    const ws = XLSX.utils.aoa_to_sheet(rows);
-    ws['!cols'] = [6,6,10,12,20,8,8,15,10,10,10,10,10,10,10,10,10,6].map(w=>({wch:w}));
-    XLSX.utils.book_append_sheet(wb, ws, op.name.slice(0,31));
+  if(!finalData.length){alert('배분 데이터가 없습니다');return;}
+  const wb=XLSX.utils.book_new();
+  const ah=[['번호','운영자','배분개수','키워드','키워드유형','카테고리ID','카테고리','검색횟수(전체)','검색횟수(PC)','검색횟수(Mobile)','상품클릭수(전체)','상품클릭수(PC)','상품클릭수(Mobile)','유입률(전체)','유입률(PC)','유입률(Mobile)','순위'],...finalData.map(d=>[d.row_num,d.operator,d.ctrCount+d.steadyCount,d.keyword,d.type,d.category_id,d.category,d.search_total,d.search_pc,d.search_mobile,d.click_total,d.click_pc,d.click_mobile,d.inflow_total,d.inflow_pc,d.inflow_mobile,d.rank])];
+  const wa=XLSX.utils.aoa_to_sheet(ah);wa['!cols']=[8,10,8,20,8,8,15,10,10,10,10,10,10,10,10,10,6].map(w=>({wch:w}));XLSX.utils.book_append_sheet(wb,wa,'전체배분');
+  operators.forEach(op=>{
+    const od=finalData.filter(d=>d.operator===op.name);
+    const rows=[['번호','개수','운영자','키워드','키워드유형','카테고리ID','카테고리','검색횟수(전체)','검색횟수(PC)','검색횟수(Mobile)','상품클릭수(전체)','상품클릭수(PC)','상품클릭수(Mobile)','유입률(전체)','유입률(PC)','유입률(Mobile)','순위'],...od.map(d=>[d.row_num,d.ctrCount+d.steadyCount,d.operator,d.keyword,d.type,d.category_id,d.category,d.search_total,d.search_pc,d.search_mobile,d.click_total,d.click_pc,d.click_mobile,d.inflow_total,d.inflow_pc,d.inflow_mobile,d.rank])];
+    const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=[6,6,10,20,8,8,15,10,10,10,10,10,10,10,10,10,6].map(w=>({wch:w}));XLSX.utils.book_append_sheet(wb,ws,op.name.slice(0,31));
   });
-
-  const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
-  XLSX.writeFile(wb, `키워드배분_전체_${today}.xlsx`);
+  XLSX.writeFile(wb,`키워드배분_전체_${new Date().toISOString().slice(0,10).replace(/-/g,'')}.xlsx`);
 }
-
-function exportPerOperator() {
-  if (!finalData.length) { alert('배분 데이터가 없습니다'); return; }
-  operators.forEach(op => {
-    const wb = XLSX.utils.book_new();
-    const opData = finalData.filter(d=>d.operator===op.name);
-    const rows = [
-      ['번호','개수','운영자','날짜','키워드','키워드유형','카테고리ID','카테고리',
-       '검색횟수(전체)','검색횟수(PC)','검색횟수(Mobile)',
-       '상품클릭수(전체)','상품클릭수(PC)','상품클릭수(Mobile)',
-       '유입률(전체)','유입률(PC)','유입률(Mobile)','순위'],
-      ...opData.map(d => [
-        d.row_num, d.dist_count, d.operator, d.dist_date, d.keyword, d.type, d.category_id, d.category,
-        d.search_total, d.search_pc, d.search_mobile,
-        d.click_total, d.click_pc, d.click_mobile,
-        d.inflow_total, d.inflow_pc, d.inflow_mobile, d.rank
-      ])
-    ];
-    const ws = XLSX.utils.aoa_to_sheet(rows);
-    ws['!cols'] = [6,6,10,12,20,8,8,15,10,10,10,10,10,10,10,10,10,6].map(w=>({wch:w}));
-    XLSX.utils.book_append_sheet(wb, ws, op.name.slice(0,31));
-    const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
-    XLSX.writeFile(wb, `키워드배분_${op.name}_${today}.xlsx`);
-  });
-}
-
 function exportCSV() {
-  if (!finalData.length) { alert('배분 데이터가 없습니다'); return; }
-  const headers = ['번호','운영자','날짜','배분개수','키워드','키워드유형','카테고리ID','카테고리',
-    '검색횟수(전체)','검색횟수(PC)','검색횟수(Mobile)',
-    '상품클릭수(전체)','상품클릭수(PC)','상품클릭수(Mobile)',
-    '유입률(전체)','유입률(PC)','유입률(Mobile)','순위'];
-  const rows = [headers, ...finalData.map(d=>[
-    d.row_num, d.operator, d.dist_date, d.dist_count, `"${d.keyword}"`, d.type, d.category_id, `"${d.category}"`,
-    d.search_total, d.search_pc, d.search_mobile,
-    d.click_total, d.click_pc, d.click_mobile,
-    d.inflow_total, d.inflow_pc, d.inflow_mobile, d.rank
-  ])];
-  const csv = '\uFEFF' + rows.map(r=>r.join(',')).join('\n');
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = `키워드배분_${new Date().toISOString().slice(0,10).replace(/-/g,'')}.csv`;
-  a.click();
+  if(!finalData.length){alert('배분 데이터가 없습니다');return;}
+  const h=['번호','운영자','배분개수','키워드','키워드유형','카테고리ID','카테고리','검색횟수(전체)','검색횟수(PC)','검색횟수(Mobile)','상품클릭수(전체)','상품클릭수(PC)','상품클릭수(Mobile)','유입률(전체)','유입률(PC)','유입률(Mobile)','순위'];
+  const rows=[h,...finalData.map(d=>[d.row_num,d.operator,d.ctrCount+d.steadyCount,`"${d.keyword}"`,d.type,d.category_id,`"${d.category}"`,d.search_total,d.search_pc,d.search_mobile,d.click_total,d.click_pc,d.click_mobile,d.inflow_total,d.inflow_pc,d.inflow_mobile,d.rank])];
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+rows.map(r=>r.join(',')).join('\n')],{type:'text/csv;charset=utf-8'}));
+  a.download=`키워드배분_${new Date().toISOString().slice(0,10).replace(/-/g,'')}.csv`;a.click();
 }
-
-// ===== 템플릿 파일 처리 =====
 function handleTemplateFile(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const infoEl = document.getElementById('templateInfo');
-  infoEl.style.display = 'flex';
-  infoEl.innerHTML = `<span class="loading"><span class="spinner"></span> 배분 파일 읽는 중... (${(file.size/1024/1024).toFixed(1)}MB)</span>`;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      // cellStyles:true → 실제 서식 정보를 함께 로드
-      const wb = XLSX.read(e.target.result, {type:'binary', cellDates:false, bookVBA:true, cellStyles:true});
-      window._templateWb       = wb;
-      window._templateRawBin   = e.target.result;  // 원본 binary 백업
-      window._templateFileName = file.name;
-
-      const sheetName = wb.SheetNames.find(n => n.includes('배분')) || wb.SheetNames[0];
-      const ws        = wb.Sheets[sheetName];
-      window._templateSheetName = sheetName;
-
-      // 마지막 데이터 행 감지
-      const range   = XLSX.utils.decode_range(ws['!ref'] || 'A1:W10');
-      window._templateLastDataRow = range.e.r;  // 0-indexed
-
-      infoEl.innerHTML = `✅ ${file.name} 로드 완료 &mdash; 시트: <strong>${sheetName}</strong>, 마지막 행: <strong>${range.e.r+1}행</strong> → ${range.e.r+2}행부터 이어붙입니다`;
-    } catch(err) {
-      infoEl.innerHTML = `❌ 오류: ${err.message}`;
-    }
-  };
-  reader.readAsBinaryString(file);
+  const file=event.target.files[0];if(!file)return;
+  const info=document.getElementById('templateInfo');info.style.display='flex';info.innerHTML=`<span class="loading"><span class="spinner"></span> 배분 파일 읽는 중...</span>`;
+  const reader=new FileReader();
+  reader.onload=(e)=>{
+    try{
+      const wb=XLSX.read(e.target.result,{type:'binary',cellDates:false,bookVBA:true,cellStyles:true});
+      window._templateWb=wb;window._templateFileName=file.name;
+      const sn=wb.SheetNames.find(n=>n.includes('배분'))||wb.SheetNames[0];
+      const ws=wb.Sheets[sn];window._templateSheetName=sn;
+      const range=XLSX.utils.decode_range(ws['!ref']||'A1:W10');window._templateLastDataRow=range.e.r;
+      info.innerHTML=`✅ ${file.name} 로드 완료 — 시트: <strong>${sn}</strong>, 마지막 행: <strong>${range.e.r+1}행</strong>`;
+    }catch(err){info.innerHTML=`❌ 오류: ${err.message}`;}
+  };reader.readAsBinaryString(file);
 }
-
-// ===== 배분파일에 이어붙이기 =====
 function exportAppendedExcel() {
-  if (!finalData.length)      { alert('배분 데이터가 없습니다. 먼저 최종 배분을 실행하세요.'); return; }
-  if (!window._templateWb)    { alert('기존 배분 파일을 먼저 업로드하세요.\n(STEP 5 상단의 파일 업로드 영역)'); return; }
-
-  addLog('finalLog', '▶ 배분파일 이어붙이기 시작...', 'info');
-
-  const wb        = window._templateWb;
-  const sheetName = window._templateSheetName;
-  const ws        = wb.Sheets[sheetName];
-  const lastRow   = window._templateLastDataRow;   // 0-indexed 기존 마지막 행
-
-  addLog('finalLog', `기존 마지막 행: ${lastRow+1}행, 새 데이터 시작: ${lastRow+2}행`, 'info');
-
-  // ── 콜럼 규칙 (0-indexed)
-  // A=0:개수  B=1:운영자  C=2:작업일(빈칸)  D=3:수집일
-  // E=4:키워드  F=5:키워드유형  G=6:카테고리
-  // H=7~M=12: 빈칸  N=13~W=22: 수치
-
-  const newRows = finalData.map(d => [
-    d.row_num,           // A: 개수
-    d.operator,          // B: 운영자
-    '',                  // C: 작업일 → 빈칸
-    d.collectDate || (operators.find(o => o.name === d.operator) || {}).collectDate || '', // D: 수집일
-    d.keyword,           // E: 키워드
-    d.type,              // F: 키워드 유형
-    d.category_id ? Number(d.category_id) : '', // G: 카테고리 ID (숫자)
-    '','','','','','',   // H~M: 빈칸
-    d.search_total  != null ? Number(d.search_total)  : '', // N
-    d.search_pc     != null ? Number(d.search_pc)     : '', // O
-    d.search_mobile != null ? Number(d.search_mobile) : '', // P
-    d.click_total   != null ? Number(d.click_total)   : '', // Q
-    d.click_pc      != null ? Number(d.click_pc)      : '', // R
-    d.click_mobile  != null ? Number(d.click_mobile)  : '', // S
-    d.inflow_total  != null ? Number(d.inflow_total)  : '', // T
-    d.inflow_pc     != null ? Number(d.inflow_pc)     : '', // U
-    d.inflow_mobile != null ? Number(d.inflow_mobile) : '', // V
-    d.rank          != null ? Number(d.rank)          : ''  // W
+  if(!finalData.length){alert('배분 데이터가 없습니다. 먼저 최종 배분을 실행하세요.');return;}
+  if(!window._templateWb){alert('기존 배분 파일을 먼저 업로드하세요.');return;}
+  addLog('finalLog','▶ 배분파일 이어붙이기 시작...','info');
+  const wb=window._templateWb,sn=window._templateSheetName,ws=wb.Sheets[sn],lr=window._templateLastDataRow;
+  const nr=finalData.map(d=>[d.row_num,d.operator,'',d.collectDate||'',d.keyword,d.type,d.category_id?Number(d.category_id):'','','','','','','',
+    d.search_total!=null?Number(d.search_total):'',d.search_pc!=null?Number(d.search_pc):'',d.search_mobile!=null?Number(d.search_mobile):'',
+    d.click_total!=null?Number(d.click_total):'',d.click_pc!=null?Number(d.click_pc):'',d.click_mobile!=null?Number(d.click_mobile):'',
+    d.inflow_total!=null?Number(d.inflow_total):'',d.inflow_pc!=null?Number(d.inflow_pc):'',d.inflow_mobile!=null?Number(d.inflow_mobile):'',
+    d.rank!=null?Number(d.rank):''
   ]);
-
-  // ── 실제 시트에 값만 쓰기 (서식 없음) ──
-  newRows.forEach((rowVals, ri) => {
-    const targetRow = lastRow + 1 + ri;  // 0-indexed
-    rowVals.forEach((val, ci) => {
-      const addr = XLSX.utils.encode_cell({ r: targetRow, c: ci });
-      let t;
-      if (val === '' || val === null || val === undefined) t = 's';
-      else if (typeof val === 'number' && !isNaN(val))    t = 'n';
-      else                                                 t = 's';
-      ws[addr] = { v: (t === 's' ? String(val ?? '') : val), t };
-    });
-  });
-
-  // ── !ref 범위 갱신 ──
-  const range  = XLSX.utils.decode_range(ws['!ref'] || 'A1:W10');
-  const newEnd = lastRow + newRows.length;
-  ws['!ref'] = XLSX.utils.encode_range({
-    s: { r: 0, c: 0 },
-    e: { r: newEnd, c: Math.max(range.e.c, 22) }
-  });
-
-  addLog('finalLog', `✅ ${newRows.length}개 행 추가 완료 (행 ${lastRow+2} ~ ${newEnd+1}행)`, 'success');
-  addLog('finalLog', `   C열(작업일): 빈칸, D열(수집일): 수집일 기입`, 'info');
-
-  // ── 파일 다운로드 ──
-  const today    = new Date().toISOString().slice(0,10).replace(/-/g,'');
-  const origName = window._templateFileName || '인기키워드검수.xlsx';
-  const baseName = origName.replace(/\.xlsx?$/i, '');
-  const outName  = `${baseName}_배분추가_${today}.xlsx`;
-
-  try {
-    XLSX.writeFile(wb, outName);
-    addLog('finalLog', `📥 다운로드: ${outName}`, 'success');
-  } catch(err) {
-    addLog('finalLog', `❌ 저장 오류: ${err.message}`, 'error');
-    alert(`저장 오류: ${err.message}`);
-  }
+  nr.forEach((rv,ri)=>{const tr=lr+1+ri;rv.forEach((val,ci)=>{const addr=XLSX.utils.encode_cell({r:tr,c:ci});let t=(val===''||val===null||val===undefined)?'s':(typeof val==='number'&&!isNaN(val))?'n':'s';ws[addr]={v:(t==='s'?String(val??''):val),t};});});
+  const range=XLSX.utils.decode_range(ws['!ref']||'A1:W10'),ne=lr+nr.length;
+  ws['!ref']=XLSX.utils.encode_range({s:{r:0,c:0},e:{r:ne,c:Math.max(range.e.c,22)}});
+  addLog('finalLog',`✅ ${nr.length}개 행 추가 완료`,'success');
+  const today=new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const outName=`${(window._templateFileName||'인기키워드검수.xlsx').replace(/\.xlsx?$/i,'')}_배분추가_${today}.xlsx`;
+  try{XLSX.writeFile(wb,outName);addLog('finalLog',`📥 다운로드: ${outName}`,'success');}
+  catch(err){addLog('finalLog',`❌ 저장 오류: ${err.message}`,'error');}
 }
 </script>
 </body>
