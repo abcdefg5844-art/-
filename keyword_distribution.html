@@ -886,27 +886,40 @@ function loadExistingTxt(event) {
 
 function exportKeywordHistory() {
   if(!finalData.length){alert('먼저 최종 배분을 실행하세요.');return;}
-  const newKeywords=finalData.map(d=>d.keyword);
-  const appendMode=document.getElementById('appendTxtMode').checked;
+
+  // 이번 주 배분된 키워드
+  const distributedKeywords = finalData.map(d=>d.keyword);
+
+  // STEP 2에서 직접 입력/업로드한 검수 키워드 (중복 제거 때 썼던 것들)
+  const prevText = document.getElementById('prevKeywords').value.trim();
+  const manualKeywords = prevText ? prevText.split('\n').map(k=>k.trim()).filter(Boolean) : [];
+
+  const appendMode = document.getElementById('appendTxtMode').checked;
 
   let allKeywords;
-  if(appendMode && existingTxtKeywords.length>0) {
-    // 기존 이력 + 새 키워드 합치고 중복 제거
-    allKeywords=[...new Set([...existingTxtKeywords,...newKeywords])];
-    addLog('finalLog',`✅ 이력 파일에 이어쓰기: 기존 ${existingTxtKeywords.length}개 + 신규 ${newKeywords.length}개 → 총 ${allKeywords.length}개 (중복 제거 후)`,'success');
+  if(appendMode && existingTxtKeywords.length > 0) {
+    // 기존 이력 + STEP2 입력 키워드 + 이번 주 배분 키워드
+    allKeywords = [...new Set([...existingTxtKeywords, ...manualKeywords, ...distributedKeywords])];
+    addLog('finalLog',
+      `✅ 이력 이어쓰기: 기존 ${existingTxtKeywords.length}개 + 검수입력 ${manualKeywords.length}개 + 배분 ${distributedKeywords.length}개 → 총 ${allKeywords.length}개 (중복 제거 후)`,
+      'success');
   } else {
-    allKeywords=[...new Set(newKeywords)];
-    addLog('finalLog',`✅ 키워드 이력 저장: ${allKeywords.length}개`,'success');
+    // STEP2 입력 키워드 + 이번 주 배분 키워드
+    allKeywords = [...new Set([...manualKeywords, ...distributedKeywords])];
+    const note = manualKeywords.length > 0
+      ? `검수입력 ${manualKeywords.length}개 + 배분 ${distributedKeywords.length}개 → 총 ${allKeywords.length}개`
+      : `배분 키워드 ${allKeywords.length}개`;
+    addLog('finalLog', `✅ 키워드 이력 저장: ${note}`, 'success');
   }
 
-  const content=allKeywords.join('\n');
-  const today=new Date().toISOString().slice(0,10).replace(/-/g,'');
-  const filename=`키워드_이력_누적_${today}.txt`;
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob(['\uFEFF'+content],{type:'text/plain;charset=utf-8'}));
-  a.download=filename;
+  const content = allKeywords.join('\n');
+  const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const filename = `키워드_이력_누적_${today}.txt`;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\uFEFF'+content],{type:'text/plain;charset=utf-8'}));
+  a.download = filename;
   a.click();
-  addLog('finalLog',`📥 다운로드: ${filename}`,'success');
+  addLog('finalLog', `📥 다운로드: ${filename}`, 'success');
 }
 function handlePrevFile(event) {
   const file=event.target.files[0];if(!file)return;
@@ -927,14 +940,20 @@ function applyDedup() {
   const prevText=document.getElementById('prevKeywords').value.trim();
   prevKeywordsSet=new Set();
   if(prevText)prevText.split('\n').forEach(kw=>{const k=kw.trim();if(k)prevKeywordsSet.add(k.toLowerCase());});
-  addLog('dedupLog',`전주 키워드: ${prevKeywordsSet.size}개`,'info');
-  if(!prevKeywordsSet.size){dedupData=[...rawData];addLog('dedupLog','전주 키워드 없음','warn');}
-  else{dedupData=rawData.filter(d=>!prevKeywordsSet.has(d.keyword.toLowerCase()));addLog('dedupLog',`중복 제거: ${rawData.length-dedupData.length}개`,'warn');}
-  addLog('dedupLog',`✅ 남은 키워드: ${dedupData.length}개`,'success');
+  addLog('dedupLog',`검수 이력 키워드: ${prevKeywordsSet.size}개 로드됨`,'info');
+  const removed = rawData.length - (prevKeywordsSet.size ? rawData.filter(d=>!prevKeywordsSet.has(d.keyword.toLowerCase())).length : rawData.length);
+  if(!prevKeywordsSet.size){
+    dedupData=[...rawData];
+    addLog('dedupLog','검수 이력 없음 — 중복 제거 없이 진행','warn');
+  } else {
+    dedupData=rawData.filter(d=>!prevKeywordsSet.has(d.keyword.toLowerCase()));
+    addLog('dedupLog',`이번 주 키워드 ${rawData.length.toLocaleString()}개 중 이미 검수한 키워드 ${(rawData.length-dedupData.length).toLocaleString()}개 제거됨`,'warn');
+  }
+  addLog('dedupLog',`✅ 이번 주 배분 대상: ${dedupData.length.toLocaleString()}개`,'success');
   document.getElementById('dedupStats').innerHTML=`
-    <div class="stat-box"><span class="num">${rawData.length.toLocaleString()}</span><span class="label">중복제거 전</span></div>
-    <div class="stat-box"><span class="num" style="color:#ef4444">${(rawData.length-dedupData.length).toLocaleString()}</span><span class="label">중복 제거</span></div>
-    <div class="stat-box"><span class="num" style="color:#22c55e">${dedupData.length.toLocaleString()}</span><span class="label">남은 키워드</span></div>`;
+    <div class="stat-box"><span class="num">${rawData.length.toLocaleString()}</span><span class="label">이번 주 전체</span></div>
+    <div class="stat-box"><span class="num" style="color:#ef4444">${(rawData.length-dedupData.length).toLocaleString()}</span><span class="label">이미 검수 (제거)</span></div>
+    <div class="stat-box"><span class="num" style="color:#22c55e">${dedupData.length.toLocaleString()}</span><span class="label">배분 대상</span></div>`;
   document.getElementById('nav-2').classList.add('done');
 }
 function skipDedup() {
