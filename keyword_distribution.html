@@ -173,7 +173,7 @@ input[type="file"] { display: none; }
 <div class="container">
   <div class="steps-nav">
     <button class="step-btn active" onclick="goStep(1)" id="nav-1"><span class="step-num">①</span><span class="step-label">파일 업로드<br>&amp; 기본 필터</span></button>
-    <button class="step-btn" onclick="goStep(2)" id="nav-2"><span class="step-num">②</span><span class="step-label">전주 키워드<br>중복 제거</span></button>
+    <button class="step-btn" onclick="goStep(2)" id="nav-2"><span class="step-num">②</span><span class="step-label">검수한 키워드<br>중복 제거</span></button>
     <button class="step-btn" onclick="goStep(3)" id="nav-3"><span class="step-num">③</span><span class="step-label">CTR/Steady<br>유형 분류</span></button>
     <button class="step-btn" onclick="goStep(4)" id="nav-4"><span class="step-num">④</span><span class="step-label">배분 설정<br>운영자</span></button>
     <button class="step-btn" onclick="goStep(5)" id="nav-5"><span class="step-num">⑤</span><span class="step-label">최종 배분<br>&amp; 다운로드</span></button>
@@ -206,7 +206,7 @@ input[type="file"] { display: none; }
       <h2>📊 처리 결과</h2>
       <div class="log" id="processLog"></div>
       <div class="stat-row" id="step1Stats"></div>
-      <div class="mt-12"><button class="btn btn-primary" onclick="goStep(2)" id="toStep2Btn" style="display:none;">다음 단계: 전주 키워드 중복 제거 →</button></div>
+      <div class="mt-12"><button class="btn btn-primary" onclick="goStep(2)" id="toStep2Btn" style="display:none;">다음 단계: 검수한 키워드 중복 제거 →</button></div>
     </div>
   </div>
 
@@ -218,9 +218,10 @@ input[type="file"] { display: none; }
       <div class="tabs">
         <div class="tab active" onclick="switchPrevTab('text')">텍스트 직접 입력</div>
         <div class="tab" onclick="switchPrevTab('file')">이전 엑셀 파일 업로드</div>
+        <div class="tab" onclick="switchPrevTab('txt')">📁 키워드 이력 파일 (.txt)</div>
       </div>
       <div id="prevTabText">
-        <div class="form-group"><label>이전 주 키워드 목록 (한 줄에 하나씩 입력)</label>
+        <div class="form-group"><label>검수했던 키워드 목록 (한 줄에 하나씩 입력)</label>
           <textarea id="prevKeywords" rows="8" placeholder="예시:&#10;노트북&#10;모니터&#10;ssd&#10;ddr5 16gb&#10;..."></textarea></div>
       </div>
       <div id="prevTabFile" style="display:none;">
@@ -231,6 +232,16 @@ input[type="file"] { display: none; }
         </label>
         <input type="file" id="prevXlsxInput" accept=".xlsx,.xls,.csv" onchange="handlePrevFile(event)">
         <div id="prevFileInfo" style="display:none;" class="alert alert-success mt-8"></div>
+      </div>
+      <div id="prevTabTxt" style="display:none;">
+        <div class="alert alert-info">📁 STEP 5에서 저장한 <strong>키워드_이력_누적.txt</strong> 파일을 업로드하면 자동으로 중복 제거됩니다.</div>
+        <label for="prevTxtInput">
+          <div class="file-upload-area" style="padding:20px;"><div class="icon">📄</div>
+            <p><strong>키워드 이력 txt 파일 업로드</strong></p>
+            <p style="font-size:11px;color:#999;margin-top:4px;">키워드_이력_누적.txt 형식</p></div>
+        </label>
+        <input type="file" id="prevTxtInput" accept=".txt" onchange="handlePrevTxtFile(event)">
+        <div id="prevTxtInfo" style="display:none;" class="alert alert-success mt-8"></div>
       </div>
       <div class="form-row mt-12">
         <button class="btn btn-warning" onclick="applyDedup()">🔄 중복 제거 실행</button>
@@ -274,20 +285,42 @@ input[type="file"] { display: none; }
       <!-- 배분 개수 설정 -->
       <div class="config-box">
         <div class="box-title">📊 인당 배분 개수 설정 <small style="color:#888;font-weight:400;">(주 5일 풀타임 기준)</small></div>
+
+        <!-- 총 개수 입력 + CTR 자동계산 안내 -->
+        <div style="display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:12px;">
+          <div class="form-group">
+            <label>인당 총 배분 개수 <small style="color:#888;">(5일 기준)</small></label>
+            <input type="number" id="totalCount" value="850" min="1" style="width:110px;" oninput="recalcCounts()">
+          </div>
+          <div style="padding-bottom:4px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#444;cursor:pointer;">
+              <input type="checkbox" id="autoCalcCtr" checked onchange="recalcCounts()"
+                style="width:15px;height:15px;accent-color:#2563eb;cursor:pointer;">
+              CTR 가용량 기준 자동 계산
+            </label>
+            <div style="font-size:11px;color:#888;margin-top:3px;margin-left:21px;">분류된 CTR 수 ÷ 운영자 수 → 인당 CTR 자동 배분</div>
+          </div>
+        </div>
+
+        <!-- CTR / STEADY 분리 표시 -->
         <div class="count-inputs">
           <div class="form-group">
             <label>CTR 개수 <small style="color:#888;">(인당·5일 기준)</small></label>
-            <input type="number" id="ctrCount" value="425" min="1" oninput="recalcCounts()">
+            <input type="number" id="ctrCount" value="425" min="0" oninput="onManualCtrChange()" style="background:#f0f6ff;border-color:#bfdbfe;">
           </div>
+          <div style="padding-bottom:10px;color:#94a3b8;font-size:18px;font-weight:300;">+</div>
           <div class="form-group">
             <label>STEADY 개수 <small style="color:#888;">(인당·5일 기준)</small></label>
-            <input type="number" id="steadyCount" value="425" min="1" oninput="recalcCounts()">
+            <input type="number" id="steadyCount" value="425" min="0" readonly
+              style="background:#f0fdf4;border-color:#86efac;color:#166534;cursor:default;">
           </div>
+          <div style="padding-bottom:10px;color:#94a3b8;font-size:18px;font-weight:300;">=</div>
           <div class="total-badge">
             <div id="totalBadgeNum">850개</div>
             <div class="badge-sub">5일 기준 인당 합계</div>
           </div>
         </div>
+        <div id="autoCalcNote" style="margin-top:8px;font-size:11px;color:#2563eb;"></div>
       </div>
 
       <!-- 요일 설정 -->
@@ -368,6 +401,25 @@ input[type="file"] { display: none; }
           <button class="btn btn-warning" onclick="exportAllExcel()">📥 새 엑셀로 다운로드</button>
           <button class="btn btn-secondary" onclick="exportCSV()">📄 CSV 다운로드</button>
         </div>
+        <!-- 키워드 이력 저장 -->
+        <div style="margin-top:14px;padding:14px 16px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;">
+          <div style="font-size:12px;font-weight:700;color:#166534;margin-bottom:6px;">📁 검수 키워드 이력 저장</div>
+          <div style="font-size:11px;color:#166534;margin-bottom:10px;">이번 배분 키워드를 누적 이력 파일(.txt)로 저장합니다. 다음 주 STEP 2에서 이 파일을 업로드하면 자동으로 중복 제거됩니다.</div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#166534;cursor:pointer;">
+              <input type="checkbox" id="appendTxtMode" style="width:15px;height:15px;accent-color:#22c55e;cursor:pointer;">
+              기존 이력 파일에 이어쓰기
+            </label>
+            <div id="appendTxtUploadArea" style="display:none;">
+              <label for="prevTxtAppendInput" style="cursor:pointer;">
+                <span style="padding:5px 12px;background:white;border:1.5px solid #86efac;border-radius:6px;font-size:11px;font-weight:600;color:#166534;">📂 기존 이력 파일 선택</span>
+              </label>
+              <input type="file" id="prevTxtAppendInput" accept=".txt" onchange="loadExistingTxt(event)">
+              <span id="appendTxtName" style="font-size:11px;color:#64748b;margin-left:6px;"></span>
+            </div>
+            <button class="btn btn-success" style="font-size:12px;padding:7px 16px;" onclick="exportKeywordHistory()">💾 키워드 이력 저장 (.txt)</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -410,15 +462,15 @@ const HELP_DATA = {
       </div>`
   },
   2: {
-    title: '전주 키워드 중복 제거',
-    label: 'STEP 2 — 지난주에 검수한 키워드를 이번 주 목록에서 제거합니다',
+    title: '검수한 키워드 중복 제거',
+    label: 'STEP 2 — 검수했던 키워드와 모니터링 할 키워드 중복을 제거합니다',
     content: `
       <div class="help-section">
         <div class="help-section-title">📋 사용 방법</div>
         <div class="help-step-list">
-          <div class="help-step-row"><div class="help-step-num">1</div><div class="help-step-text">입력 방식을 선택합니다.<br>· <strong>텍스트 직접 입력</strong> — 지난주 키워드를 한 줄에 하나씩 붙여넣기<br>· <strong>이전 엑셀 파일 업로드</strong> — 지난주 배분 엑셀을 올리면 키워드 자동 추출</div></div>
-          <div class="help-step-row"><div class="help-step-num">2</div><div class="help-step-text"><strong>🔄 중복 제거 실행</strong>을 클릭합니다. 지난주와 겹치는 키워드가 이번 주 목록에서 제거됩니다.</div></div>
-          <div class="help-step-row"><div class="help-step-num">3</div><div class="help-step-text">전주 키워드가 없거나 중복 제거 없이 진행하려면 <strong>건너뛰기</strong>를 클릭합니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">1</div><div class="help-step-text"><strong>텍스트 직접 입력</strong> — 이전에 검수했던 키워드를 한 줄에 하나씩 붙여넣기합니다. 이번 주 목록에서 겹치는 키워드가 자동으로 제거됩니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">2</div><div class="help-step-text"><strong>이전 엑셀 파일 업로드</strong> — 이전에 배분했던 엑셀 파일을 올리면 키워드 컬럼을 자동으로 읽어 중복을 제거합니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">3</div><div class="help-step-text">검수 이력이 없거나 중복 제거가 필요 없으면 <strong>건너뛰기</strong>를 클릭합니다.</div></div>
         </div>
         <div class="help-note">📌 대소문자 구분 없이 중복 체크됩니다.</div>
       </div>`
@@ -505,21 +557,89 @@ function toggleDay(day) {
 
 // ===== 개수 계산 =====
 function getAdj() {
-  const bc=parseInt(document.getElementById('ctrCount').value)||425;
-  const bs=parseInt(document.getElementById('steadyCount').value)||425;
-  const active=Object.values(dayState).filter(Boolean).length;
-  return {bc,bs,active,ac:Math.floor(bc*active/5),as_:Math.floor(bs*active/5)};
+  const total = parseInt(document.getElementById('totalCount').value)||850;
+  const active = Object.values(dayState).filter(Boolean).length;
+  const autoCalc = document.getElementById('autoCalcCtr').checked;
+  const opCount = operators.length || DEFAULT_OPERATORS.length;
+
+  let bc, bs; // 5일 기준 인당 CTR / STEADY
+
+  if(autoCalc && classifiedData.length > 0) {
+    const ctrAvail = classifiedData.filter(d=>d.type==='ctr').length;
+    // 인당 CTR = 전체 CTR ÷ 운영자 수 (올림, 단 total 초과 금지)
+    bc = Math.min(Math.ceil(ctrAvail / opCount), total);
+    bs = total - bc;
+  } else {
+    bc = parseInt(document.getElementById('ctrCount').value)||0;
+    bs = total - bc;
+    if(bs < 0) bs = 0;
+  }
+
+  // 요일 반영
+  const ac = Math.floor(bc * active / 5);
+  const as_ = Math.floor(bs * active / 5);
+  return {bc, bs, total, active, ac, as_};
 }
 
 function recalcCounts() {
-  const {bc,bs,active,ac,as_}=getAdj();
-  document.getElementById('totalBadgeNum').textContent=(bc+bs)+'개';
-  const adjTotal=ac+as_, changed=active<5;
-  document.getElementById('daySummary').innerHTML=
-    '작업일 <strong>'+active+'일</strong> / 기준 <strong>'+(bc+bs)+'개</strong> → 실제 인당 '
-    +(changed?'<span class="adj-highlight">':' <strong>')+adjTotal+'개'+(changed?'</span>':'</strong>')
-    +' <span style="color:#888;font-size:11px;">(CTR '+ac+' + STEADY '+as_+')</span>';
-  operators.forEach(op=>{op.ctrCount=ac;op.steadyCount=as_;});
+  const {bc, bs, total, active, ac, as_} = getAdj();
+  const autoCalc = document.getElementById('autoCalcCtr').checked;
+
+  // 입력창 업데이트
+  const ctrInput = document.getElementById('ctrCount');
+  const steadyInput = document.getElementById('steadyCount');
+  const totalInput = document.getElementById('totalCount');
+
+  ctrInput.value = bc;
+  steadyInput.value = bs;
+  document.getElementById('totalBadgeNum').textContent = (ac + as_) + '개';
+
+  // 자동계산 모드일 때 CTR 입력창 잠금
+  ctrInput.readOnly = autoCalc;
+  ctrInput.style.background = autoCalc ? '#f0f6ff' : '#fff';
+  ctrInput.style.borderColor = autoCalc ? '#bfdbfe' : '#d0d8e8';
+
+  // 자동계산 안내 메시지
+  const noteEl = document.getElementById('autoCalcNote');
+  if(autoCalc && classifiedData.length > 0) {
+    const ctrAvail = classifiedData.filter(d=>d.type==='ctr').length;
+    const opCount = operators.length || DEFAULT_OPERATORS.length;
+    noteEl.innerHTML = `🤖 <strong>자동계산:</strong> CTR ${ctrAvail}개 ÷ ${opCount}명 = 인당 CTR <strong>${bc}개</strong> / STEADY <strong>${bs}개</strong> (총 ${total}개 기준)`;
+    noteEl.style.color = '#2563eb';
+  } else if(autoCalc && classifiedData.length === 0) {
+    noteEl.innerHTML = `⚠️ STEP 3 분류 후 자동계산됩니다. 현재는 수동 입력 중입니다.`;
+    noteEl.style.color = '#f59e0b';
+  } else {
+    noteEl.innerHTML = '';
+  }
+
+  // 요일 요약
+  const adjTotal = ac + as_, changed = active < 5;
+  document.getElementById('daySummary').innerHTML =
+    '작업일 <strong>' + active + '일</strong> / 기준 <strong>' + total + '개</strong> → 실제 인당 '
+    + (changed ? '<span class="adj-highlight">' : ' <strong>') + adjTotal + '개' + (changed ? '</span>' : '</strong>')
+    + ' <span style="color:#888;font-size:11px;">(CTR ' + ac + ' + STEADY ' + as_ + ')</span>';
+
+  operators.forEach(op => { op.ctrCount = ac; op.steadyCount = as_; });
+  renderOpCards();
+}
+
+// CTR 수동 변경 시 STEADY 자동 보정
+function onManualCtrChange() {
+  const total = parseInt(document.getElementById('totalCount').value)||850;
+  const ctr = parseInt(document.getElementById('ctrCount').value)||0;
+  const steady = Math.max(0, total - ctr);
+  document.getElementById('steadyCount').value = steady;
+  document.getElementById('totalBadgeNum').textContent = (ctr + steady) + '개';
+  const active = Object.values(dayState).filter(Boolean).length;
+  const ac = Math.floor(ctr * active / 5);
+  const as_ = Math.floor(steady * active / 5);
+  const changed = active < 5;
+  document.getElementById('daySummary').innerHTML =
+    '작업일 <strong>' + active + '일</strong> / 기준 <strong>' + total + '개</strong> → 실제 인당 '
+    + (changed ? '<span class="adj-highlight">' : ' <strong>') + (ac+as_) + '개' + (changed ? '</span>' : '</strong>')
+    + ' <span style="color:#888;font-size:11px;">(CTR ' + ac + ' + STEADY ' + as_ + ')</span>';
+  operators.forEach(op => { op.ctrCount = ac; op.steadyCount = as_; });
   renderOpCards();
 }
 
@@ -605,12 +725,12 @@ function addOperator() {
   sel.value='';
   customInput.style.display='none';
   customInput.value='';
-  renderOpCards();
+  recalcCounts(); // 운영자 수 변경 → CTR 재계산
 }
 
 function removeOperator(name) {
   operators=operators.filter(o=>o.name!==name);
-  renderOpCards();
+  recalcCounts(); // 운영자 수 변경 → CTR 재계산
 }
 
 function resetOperators() {
@@ -619,7 +739,7 @@ function resetOperators() {
   document.getElementById('opNameSelect').value='';
   document.getElementById('opNameCustom').style.display='none';
   document.getElementById('opNameCustom').value='';
-  renderOpCards();
+  recalcCounts(); // 운영자 수 변경 → CTR 재계산
 }
 
 // ===== 공통 =====
@@ -634,6 +754,8 @@ function goStep(n) {
   document.getElementById('step-'+n).classList.add('active');
   document.querySelectorAll('.step-btn').forEach((b,i)=>{b.classList.remove('active');if(i+1<n)b.classList.add('done');else b.classList.remove('done');});
   document.getElementById('nav-'+n).classList.add('active');
+  // STEP 4 진입 시 CTR 가용량 기준 자동 재계산
+  if(n===4) recalcCounts();
 }
 function addLog(id,msg,type='info') {
   const el=document.getElementById(id);
@@ -711,9 +833,72 @@ function processData() {
 
 // ===== STEP 2 =====
 function switchPrevTab(tab) {
-  document.querySelectorAll('#step-2 .tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&tab==='text')||(i===1&&tab==='file')));
+  document.querySelectorAll('#step-2 .tab').forEach((t,i)=>{
+    t.classList.toggle('active',
+      (i===0&&tab==='text')||(i===1&&tab==='file')||(i===2&&tab==='txt'));
+  });
   document.getElementById('prevTabText').style.display=tab==='text'?'block':'none';
   document.getElementById('prevTabFile').style.display=tab==='file'?'block':'none';
+  document.getElementById('prevTabTxt').style.display=tab==='txt'?'block':'none';
+}
+
+function handlePrevTxtFile(event) {
+  const file=event.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=(e)=>{
+    const lines=e.target.result.split('\n').map(l=>l.trim()).filter(Boolean);
+    // 중복 제거된 고유 키워드만
+    const unique=[...new Set(lines)];
+    document.getElementById('prevKeywords').value=unique.join('\n');
+    document.getElementById('prevTxtInfo').style.display='flex';
+    document.getElementById('prevTxtInfo').innerHTML=`✅ ${file.name} 로드 완료 — 키워드 <strong>${unique.length}개</strong> 불러옴`;
+  };
+  reader.readAsText(file,'utf-8');
+}
+
+// 이어쓰기 모드 토글
+document.addEventListener('DOMContentLoaded',()=>{
+  const cb=document.getElementById('appendTxtMode');
+  if(cb) cb.addEventListener('change',()=>{
+    document.getElementById('appendTxtUploadArea').style.display=cb.checked?'flex':'none';
+  });
+});
+
+let existingTxtKeywords=[]; // 기존 이력 파일 내용
+
+function loadExistingTxt(event) {
+  const file=event.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=(e)=>{
+    existingTxtKeywords=e.target.result.split('\n').map(l=>l.trim()).filter(Boolean);
+    document.getElementById('appendTxtName').textContent=`${file.name} (${existingTxtKeywords.length}개)`;
+  };
+  reader.readAsText(file,'utf-8');
+}
+
+function exportKeywordHistory() {
+  if(!finalData.length){alert('먼저 최종 배분을 실행하세요.');return;}
+  const newKeywords=finalData.map(d=>d.keyword);
+  const appendMode=document.getElementById('appendTxtMode').checked;
+
+  let allKeywords;
+  if(appendMode && existingTxtKeywords.length>0) {
+    // 기존 이력 + 새 키워드 합치고 중복 제거
+    allKeywords=[...new Set([...existingTxtKeywords,...newKeywords])];
+    addLog('finalLog',`✅ 이력 파일에 이어쓰기: 기존 ${existingTxtKeywords.length}개 + 신규 ${newKeywords.length}개 → 총 ${allKeywords.length}개 (중복 제거 후)`,'success');
+  } else {
+    allKeywords=[...new Set(newKeywords)];
+    addLog('finalLog',`✅ 키워드 이력 저장: ${allKeywords.length}개`,'success');
+  }
+
+  const content=allKeywords.join('\n');
+  const today=new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const filename=`키워드_이력_누적_${today}.txt`;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['\uFEFF'+content],{type:'text/plain;charset=utf-8'}));
+  a.download=filename;
+  a.click();
+  addLog('finalLog',`📥 다운로드: ${filename}`,'success');
 }
 function handlePrevFile(event) {
   const file=event.target.files[0];if(!file)return;
