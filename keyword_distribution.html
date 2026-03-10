@@ -187,7 +187,7 @@ input[type="file"] { display: none; }
       <label for="xlsxInput">
         <div class="file-upload-area" id="dropZone">
           <div class="icon">📊</div>
-          <p><strong>클릭하거나 파일을 드래그</strong>하여 업로드</p>
+          <p><strong>클릭하여 파일 업로드</strong></p>
           <p style="margin-top:6px;font-size:11px;color:#999;">searchlog_YYYYMMDD_YYYYMMDD.xlsx 형식</p>
         </div>
       </label>
@@ -370,7 +370,7 @@ input[type="file"] { display: none; }
         <label for="templateInput">
           <div class="file-upload-area" style="padding:16px;">
             <div class="icon" style="font-size:24px;">📋</div>
-            <p><strong>기존 배분 엑셀 파일 클릭 또는 드래그</strong></p>
+            <p><strong>기존 배분 엑셀 파일 클릭하여 업로드</strong></p>
             <p style="font-size:11px;color:#999;margin-top:4px;">인기키워드검수_*.xlsx 형식</p>
           </div>
         </label>
@@ -425,7 +425,7 @@ const HELP_DATA = {
       <div class="help-section">
         <div class="help-section-title">📋 사용 방법</div>
         <div class="help-step-list">
-          <div class="help-step-row"><div class="help-step-num">1</div><div class="help-step-text">다나와에서 다운로드한 검색로그 엑셀 파일(<strong>searchlog_YYYYMMDD_YYYYMMDD.xlsx</strong>)을 업로드 영역에 <strong>드래그하거나 클릭</strong>해서 선택합니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">1</div><div class="help-step-text">다나와에서 다운로드한 검색로그 엑셀 파일(<strong>searchlog_YYYYMMDD_YYYYMMDD.xlsx</strong>)을 업로드 영역에 <strong>클릭</strong>해서 선택합니다.</div></div>
           <div class="help-step-row"><div class="help-step-num">2</div><div class="help-step-text">파일이 로드되면 하단에 <strong>필터 설정 카드</strong>가 나타납니다. 키워드 최대 글자수를 조정할 수 있습니다 (기본값 24자).</div></div>
           <div class="help-step-row"><div class="help-step-num">3</div><div class="help-step-text"><strong>🚀 데이터 처리 시작</strong> 버튼을 클릭합니다. 자동 필터링이 실행되고 처리 결과가 표시됩니다.</div></div>
           <div class="help-step-row"><div class="help-step-num">4</div><div class="help-step-text">처리 완료 후 결과를 확인하고 <strong>다음 단계 버튼</strong>을 클릭해 Step 2로 이동합니다.</div></div>
@@ -1183,27 +1183,40 @@ function exportAppendedExcel() {
 
   const sn = window._templateSheetName;
   const ws = wb.Sheets[sn];
-  const lr = window._templateLastDataRow;
   const cd = document.getElementById('opCollectDate').value.trim();
   const period = document.getElementById('opPeriod').value.trim();
 
-  // 정렬: 수집일 내림차순 → 키워드유형(steady→ctr) 순
-  const sortedData = [...finalData].sort((a, b) => {
-    const cdA = a.collectDate || cd;
-    const cdB = b.collectDate || cd;
-    if(cdA !== cdB) return cdB.localeCompare(cdA, 'ko'); // 수집일 내림차순
-    if(a.type !== b.type) return a.type === 'steady' ? -1 : 1; // steady 먼저
-    return 0;
-  });
+  // 기존 데이터 읽기 (10행부터 마지막 행까지)
+  const range = XLSX.utils.decode_range(ws['!ref'] || 'A1:W10');
+  const existingRows = [];
+  for(let r = 9; r <= range.e.r; r++) {
+    const row = [];
+    let hasVal = false;
+    for(let c = 0; c <= range.e.c; c++) {
+      const cell = ws[XLSX.utils.encode_cell({r, c})];
+      const v = cell ? cell.v : '';
+      row.push({v, s: cell && cell.s ? JSON.parse(JSON.stringify(cell.s)) : null, t: cell ? cell.t : 's'});
+      if(v !== '' && v !== null && v !== undefined) hasVal = true;
+    }
+    if(hasVal) existingRows.push(row);
+  }
 
-  // 원본 10행 스타일 딥카피 (컬럼별)
+  // 원본 10행 스타일 딥카피 (새 행 서식용)
   const refRowStyle = {};
-  for(let c=0;c<23;c++){
+  for(let c = 0; c < 23; c++) {
     const addr = XLSX.utils.encode_cell({r:9, c});
     if(ws[addr] && ws[addr].s) refRowStyle[c] = JSON.parse(JSON.stringify(ws[addr].s));
   }
 
-  const nr = sortedData.map((d, idx) => [
+  // 새 배분 데이터 정렬: 운영자별 묶음 유지, 같은 운영자 내 steady→ctr
+  const sortedNew = [...finalData].sort((a, b) => {
+    if(a.operator !== b.operator) return 0; // 운영자 순서 원본 유지
+    if(a.type !== b.type) return a.type === 'steady' ? -1 : 1;
+    return 0;
+  });
+
+  // 새 데이터 행 배열로 변환
+  const newRows = sortedNew.map((d, idx) => [
     idx + 1,
     d.operator,
     '',
@@ -1224,8 +1237,25 @@ function exportAppendedExcel() {
     d.rank          != null ? Number(d.rank)          : ''
   ]);
 
-  nr.forEach((rv, ri) => {
-    const tr = lr + 1 + ri;
+  // 기존 데이터 개수 재번호
+  const existingRenumbered = existingRows.map((row, idx) => {
+    const newRow = [...row];
+    // A열(개수) 재번호
+    newRow[0] = {v: newRows.length + idx + 1, s: newRow[0].s, t: 'n'};
+    return newRow;
+  });
+
+  // 전체 데이터 = 새 데이터(위) + 기존 데이터(아래)
+  // 먼저 10행 이후 시트 비우기
+  for(let r = 9; r <= range.e.r + newRows.length + 10; r++) {
+    for(let c = 0; c <= range.e.c; c++) {
+      delete ws[XLSX.utils.encode_cell({r, c})];
+    }
+  }
+
+  // 새 데이터 쓰기 (10행부터)
+  newRows.forEach((rv, ri) => {
+    const tr = 9 + ri;
     rv.forEach((val, ci) => {
       const addr = XLSX.utils.encode_cell({r:tr, c:ci});
       const isEmpty = val==='' || val===null || val===undefined;
@@ -1236,16 +1266,25 @@ function exportAppendedExcel() {
     });
   });
 
-  const range = XLSX.utils.decode_range(ws['!ref']||'A1:W10');
-  const ne = lr + nr.length;
-  ws['!ref'] = XLSX.utils.encode_range({s:{r:0,c:0}, e:{r:ne, c:Math.max(range.e.c,22)}});
+  // 기존 데이터 뒤에 쓰기
+  existingRenumbered.forEach((row, ri) => {
+    const tr = 9 + newRows.length + ri;
+    row.forEach((cell, ci) => {
+      const addr = XLSX.utils.encode_cell({r:tr, c:ci});
+      const isEmpty = cell.v==='' || cell.v===null || cell.v===undefined;
+      const isNum   = !isEmpty && typeof cell.v==='number' && !isNaN(cell.v);
+      const newCell = isEmpty ? {v:'',t:'s'} : isNum ? {v:cell.v,t:'n'} : {v:String(cell.v),t:'s'};
+      if(cell.s) newCell.s = cell.s;
+      ws[addr] = newCell;
+    });
+  });
 
-  addLog('finalLog', `✅ ${nr.length}개 행 추가 (키워드유형 내림차순 정렬)`, 'success');
+  const totalRows = newRows.length + existingRenumbered.length;
+  ws['!ref'] = XLSX.utils.encode_range({s:{r:0,c:0}, e:{r:9+totalRows-1, c:Math.max(range.e.c,22)}});
 
-  // 파일명: 인기_키워드_검수_{period}.xlsx
-  const outName = period
-    ? `인기_키워드_검수_${period}.xlsx`
-    : `인기_키워드_검수_배분추가.xlsx`;
+  addLog('finalLog', `✅ 새 데이터 ${newRows.length}개(위) + 기존 데이터 ${existingRenumbered.length}개(아래) 합계 ${totalRows}개`, 'success');
+
+  const outName = period ? `인기_키워드_검수_${period}.xlsx` : `인기_키워드_검수_배분추가.xlsx`;
 
   try {
     XLSX.writeFile(wb, outName, {cellStyles:true});
