@@ -218,7 +218,6 @@ input[type="file"] { display: none; }
       <div class="tabs">
         <div class="tab active" onclick="switchPrevTab('text')">텍스트 직접 입력</div>
         <div class="tab" onclick="switchPrevTab('file')">이전 엑셀 파일 업로드</div>
-        <div class="tab" onclick="switchPrevTab('txt')">📁 키워드 이력 파일 (.txt)</div>
       </div>
       <div id="prevTabText">
         <div class="form-group"><label>검수했던 키워드 목록 (한 줄에 하나씩 입력)</label>
@@ -233,19 +232,10 @@ input[type="file"] { display: none; }
         <input type="file" id="prevXlsxInput" accept=".xlsx,.xls,.csv" onchange="handlePrevFile(event)">
         <div id="prevFileInfo" style="display:none;" class="alert alert-success mt-8"></div>
       </div>
-      <div id="prevTabTxt" style="display:none;">
-        <div class="alert alert-info">📁 STEP 5에서 저장한 <strong>키워드_이력_누적.txt</strong> 파일을 업로드하면 자동으로 중복 제거됩니다.</div>
-        <label for="prevTxtInput">
-          <div class="file-upload-area" style="padding:20px;"><div class="icon">📄</div>
-            <p><strong>키워드 이력 txt 파일 업로드</strong></p>
-            <p style="font-size:11px;color:#999;margin-top:4px;">키워드_이력_누적.txt 형식</p></div>
-        </label>
-        <input type="file" id="prevTxtInput" accept=".txt" onchange="handlePrevTxtFile(event)">
-        <div id="prevTxtInfo" style="display:none;" class="alert alert-success mt-8"></div>
-      </div>
-      <div class="form-row mt-12">
+      <div class="form-row mt-12" style="align-items:center;gap:12px;">
         <button class="btn btn-warning" onclick="applyDedup()">🔄 중복 제거 실행</button>
         <button class="btn btn-secondary" onclick="skipDedup()">⏭️ 건너뛰기 (중복 제거 없음)</button>
+        <span style="font-size:11px;color:#f59e0b;font-weight:600;">⏳ 실행 완료 후 다음 단계 클릭하세요</span>
       </div>
       <div id="dedupResult" style="display:none;" class="mt-12">
         <div class="log" id="dedupLog"></div>
@@ -353,13 +343,20 @@ input[type="file"] { display: none; }
       </div>
 
       <div class="alert alert-warning mt-8" id="totalDistInfo" style="display:none;"></div>
-      <div style="margin-top:10px;">
+      <div style="margin-top:10px;display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;">
+        <div class="form-group" style="max-width:200px;">
+          <label>수집일 <small style="color:#e11d48;font-weight:600;">* 필수</small></label>
+          <input type="text" id="opCollectDate" placeholder="예: 3월 2주차" oninput="validateStep4()">
+          <div id="collectDateErr" style="display:none;color:#e11d48;font-size:11px;margin-top:3px;">⚠️ 수집일을 입력해주세요</div>
+        </div>
         <div class="form-group" style="max-width:220px;">
-          <label>수집일 <small style="color:#888;font-weight:400;">(예: 3월 2주차)</small></label>
-          <input type="text" id="opCollectDate" placeholder="3월 2주차">
+          <label>기간 (파일명용) <small style="color:#888;font-weight:400;">예: 260302_260306</small></label>
+          <input type="text" id="opPeriod" placeholder="260302_260306" oninput="validateStep4()"
+            style="font-family:monospace;letter-spacing:1px;">
+          <div id="periodErr" style="display:none;color:#e11d48;font-size:11px;margin-top:3px;">⚠️ 기간을 입력해주세요</div>
         </div>
       </div>
-      <button class="btn btn-primary mt-12" onclick="goStep(5)">다음 단계: 최종 배분 →</button>
+      <button class="btn btn-primary mt-12" onclick="goStep5WithValidation()">다음 단계: 최종 배분 →</button>
     </div>
   </div>
 
@@ -394,25 +391,6 @@ input[type="file"] { display: none; }
           <button class="btn btn-success" onclick="exportAppendedExcel()">📅 배분파일에 이어붙이기 다운로드 (권장)</button>
           <button class="btn btn-warning" onclick="exportAllExcel()">📥 새 엑셀로 다운로드</button>
           <button class="btn btn-secondary" onclick="exportCSV()">📄 CSV 다운로드</button>
-        </div>
-        <!-- 키워드 이력 저장 -->
-        <div style="margin-top:14px;padding:14px 16px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;">
-          <div style="font-size:12px;font-weight:700;color:#166534;margin-bottom:6px;">📁 검수 키워드 이력 저장</div>
-          <div style="font-size:11px;color:#166534;margin-bottom:10px;">이번 배분 키워드를 누적 이력 파일(.txt)로 저장합니다. 다음 주 STEP 2에서 이 파일을 업로드하면 자동으로 중복 제거됩니다.</div>
-          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#166534;cursor:pointer;">
-              <input type="checkbox" id="appendTxtMode" style="width:15px;height:15px;accent-color:#22c55e;cursor:pointer;">
-              기존 이력 파일에 이어쓰기
-            </label>
-            <div id="appendTxtUploadArea" style="display:none;">
-              <label for="prevTxtAppendInput" style="cursor:pointer;">
-                <span style="padding:5px 12px;background:white;border:1.5px solid #86efac;border-radius:6px;font-size:11px;font-weight:600;color:#166534;">📂 기존 이력 파일 선택</span>
-              </label>
-              <input type="file" id="prevTxtAppendInput" accept=".txt" onchange="loadExistingTxt(event)">
-              <span id="appendTxtName" style="font-size:11px;color:#64748b;margin-left:6px;"></span>
-            </div>
-            <button class="btn btn-success" style="font-size:12px;padding:7px 16px;" onclick="exportKeywordHistory()">💾 키워드 이력 저장 (.txt)</button>
-          </div>
         </div>
       </div>
     </div>
@@ -790,8 +768,21 @@ function processFile(file) {
           document.getElementById('filterSettingCard').style.display='block';
           window._rawJsonData=jsonData;
           addLog('processLog',`파일 로드: ${file.name}, 총 ${jsonData.length}행`,'success');
-          const dm=file.name.match(/_(\d{2})(\d{2})(\d{2})[_\.]/i);
-          if(dm){const ac=`${parseInt(dm[2],10)}월${Math.ceil(parseInt(dm[3],10)/7)}주차`;const el=document.getElementById('opCollectDate');if(el&&!el.value)el.value=ac;addLog('processLog',`📅 수집일 자동: ${ac}`,'success');}
+          const dm=file.name.match(/_(\d{6})_(\d{6})/)||file.name.match(/_(\d{2})(\d{2})(\d{2})[_\.]/i);
+          if(dm){
+            let label='';
+            if(dm[0].includes('_') && dm[1].length===6){
+              // _260302_260306 형식
+              const month=parseInt(dm[1].slice(2,4),10);
+              const day=parseInt(dm[1].slice(4,6),10);
+              label=`${month}월 ${Math.ceil(day/7)}주차`;
+            } else {
+              // _YYMMDD_ 형식
+              label=`${parseInt(dm[2],10)}월${Math.ceil(parseInt(dm[3],10)/7)}주차`;
+            }
+            const el=document.getElementById('opCollectDate');if(el&&!el.value)el.value=label;
+            addLog('processLog',`📅 수집일 자동: ${label}`,'success');
+          }
         },50);
       }catch(err){info.innerHTML=`❌ 오류: ${err.message}`;}
     };
@@ -1079,40 +1070,189 @@ function exportCSV() {
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+rows.map(r=>r.join(',')).join('\n')],{type:'text/csv;charset=utf-8'}));
   a.download=`키워드배분_${new Date().toISOString().slice(0,10).replace(/-/g,'')}.csv`;a.click();
 }
+
+function exportJSON() {
+  if(!finalData.length){alert('배분 데이터가 없습니다');return;}
+  const cd = document.getElementById('opCollectDate').value.trim();
+  const period = document.getElementById('opPeriod').value.trim();
+  // steady → ctr 내림차순 정렬
+  const sorted = [...finalData].sort((a,b) => a.type===b.type?0:a.type==='steady'?-1:1);
+  const out = sorted.map((d,i) => ({
+    row_num: i+1,
+    operator: d.operator,
+    collect_date: d.collectDate || cd,
+    keyword: d.keyword,
+    type: d.type,
+    category_id: d.category_id || '',
+    category: d.category || '',
+    search_total: d.search_total,
+    search_pc: d.search_pc,
+    search_mobile: d.search_mobile,
+    click_total: d.click_total,
+    click_pc: d.click_pc,
+    click_mobile: d.click_mobile,
+    inflow_total: d.inflow_total,
+    inflow_pc: d.inflow_pc,
+    inflow_mobile: d.inflow_mobile,
+    rank: d.rank
+  }));
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 2)], {type:'application/json'}));
+  a.download = `배분데이터_${period||'data'}.json`;
+  a.click();
+  addLog('finalLog', `📥 JSON 내보내기 완료: ${out.length}개 (Python 스크립트로 처리하세요)`, 'success');
+}
+function validateStep4() {
+  const cd = document.getElementById('opCollectDate').value.trim();
+  const pd = document.getElementById('opPeriod').value.trim();
+  document.getElementById('collectDateErr').style.display = cd ? 'none' : 'block';
+  document.getElementById('periodErr').style.display = pd ? 'none' : 'block';
+  return cd && pd;
+}
+
+function goStep5WithValidation() {
+  if(!validateStep4()) {
+    document.getElementById('collectDateErr').style.display =
+      document.getElementById('opCollectDate').value.trim() ? 'none' : 'block';
+    document.getElementById('periodErr').style.display =
+      document.getElementById('opPeriod').value.trim() ? 'none' : 'block';
+    return;
+  }
+  goStep(5);
+}
+
+function getWeekLabel(dateStr) {
+  if(!dateStr) return document.getElementById('opCollectDate').value.trim() || '';
+  const m = dateStr.match(/(\d{2})(\d{2})(\d{2})/);
+  if(!m) return '';
+  const month = parseInt(m[2], 10);
+  const day   = parseInt(m[3], 10);
+  const week  = Math.ceil(day / 7);
+  return `${month}월 ${week}주차`;
+}
+
 function handleTemplateFile(event) {
   const file=event.target.files[0];if(!file)return;
   const info=document.getElementById('templateInfo');info.style.display='flex';info.innerHTML=`<span class="loading"><span class="spinner"></span> 배분 파일 읽는 중...</span>`;
+
+  // 파일명에서 수집일 자동 세팅
+  const dm = file.name.match(/_(\d{6})_(\d{6})/);
+  if(dm) {
+    const label = getWeekLabel(dm[1]);
+    const el = document.getElementById('opCollectDate');
+    if(el && !el.value) el.value = label;
+  }
+
   const reader=new FileReader();
   reader.onload=(e)=>{
     try{
-      const wb=XLSX.read(e.target.result,{type:'binary',cellDates:false,bookVBA:true,cellStyles:true});
-      window._templateWb=wb;window._templateFileName=file.name;
+      // cellStyles, bookVBA 모두 제거 → Named Range 오류 원인
+      const wb=XLSX.read(e.target.result,{type:'binary',cellDates:false});
+      // Named Range 삭제 (오류 원인)
+      if(wb.Workbook && wb.Workbook.Names) wb.Workbook.Names=[];
+      window._templateWb=wb;
+      window._templateFileName=file.name;
+      window._templateRawBuf=e.target.result; // 원본 바이너리 보관
+
       const sn=wb.SheetNames.find(n=>n.includes('배분'))||wb.SheetNames[0];
-      const ws=wb.Sheets[sn];window._templateSheetName=sn;
-      const range=XLSX.utils.decode_range(ws['!ref']||'A1:W10');window._templateLastDataRow=range.e.r;
+      const ws=wb.Sheets[sn];
+      window._templateSheetName=sn;
+      const range=XLSX.utils.decode_range(ws['!ref']||'A1:W10');
+      window._templateLastDataRow=range.e.r;
+
+      // 10행(첫 데이터행) 스타일 저장 → 새 행에 복사용
+      window._templateRowStyle = {};
+      for(let c=0;c<23;c++){
+        const addr=XLSX.utils.encode_cell({r:9,c}); // 10행=index 9
+        if(ws[addr] && ws[addr].s) window._templateRowStyle[c]=ws[addr].s;
+      }
+
       info.innerHTML=`✅ ${file.name} 로드 완료 — 시트: <strong>${sn}</strong>, 마지막 행: <strong>${range.e.r+1}행</strong>`;
     }catch(err){info.innerHTML=`❌ 오류: ${err.message}`;}
-  };reader.readAsBinaryString(file);
+  };
+  reader.readAsBinaryString(file);
 }
+
 function exportAppendedExcel() {
   if(!finalData.length){alert('배분 데이터가 없습니다. 먼저 최종 배분을 실행하세요.');return;}
   if(!window._templateWb){alert('기존 배분 파일을 먼저 업로드하세요.');return;}
   addLog('finalLog','▶ 배분파일 이어붙이기 시작...','info');
-  const wb=window._templateWb,sn=window._templateSheetName,ws=wb.Sheets[sn],lr=window._templateLastDataRow;
-  const nr=finalData.map(d=>[d.row_num,d.operator,'',d.collectDate||'',d.keyword,d.type,d.category_id?Number(d.category_id):'','','','','','','',
-    d.search_total!=null?Number(d.search_total):'',d.search_pc!=null?Number(d.search_pc):'',d.search_mobile!=null?Number(d.search_mobile):'',
-    d.click_total!=null?Number(d.click_total):'',d.click_pc!=null?Number(d.click_pc):'',d.click_mobile!=null?Number(d.click_mobile):'',
-    d.inflow_total!=null?Number(d.inflow_total):'',d.inflow_pc!=null?Number(d.inflow_pc):'',d.inflow_mobile!=null?Number(d.inflow_mobile):'',
-    d.rank!=null?Number(d.rank):''
+
+  const wb = XLSX.read(window._templateRawBuf, {type:'binary', cellDates:false, cellStyles:true});
+  if(wb.Workbook && wb.Workbook.Names) wb.Workbook.Names = [];
+
+  const sn = window._templateSheetName;
+  const ws = wb.Sheets[sn];
+  const lr = window._templateLastDataRow;
+  const cd = document.getElementById('opCollectDate').value.trim();
+  const period = document.getElementById('opPeriod').value.trim();
+
+  // 정렬: 수집일 내림차순 → 키워드유형(steady→ctr) 순
+  const sortedData = [...finalData].sort((a, b) => {
+    const cdA = a.collectDate || cd;
+    const cdB = b.collectDate || cd;
+    if(cdA !== cdB) return cdB.localeCompare(cdA, 'ko'); // 수집일 내림차순
+    if(a.type !== b.type) return a.type === 'steady' ? -1 : 1; // steady 먼저
+    return 0;
+  });
+
+  // 원본 10행 스타일 딥카피 (컬럼별)
+  const refRowStyle = {};
+  for(let c=0;c<23;c++){
+    const addr = XLSX.utils.encode_cell({r:9, c});
+    if(ws[addr] && ws[addr].s) refRowStyle[c] = JSON.parse(JSON.stringify(ws[addr].s));
+  }
+
+  const nr = sortedData.map((d, idx) => [
+    idx + 1,
+    d.operator,
+    '',
+    d.collectDate || cd,
+    d.keyword,
+    d.type,
+    d.category_id ? Number(d.category_id) : '',
+    '','','','','','',
+    d.search_total  != null ? Number(d.search_total)  : '',
+    d.search_pc     != null ? Number(d.search_pc)     : '',
+    d.search_mobile != null ? Number(d.search_mobile) : '',
+    d.click_total   != null ? Number(d.click_total)   : '',
+    d.click_pc      != null ? Number(d.click_pc)      : '',
+    d.click_mobile  != null ? Number(d.click_mobile)  : '',
+    d.inflow_total  != null ? Number(d.inflow_total)  : '',
+    d.inflow_pc     != null ? Number(d.inflow_pc)     : '',
+    d.inflow_mobile != null ? Number(d.inflow_mobile) : '',
+    d.rank          != null ? Number(d.rank)          : ''
   ]);
-  nr.forEach((rv,ri)=>{const tr=lr+1+ri;rv.forEach((val,ci)=>{const addr=XLSX.utils.encode_cell({r:tr,c:ci});let t=(val===''||val===null||val===undefined)?'s':(typeof val==='number'&&!isNaN(val))?'n':'s';ws[addr]={v:(t==='s'?String(val??''):val),t};});});
-  const range=XLSX.utils.decode_range(ws['!ref']||'A1:W10'),ne=lr+nr.length;
-  ws['!ref']=XLSX.utils.encode_range({s:{r:0,c:0},e:{r:ne,c:Math.max(range.e.c,22)}});
-  addLog('finalLog',`✅ ${nr.length}개 행 추가 완료`,'success');
-  const today=new Date().toISOString().slice(0,10).replace(/-/g,'');
-  const outName=`${(window._templateFileName||'인기키워드검수.xlsx').replace(/\.xlsx?$/i,'')}_배분추가_${today}.xlsx`;
-  try{XLSX.writeFile(wb,outName);addLog('finalLog',`📥 다운로드: ${outName}`,'success');}
-  catch(err){addLog('finalLog',`❌ 저장 오류: ${err.message}`,'error');}
+
+  nr.forEach((rv, ri) => {
+    const tr = lr + 1 + ri;
+    rv.forEach((val, ci) => {
+      const addr = XLSX.utils.encode_cell({r:tr, c:ci});
+      const isEmpty = val==='' || val===null || val===undefined;
+      const isNum   = !isEmpty && typeof val==='number' && !isNaN(val);
+      const cell = isEmpty ? {v:'',t:'s'} : isNum ? {v:val,t:'n'} : {v:String(val),t:'s'};
+      if(refRowStyle[ci]) cell.s = JSON.parse(JSON.stringify(refRowStyle[ci]));
+      ws[addr] = cell;
+    });
+  });
+
+  const range = XLSX.utils.decode_range(ws['!ref']||'A1:W10');
+  const ne = lr + nr.length;
+  ws['!ref'] = XLSX.utils.encode_range({s:{r:0,c:0}, e:{r:ne, c:Math.max(range.e.c,22)}});
+
+  addLog('finalLog', `✅ ${nr.length}개 행 추가 (키워드유형 내림차순 정렬)`, 'success');
+
+  // 파일명: 인기_키워드_검수_{period}.xlsx
+  const outName = period
+    ? `인기_키워드_검수_${period}.xlsx`
+    : `인기_키워드_검수_배분추가.xlsx`;
+
+  try {
+    XLSX.writeFile(wb, outName, {cellStyles:true});
+    addLog('finalLog', `📥 다운로드: ${outName}`, 'success');
+  } catch(err) {
+    addLog('finalLog', `❌ 저장 오류: ${err.message}`, 'error');
+  }
 }
 </script>
 </body>
