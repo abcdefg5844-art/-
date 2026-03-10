@@ -286,23 +286,17 @@ input[type="file"] { display: none; }
       <div class="config-box">
         <div class="box-title">📊 인당 배분 개수 설정 <small style="color:#888;font-weight:400;">(주 5일 풀타임 기준)</small></div>
 
-        <!-- 총 개수 입력 + CTR 자동계산 안내 -->
         <div style="display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:12px;">
           <div class="form-group">
             <label>인당 총 배분 개수 <small style="color:#888;">(5일 기준)</small></label>
             <input type="number" id="totalCount" value="850" min="1" style="width:110px;" oninput="recalcCounts()">
           </div>
-          <div style="padding-bottom:4px;">
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#444;cursor:pointer;">
-              <input type="checkbox" id="autoCalcCtr" checked onchange="recalcCounts()"
-                style="width:15px;height:15px;accent-color:#2563eb;cursor:pointer;">
-              CTR 가용량 기준 자동 계산
-            </label>
-            <div style="font-size:11px;color:#888;margin-top:3px;margin-left:21px;">분류된 CTR 수 ÷ 운영자 수 → 인당 CTR 자동 배분</div>
+          <div style="padding-bottom:6px;font-size:11px;color:#64748b;line-height:1.6;">
+            CTR이 충분하면 <strong>절반씩 고정</strong><br>
+            CTR이 부족하면 <strong>가용량 기준 자동조정</strong>
           </div>
         </div>
 
-        <!-- CTR / STEADY 분리 표시 -->
         <div class="count-inputs">
           <div class="form-group">
             <label>CTR 개수 <small style="color:#888;">(인당·5일 기준)</small></label>
@@ -320,7 +314,7 @@ input[type="file"] { display: none; }
             <div class="badge-sub">5일 기준 인당 합계</div>
           </div>
         </div>
-        <div id="autoCalcNote" style="margin-top:8px;font-size:11px;color:#2563eb;"></div>
+        <div id="autoCalcNote" style="margin-top:8px;font-size:11px;"></div>
       </div>
 
       <!-- 요일 설정 -->
@@ -559,58 +553,72 @@ function toggleDay(day) {
 function getAdj() {
   const total = parseInt(document.getElementById('totalCount').value)||850;
   const active = Object.values(dayState).filter(Boolean).length;
-  const autoCalc = document.getElementById('autoCalcCtr').checked;
   const opCount = operators.length || DEFAULT_OPERATORS.length;
 
-  let bc, bs; // 5일 기준 인당 CTR / STEADY
+  // 기준 CTR (5일 풀타임 인당)
+  const baseCtr = Math.round(total / 2); // total의 절반이 기본 CTR 기준 (기본 425)
 
-  if(autoCalc && classifiedData.length > 0) {
+  let bc, bs, autoMode = false;
+
+  if(classifiedData.length > 0) {
     const ctrAvail = classifiedData.filter(d=>d.type==='ctr').length;
-    // 인당 CTR = 전체 CTR ÷ 운영자 수 (올림, 단 total 초과 금지)
-    bc = Math.min(Math.ceil(ctrAvail / opCount), total);
-    bs = total - bc;
+    const ctrNeeded = baseCtr * opCount; // 총 필요 CTR (예: 425 × 4 = 1700)
+
+    if(ctrAvail >= ctrNeeded) {
+      // CTR 충분 → 고정값 사용
+      bc = baseCtr;
+      bs = total - bc;
+      autoMode = false;
+    } else {
+      // CTR 부족 → 가용량 기준 자동계산
+      bc = Math.floor(ctrAvail / opCount);
+      bs = total - bc;
+      autoMode = true;
+    }
   } else {
-    bc = parseInt(document.getElementById('ctrCount').value)||0;
+    // 분류 전 → 입력값 그대로
+    bc = parseInt(document.getElementById('ctrCount').value) || baseCtr;
     bs = total - bc;
     if(bs < 0) bs = 0;
   }
 
-  // 요일 반영
   const ac = Math.floor(bc * active / 5);
   const as_ = Math.floor(bs * active / 5);
-  return {bc, bs, total, active, ac, as_};
+  return {bc, bs, total, active, ac, as_, autoMode};
 }
 
 function recalcCounts() {
-  const {bc, bs, total, active, ac, as_} = getAdj();
-  const autoCalc = document.getElementById('autoCalcCtr').checked;
+  const {bc, bs, total, active, ac, as_, autoMode} = getAdj();
 
-  // 입력창 업데이트
   const ctrInput = document.getElementById('ctrCount');
   const steadyInput = document.getElementById('steadyCount');
-  const totalInput = document.getElementById('totalCount');
 
   ctrInput.value = bc;
   steadyInput.value = bs;
   document.getElementById('totalBadgeNum').textContent = (ac + as_) + '개';
 
-  // 자동계산 모드일 때 CTR 입력창 잠금
-  ctrInput.readOnly = autoCalc;
-  ctrInput.style.background = autoCalc ? '#f0f6ff' : '#fff';
-  ctrInput.style.borderColor = autoCalc ? '#bfdbfe' : '#d0d8e8';
+  // CTR 입력창: 자동모드면 잠금
+  ctrInput.readOnly = autoMode;
+  ctrInput.style.background = autoMode ? '#fff7ed' : '#f0f6ff';
+  ctrInput.style.borderColor = autoMode ? '#fed7aa' : '#bfdbfe';
 
-  // 자동계산 안내 메시지
+  // 안내 메시지
   const noteEl = document.getElementById('autoCalcNote');
-  if(autoCalc && classifiedData.length > 0) {
+  if(classifiedData.length > 0) {
     const ctrAvail = classifiedData.filter(d=>d.type==='ctr').length;
     const opCount = operators.length || DEFAULT_OPERATORS.length;
-    noteEl.innerHTML = `🤖 <strong>자동계산:</strong> CTR ${ctrAvail}개 ÷ ${opCount}명 = 인당 CTR <strong>${bc}개</strong> / STEADY <strong>${bs}개</strong> (총 ${total}개 기준)`;
-    noteEl.style.color = '#2563eb';
-  } else if(autoCalc && classifiedData.length === 0) {
-    noteEl.innerHTML = `⚠️ STEP 3 분류 후 자동계산됩니다. 현재는 수동 입력 중입니다.`;
-    noteEl.style.color = '#f59e0b';
+    const baseCtr = Math.round(total / 2);
+    const ctrNeeded = baseCtr * opCount;
+
+    if(autoMode) {
+      noteEl.innerHTML = `⚠️ <strong>CTR 부족 — 자동조정:</strong> CTR ${ctrAvail}개 &lt; 필요 ${ctrNeeded}개 (${baseCtr}×${opCount}명) → 인당 CTR <strong style="color:#ea580c">${bc}개</strong> / STEADY <strong>${bs}개</strong>`;
+      noteEl.style.color = '#ea580c';
+    } else {
+      noteEl.innerHTML = `✅ <strong>CTR 충분:</strong> CTR ${ctrAvail}개 ≥ 필요 ${ctrNeeded}개 → 인당 CTR <strong style="color:#166534">${bc}개</strong> / STEADY <strong>${bs}개</strong> (고정값 유지)`;
+      noteEl.style.color = '#166534';
+    }
   } else {
-    noteEl.innerHTML = '';
+    noteEl.innerHTML = `<span style="color:#94a3b8">STEP 3 분류 후 CTR 가용량을 자동 판단합니다.</span>`;
   }
 
   // 요일 요약
