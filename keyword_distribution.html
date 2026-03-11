@@ -125,6 +125,19 @@ input[type="file"] { display: none; }
 .op-card-del { background: none; border: none; cursor: pointer; color: #cbd5e1; font-size: 16px; line-height: 1; padding: 2px 4px; border-radius: 4px; transition: color 0.15s; margin-left: auto; }
 .op-card-del:hover { color: #ef4444; }
 
+/* ===== 휴가 계산표 ===== */
+.leave-calc-panel { background: #f8faff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 12px 14px; width: 100%; box-sizing: border-box; }
+.leave-calc-title { font-size: 11px; font-weight: 700; color: #1d4ed8; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+.leave-calc-legend { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+.leave-legend-item { font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 600; }
+.leave-calc-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.leave-calc-table th { background: #e8edf8; color: #374151; padding: 4px 4px; text-align: center; font-weight: 700; font-size: 10px; }
+.leave-calc-table td { padding: 3px 3px; text-align: center; border-bottom: 1px solid #f0f4ff; }
+.leave-calc-table tr:last-child td { border-bottom: none; }
+.leave-calc-table td:first-child { font-weight: 700; color: #1e3a8a; text-align: left; padding-left: 6px; white-space: nowrap; }
+.leave-day-sel { font-size: 10px; padding: 2px 2px; border: 1px solid #d0d8e8; border-radius: 4px; background: white; cursor: pointer; width: 52px; }
+.leave-calc-result { margin-top: 8px; padding: 6px 10px; background: white; border: 1.5px solid #bfdbfe; border-radius: 7px; font-size: 11px; font-weight: 700; color: #1d4ed8; text-align: center; }
+
 /* 운영자 추가 행 */
 .op-add-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
 .op-add-row select { padding: 8px 12px; border: 1.5px solid #d0d8e8; border-radius: 7px; font-size: 13px; font-family: inherit; background: #fafbfe; outline: none; }
@@ -198,7 +211,7 @@ input[type="file"] { display: none; }
       <h2>⚙️ 필터 설정</h2>
       <div class="filter-settings">
         <div class="filter-item"><label>키워드 최대 글자수 (이하만 허용)</label><input type="number" id="maxKeyLen" value="24" min="1" max="100"></div>
-        <div class="filter-item"><label>결과유무 필터 (O만 허용)</label><input type="text" value="O (고정)" readonly style="background:#f0f0f0;"></div>
+
       </div>
       <button class="btn btn-primary" onclick="processData()"><span>🚀 데이터 처리 시작</span></button>
     </div>
@@ -340,6 +353,28 @@ input[type="file"] { display: none; }
           <input type="text" id="opNameCustom" placeholder="이름 직접 입력" style="display:none;padding:8px 12px;border:1.5px solid #f59e0b;border-radius:7px;font-size:13px;width:130px;font-family:inherit;outline:none;">
           <button class="btn-add-op" onclick="addOperator()">+ 추가</button>
         </div>
+
+        <!-- 휴가 계산표 (운영자 카드 바로 아래) -->
+        <div class="leave-calc-panel" style="margin-top:14px;">
+          <div class="leave-calc-title">📅 휴가 개수 계산표 <span style="font-size:10px;color:#94a3b8;font-weight:400;">— 요일 선택 후 적용</span></div>
+          <div class="leave-calc-legend">
+            <span class="leave-legend-item" style="background:#dcfce7;color:#166534;">정상 = 하루 기준</span>
+            <span class="leave-legend-item" style="background:#fef9c3;color:#854d0e;">반차 = 45개</span>
+            <span class="leave-legend-item" style="background:#ede9fe;color:#5b21b6;">반반차 = 90개</span>
+            <span class="leave-legend-item" style="background:#fee2e2;color:#991b1b;">연차 = 0개</span>
+          </div>
+          <table class="leave-calc-table">
+            <thead>
+              <tr>
+                <th>운영자</th>
+                <th>월</th><th>화</th><th>수</th><th>목</th><th>금</th>
+                <th>합계</th>
+              </tr>
+            </thead>
+            <tbody id="leaveCalcBody"></tbody>
+          </table>
+          <button onclick="applyLeaveCalc()" style="margin-top:8px;width:100%;padding:6px;background:#2563eb;color:white;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;">✅ 계산 결과 운영자 카드에 적용</button>
+        </div>
       </div>
 
       <div class="alert alert-warning mt-8" id="totalDistInfo" style="display:none;"></div>
@@ -430,7 +465,7 @@ const HELP_DATA = {
           <div class="help-step-row"><div class="help-step-num">3</div><div class="help-step-text"><strong>🚀 데이터 처리 시작</strong> 버튼을 클릭합니다. 자동 필터링이 실행되고 처리 결과가 표시됩니다.</div></div>
           <div class="help-step-row"><div class="help-step-num">4</div><div class="help-step-text">처리 완료 후 결과를 확인하고 <strong>다음 단계 버튼</strong>을 클릭해 Step 2로 이동합니다.</div></div>
         </div>
-        <div class="help-note">📌 <strong>자동 제거 조건 3가지</strong><br>① 6행 제거 — 검색횟수 2회 이하 통계 행<br>② 키워드 25자 이상 제거<br>③ 결과유무가 O가 아닌 행 제거</div>
+        <div class="help-note">📌 <strong>자동 제거 조건 2가지</strong><br>① 6행 제거 — 검색횟수 2회 이하 통계 행<br>② 키워드 25자 이상 제거</div>
       </div>`
   },
   2: {
@@ -633,6 +668,7 @@ function onManualCtrChange() {
 function renderOpCards() {
   const list=document.getElementById('opCardList');
   if(!operators.length){list.innerHTML='<div style="color:#94a3b8;font-size:12px;padding:8px 0;">운영자가 없습니다</div>';return;}
+
   list.innerHTML=operators.map((op,i)=>`
     <div class="op-card-item">
       <div class="op-card-num" style="background:${OP_COLORS[i%OP_COLORS.length]}">${i+1}</div>
@@ -649,19 +685,98 @@ function renderOpCards() {
       <button class="op-card-del" onclick="removeOperator('${op.name}')" title="제거">✕</button>
     </div>`).join('');
 
-  // 드롭다운 옵션 중 이미 추가된 이름 비활성화
   const sel=document.getElementById('opNameSelect');
   Array.from(sel.options).forEach(opt=>{
     if(!opt.value||opt.value==='__custom__') return;
     opt.disabled=!!operators.find(o=>o.name===opt.value);
   });
 
-  // 총계 정보
+  updateTotalDistInfo();
+  renderLeaveCalc();
+}
+
+function renderLeaveCalc() {
+  const tbody = document.getElementById('leaveCalcBody');
+  if(!tbody) return;
+  if(!operators.length){ tbody.innerHTML='<tr><td colspan="7" style="color:#94a3b8;font-size:11px;padding:8px;">운영자를 추가하면 표가 나타납니다</td></tr>'; return; }
+
+  const total = parseInt(document.getElementById('totalCount').value)||850;
+  const dayBase = Math.round(total / 5); // 하루 기준
+  const days = ['mon','tue','wed','thu','fri'];
+  const dayLabels = ['월','화','수','목','금'];
+  const leaveOptions = `
+    <option value="normal">정상</option>
+    <option value="half">반차</option>
+    <option value="quarter">반반차</option>
+    <option value="off">연차</option>`;
+
+  tbody.innerHTML = operators.map((op, i) => {
+    const schedule = op.leaveSchedule || {mon:'normal',tue:'normal',wed:'normal',thu:'normal',fri:'normal'};
+    const total_count = calcLeaveTotal(schedule, dayBase);
+    const hasLeave = Object.values(schedule).some(v=>v!=='normal');
+    return `<tr>
+      <td style="color:${OP_COLORS[i%OP_COLORS.length]};font-weight:700;">${op.name}</td>
+      ${days.map(d=>`<td><select class="leave-day-sel" onchange="updateLeaveSchedule('${op.name}','${d}',this.value)">
+        ${leaveOptions.replace(`value="${schedule[d]}"`,`value="${schedule[d]}" selected`)}
+      </select></td>`).join('')}
+      <td style="font-weight:700;color:${hasLeave?'#f59e0b':'#1d4ed8'};">${total_count}개</td>
+    </tr>`;
+  }).join('');
+}
+
+function calcLeaveTotal(schedule, dayBase) {
+  const days = ['mon','tue','wed','thu','fri'];
+  return days.reduce((sum, d) => {
+    const v = schedule[d] || 'normal';
+    if(v === 'normal') return sum + dayBase;
+    if(v === 'half') return sum + 45;
+    if(v === 'quarter') return sum + 90;
+    return sum; // off = 0
+  }, 0);
+}
+
+function updateLeaveSchedule(name, day, value) {
+  const op = operators.find(o=>o.name===name);
+  if(!op) return;
+  if(!op.leaveSchedule) op.leaveSchedule = {mon:'normal',tue:'normal',wed:'normal',thu:'normal',fri:'normal'};
+  op.leaveSchedule[day] = value;
+  // 합계 셀만 즉시 갱신
+  renderLeaveCalc();
+}
+
+function applyLeaveCalc() {
+  const total = parseInt(document.getElementById('totalCount').value)||850;
+  const dayBase = Math.round(total / 5);
+  operators.forEach(op => {
+    const schedule = op.leaveSchedule || {mon:'normal',tue:'normal',wed:'normal',thu:'normal',fri:'normal'};
+    const totalCount = calcLeaveTotal(schedule, dayBase);
+    op.ctrCount = Math.floor(totalCount / 2);
+    op.steadyCount = totalCount - op.ctrCount;
+  });
+  renderOpCards();
+  updateTotalDistInfo();
+  // 적용 완료 피드백
+  const btn = document.querySelector('.leave-calc-panel button');
+  if(btn){ const orig=btn.textContent; btn.textContent='✅ 적용 완료!'; btn.style.background='#16a34a'; setTimeout(()=>{btn.textContent=orig;btn.style.background='#2563eb';},1500); }
+}
+
+function updateTotalDistInfo() {
   const info=document.getElementById('totalDistInfo');
   const tc=operators.reduce((s,o)=>s+o.ctrCount,0),ts=operators.reduce((s,o)=>s+o.steadyCount,0);
   const ca=classifiedData.filter(d=>d.type==='ctr').length,sa=classifiedData.filter(d=>d.type==='steady').length;
+  const offCount = operators.filter(o=>o.leave==='off').length;
+  const halfCount = operators.filter(o=>o.leave==='half').length;
+  const quarterCount = operators.filter(o=>o.leave==='quarter').length;
+  let leaveNote = '';
+  if(offCount||halfCount||quarterCount) {
+    const parts = [];
+    if(offCount) parts.push(`연차 ${offCount}명`);
+    if(halfCount) parts.push(`반차 ${halfCount}명`);
+    if(quarterCount) parts.push(`반반차 ${quarterCount}명`);
+    leaveNote = ` <span style="color:#f59e0b;font-size:11px;">(${parts.join(', ')} 반영)</span>`;
+  }
   info.style.display='flex';
-  info.innerHTML=`📊 운영자 <strong>${operators.length}명</strong> | 총 필요: <strong>CTR ${tc} + STEADY ${ts} = ${tc+ts}개</strong> | CTR 가용: <strong style="color:${ca>=tc?'#166534':'#dc2626'}">${ca}개</strong> | STEADY 가용: <strong>${sa}개</strong>`;
+  info.innerHTML=`📊 운영자 <strong>${operators.length}명</strong>${leaveNote} | 총 필요: <strong>CTR ${tc} + STEADY ${ts} = ${tc+ts}개</strong> | CTR 가용: <strong style="color:${ca>=tc?'#166534':'#dc2626'}">${ca}개</strong> | STEADY 가용: <strong>${sa}개</strong>`;
 }
 
 function updateOpCount(name, field, val) {
@@ -670,16 +785,11 @@ function updateOpCount(name, field, val) {
   const v = parseInt(val)||0;
   if(field==='ctr') op.ctrCount=v;
   else op.steadyCount=v;
-  // 합계 뱃지만 즉시 갱신 (리렌더 없이)
+  op.leave = 'normal'; // 수동 수정 시 근무상태 초기화
   const idx = operators.indexOf(op);
   const totalEl = document.getElementById('op-total-'+idx);
   if(totalEl) totalEl.textContent=(op.ctrCount+op.steadyCount)+'개';
-  // totalDistInfo 갱신
-  const info=document.getElementById('totalDistInfo');
-  const tc=operators.reduce((s,o)=>s+o.ctrCount,0),ts=operators.reduce((s,o)=>s+o.steadyCount,0);
-  const ca=classifiedData.filter(d=>d.type==='ctr').length,sa=classifiedData.filter(d=>d.type==='steady').length;
-  info.style.display='flex';
-  info.innerHTML=`📊 운영자 <strong>${operators.length}명</strong> | 총 필요: <strong>CTR ${tc} + STEADY ${ts} = ${tc+ts}개</strong> | CTR 가용: <strong style="color:${ca>=tc?'#166534':'#dc2626'}">${ca}개</strong> | STEADY 가용: <strong>${sa}개</strong>`;
+  updateTotalDistInfo();
 }
 
 function onOpSelectChange(sel) {
@@ -810,7 +920,7 @@ function processData() {
     if(i===ds){skip6++;continue;}
     const kw=String(row[cK]||'').trim();if(!kw)continue;
     if(kw.length>maxLen){longKw++;continue;}
-    if(String(row[cRes]||'').trim().toUpperCase()!=='O'){noResult++;continue;}
+    if(String(row[cRes]||'').trim().toUpperCase()!=='O'){noResult++;}
     const n=v=>(v===''||v===null||v===undefined)?0:(parseFloat(v)||0);
     rawData.push({keyword:kw,type:'steady',category:String(row[cCat]||'').trim(),
       search_total:n(row[cST]),search_pc:n(row[cSP]),search_mobile:n(row[cSM]),
