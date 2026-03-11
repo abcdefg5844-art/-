@@ -334,13 +334,30 @@ input[type="file"] { display: none; }
         </div>
       </div>
 
-      <!-- 운영자 카드 리스트 -->
+      <!-- 통합 운영자 & 휴가 계산표 -->
       <div style="margin-top:16px;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-          <span style="font-size:12px;font-weight:700;color:#444;">👤 운영자 목록</span>
-          <button onclick="resetOperators()" style="padding:3px 10px;background:#f1f5f9;border:1.5px solid #cbd5e1;border-radius:6px;font-size:11px;font-weight:600;color:#64748b;cursor:pointer;" title="디폴트 4명으로 초기화">↺ 초기화</button>
+          <span style="font-size:12px;font-weight:700;color:#444;">👤 운영자 & 휴가 계산표</span>
+          <button onclick="resetOperators()" style="padding:3px 10px;background:#f1f5f9;border:1.5px solid #cbd5e1;border-radius:6px;font-size:11px;font-weight:600;color:#64748b;cursor:pointer;">↺ 초기화</button>
         </div>
-        <div class="op-card-list" id="opCardList"></div>
+        <div class="leave-calc-legend" style="margin-bottom:8px;">
+          <span class="leave-legend-item" style="background:#dcfce7;color:#166534;">정상 = 하루 기준</span>
+          <span class="leave-legend-item" style="background:#fef9c3;color:#854d0e;">반차 = 45개</span>
+          <span class="leave-legend-item" style="background:#ede9fe;color:#5b21b6;">반반차 = 90개</span>
+          <span class="leave-legend-item" style="background:#fee2e2;color:#991b1b;">연차 = 0개</span>
+        </div>
+        <div class="leave-calc-panel" style="padding:0;overflow:hidden;">
+          <table class="leave-calc-table">
+            <thead>
+              <tr>
+                <th style="padding:7px 10px;text-align:left;">운영자</th>
+                <th>월</th><th>화</th><th>수</th><th>목</th><th>금</th>
+                <th>CTR</th><th>STEADY</th><th>합계</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="leaveCalcBody"></tbody>
+          </table>
+        </div>
         <!-- 추가 행 -->
         <div class="op-add-row" id="opAddRow" style="margin-top:10px;">
           <select id="opNameSelect" onchange="onOpSelectChange(this)">
@@ -353,42 +370,36 @@ input[type="file"] { display: none; }
           <input type="text" id="opNameCustom" placeholder="이름 직접 입력" style="display:none;padding:8px 12px;border:1.5px solid #f59e0b;border-radius:7px;font-size:13px;width:130px;font-family:inherit;outline:none;">
           <button class="btn-add-op" onclick="addOperator()">+ 추가</button>
         </div>
-
-        <!-- 휴가 계산표 (운영자 카드 바로 아래) -->
-        <div class="leave-calc-panel" style="margin-top:14px;">
-          <div class="leave-calc-title">📅 휴가 개수 계산표 <span style="font-size:10px;color:#94a3b8;font-weight:400;">— 요일 선택 후 적용</span></div>
-          <div class="leave-calc-legend">
-            <span class="leave-legend-item" style="background:#dcfce7;color:#166534;">정상 = 하루 기준</span>
-            <span class="leave-legend-item" style="background:#fef9c3;color:#854d0e;">반차 = 45개</span>
-            <span class="leave-legend-item" style="background:#ede9fe;color:#5b21b6;">반반차 = 90개</span>
-            <span class="leave-legend-item" style="background:#fee2e2;color:#991b1b;">연차 = 0개</span>
-          </div>
-          <table class="leave-calc-table">
-            <thead>
-              <tr>
-                <th>운영자</th>
-                <th>월</th><th>화</th><th>수</th><th>목</th><th>금</th>
-                <th>합계</th>
-              </tr>
-            </thead>
-            <tbody id="leaveCalcBody"></tbody>
-          </table>
-          <button onclick="applyLeaveCalc()" style="margin-top:8px;width:100%;padding:6px;background:#2563eb;color:white;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;">✅ 계산 결과 운영자 카드에 적용</button>
-        </div>
+        <!-- 숨겨진 opCardList (배분 로직 호환용) -->
+        <div id="opCardList" style="display:none;"></div>
       </div>
 
       <div class="alert alert-warning mt-8" id="totalDistInfo" style="display:none;"></div>
-      <div style="margin-top:10px;display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;">
+      <div style="margin-top:10px;display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;">
         <div class="form-group" style="max-width:200px;">
           <label>수집일 <small style="color:#e11d48;font-weight:600;">* 필수</small></label>
           <input type="text" id="opCollectDate" placeholder="예: 3월 2주차" oninput="validateStep4()">
           <div id="collectDateErr" style="display:none;color:#e11d48;font-size:11px;margin-top:3px;">⚠️ 수집일을 입력해주세요</div>
         </div>
-        <div class="form-group" style="max-width:220px;">
-          <label>기간 (파일명용) <small style="color:#888;font-weight:400;">예: 260302_260306</small></label>
-          <input type="text" id="opPeriod" placeholder="260302_260306" oninput="validateStep4()"
-            style="font-family:monospace;letter-spacing:1px;">
-          <div id="periodErr" style="display:none;color:#e11d48;font-size:11px;margin-top:3px;">⚠️ 기간을 입력해주세요</div>
+        <div class="form-group">
+          <label>기간 선택 <small style="color:#e11d48;font-weight:600;">* 필수</small> <small style="color:#888;font-weight:400;">— 달력에서 한 주 클릭</small></label>
+          <!-- 주간 달력 피커 -->
+          <div id="weekPickerWrap" style="background:white;border:1.5px solid #d0d8e8;border-radius:10px;padding:12px;width:260px;user-select:none;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+              <button onclick="weekCalPrev()" style="background:none;border:none;cursor:pointer;font-size:16px;color:#2563eb;padding:2px 6px;">‹</button>
+              <span id="weekCalMonthLabel" style="font-size:12px;font-weight:700;color:#1e3a8a;"></span>
+              <button onclick="weekCalNext()" style="background:none;border:none;cursor:pointer;font-size:16px;color:#2563eb;padding:2px 6px;">›</button>
+            </div>
+            <table style="width:100%;border-collapse:collapse;font-size:11px;">
+              <thead>
+                <tr id="weekCalHead"></tr>
+              </thead>
+              <tbody id="weekCalBody"></tbody>
+            </table>
+            <div id="weekPickerResult" style="margin-top:8px;padding:5px 8px;background:#eff6ff;border-radius:6px;font-size:11px;font-weight:700;color:#1d4ed8;text-align:center;display:none;"></div>
+          </div>
+          <input type="hidden" id="opPeriod">
+          <div id="periodErr" style="display:none;color:#e11d48;font-size:11px;margin-top:3px;">⚠️ 기간을 선택해주세요</div>
         </div>
       </div>
       <button class="btn btn-primary mt-12" onclick="goStep5WithValidation()">다음 단계: 최종 배분 →</button>
@@ -545,7 +556,7 @@ function openHelp(step) {
 }
 function closeHelp() { document.getElementById('helpModal').classList.remove('open'); }
 
-document.addEventListener('DOMContentLoaded',()=>{ setupDrop(); initDefaultOperators(); recalcCounts(); });
+document.addEventListener('DOMContentLoaded',()=>{ setupDrop(); initDefaultOperators(); recalcCounts(); weekCalInit(); });
 
 // ===== 디폴트 운영자 =====
 function initDefaultOperators() {
@@ -641,7 +652,15 @@ function recalcCounts() {
     + (changed ? '<span class="adj-highlight">' : ' <strong>') + adjTotal + '개' + (changed ? '</span>' : '</strong>')
     + ' <span style="color:#888;font-size:11px;">(CTR ' + ac + ' + STEADY ' + as_ + ')</span>';
 
-  operators.forEach(op => { op.ctrCount = ac; op.steadyCount = as_; });
+  operators.forEach(op => {
+    if(op.leaveSchedule && Object.values(op.leaveSchedule).some(v=>v!=='normal')) {
+      const tot = calcLeaveTotal(op.leaveSchedule, Math.round(total / 5));
+      op.ctrCount = Math.floor(tot / 2);
+      op.steadyCount = tot - op.ctrCount;
+    } else {
+      op.ctrCount = ac; op.steadyCount = as_;
+    }
+  });
   renderOpCards();
 }
 
@@ -660,73 +679,72 @@ function onManualCtrChange() {
     '작업일 <strong>' + active + '일</strong> / 기준 <strong>' + total + '개</strong> → 실제 인당 '
     + (changed ? '<span class="adj-highlight">' : ' <strong>') + (ac+as_) + '개' + (changed ? '</span>' : '</strong>')
     + ' <span style="color:#888;font-size:11px;">(CTR ' + ac + ' + STEADY ' + as_ + ')</span>';
-  operators.forEach(op => { op.ctrCount = ac; op.steadyCount = as_; });
+  operators.forEach(op => {
+    if(op.leaveSchedule && Object.values(op.leaveSchedule).some(v=>v!=='normal')) {
+      const tot = calcLeaveTotal(op.leaveSchedule, Math.round(total / 5));
+      op.ctrCount = Math.floor(tot / 2);
+      op.steadyCount = tot - op.ctrCount;
+    } else {
+      op.ctrCount = ac; op.steadyCount = as_;
+    }
+  });
   renderOpCards();
 }
 
-// ===== 운영자 카드 렌더 =====
+// ===== 운영자 카드 렌더 (통합 계산표로 대체) =====
 function renderOpCards() {
-  const list=document.getElementById('opCardList');
-  if(!operators.length){list.innerHTML='<div style="color:#94a3b8;font-size:12px;padding:8px 0;">운영자가 없습니다</div>';return;}
-
-  list.innerHTML=operators.map((op,i)=>`
-    <div class="op-card-item">
-      <div class="op-card-num" style="background:${OP_COLORS[i%OP_COLORS.length]}">${i+1}</div>
-      <div class="op-card-name">${op.name}</div>
-      <div class="op-card-counts">
-        <span class="op-cnt-label">CTR</span>
-        <input class="op-cnt-input" type="number" min="0" value="${op.ctrCount}"
-          oninput="updateOpCount('${op.name}','ctr',this.value)" title="CTR 개수 직접 수정">
-        <span class="op-cnt-label">STEADY</span>
-        <input class="op-cnt-input" type="number" min="0" value="${op.steadyCount}"
-          oninput="updateOpCount('${op.name}','steady',this.value)" title="STEADY 개수 직접 수정">
-        <span class="op-cnt-total" id="op-total-${i}">${op.ctrCount+op.steadyCount}개</span>
-      </div>
-      <button class="op-card-del" onclick="removeOperator('${op.name}')" title="제거">✕</button>
-    </div>`).join('');
-
-  const sel=document.getElementById('opNameSelect');
-  Array.from(sel.options).forEach(opt=>{
-    if(!opt.value||opt.value==='__custom__') return;
-    opt.disabled=!!operators.find(o=>o.name===opt.value);
-  });
-
-  updateTotalDistInfo();
   renderLeaveCalc();
 }
 
 function renderLeaveCalc() {
   const tbody = document.getElementById('leaveCalcBody');
   if(!tbody) return;
-  if(!operators.length){ tbody.innerHTML='<tr><td colspan="7" style="color:#94a3b8;font-size:11px;padding:8px;">운영자를 추가하면 표가 나타납니다</td></tr>'; return; }
+  if(!operators.length){
+    tbody.innerHTML='<tr><td colspan="10" style="color:#94a3b8;font-size:11px;padding:10px;">운영자를 추가하면 표가 나타납니다</td></tr>';
+    return;
+  }
 
   const total = parseInt(document.getElementById('totalCount').value)||850;
-  const dayBase = Math.round(total / 5); // 하루 기준
+  const dayBase = Math.round(total / 5);
   const days = ['mon','tue','wed','thu','fri'];
-  const dayLabels = ['월','화','수','목','금'];
-  const leaveOptions = `
-    <option value="normal">정상</option>
-    <option value="half">반차</option>
-    <option value="quarter">반반차</option>
-    <option value="off">연차</option>`;
+  const leaveOptions = (sel) => ['normal','half','quarter','off'].map(v =>
+    `<option value="${v}"${sel===v?' selected':''}>${v==='normal'?'정상':v==='half'?'반차':v==='quarter'?'반반차':'연차'}</option>`
+  ).join('');
 
   tbody.innerHTML = operators.map((op, i) => {
     const schedule = op.leaveSchedule || {mon:'normal',tue:'normal',wed:'normal',thu:'normal',fri:'normal'};
-    const total_count = calcLeaveTotal(schedule, dayBase);
+    const tot = calcLeaveTotal(schedule, dayBase);
+    // 항상 tot 기준으로 CTR/STEADY 동기화
+    op.ctrCount = Math.floor(tot / 2);
+    op.steadyCount = tot - op.ctrCount;
     const hasLeave = Object.values(schedule).some(v=>v!=='normal');
-    return `<tr>
-      <td style="color:${OP_COLORS[i%OP_COLORS.length]};font-weight:700;">${op.name}</td>
-      ${days.map(d=>`<td><select class="leave-day-sel" onchange="updateLeaveSchedule('${op.name}','${d}',this.value)">
-        ${leaveOptions.replace(`value="${schedule[d]}"`,`value="${schedule[d]}" selected`)}
-      </select></td>`).join('')}
-      <td style="font-weight:700;color:${hasLeave?'#f59e0b':'#1d4ed8'};">${total_count}개</td>
+    const rowBg = hasLeave ? 'background:#fffbeb;' : '';
+    return `<tr style="${rowBg}">
+      <td style="padding:5px 10px;font-weight:700;color:${OP_COLORS[i%OP_COLORS.length]};white-space:nowrap;">${op.name}</td>
+      ${days.map(d=>`<td style="padding:3px 2px;"><select class="leave-day-sel" onchange="updateLeaveSchedule('${op.name}','${d}',this.value)">${leaveOptions(schedule[d])}</select></td>`).join('')}
+      <td style="padding:3px 4px;"><input class="op-cnt-input" type="number" min="0" value="${op.ctrCount}" style="width:54px;" oninput="updateOpCount('${op.name}','ctr',this.value)"></td>
+      <td style="padding:3px 4px;"><input class="op-cnt-input" type="number" min="0" value="${op.steadyCount}" style="width:54px;" oninput="updateOpCount('${op.name}','steady',this.value)"></td>
+      <td style="padding:3px 8px;font-weight:700;color:${hasLeave?'#f59e0b':'#1d4ed8'};white-space:nowrap;">${tot}개</td>
+      <td style="padding:3px 6px;"><button onclick="removeOperator('${op.name}')" style="background:none;border:none;cursor:pointer;color:#cbd5e1;font-size:15px;line-height:1;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#cbd5e1'">✕</button></td>
     </tr>`;
   }).join('');
+
+  // 드롭다운 비활성화
+  const sel = document.getElementById('opNameSelect');
+  if(sel) Array.from(sel.options).forEach(opt=>{
+    if(!opt.value||opt.value==='__custom__') return;
+    opt.disabled=!!operators.find(o=>o.name===opt.value);
+  });
+
+  updateTotalDistInfo();
 }
 
 function calcLeaveTotal(schedule, dayBase) {
+  const dayMap = {mon:'mon', tue:'tue', wed:'wed', thu:'thu', fri:'fri'};
   const days = ['mon','tue','wed','thu','fri'];
   return days.reduce((sum, d) => {
+    // 작업요일에서 해제된 날은 0개
+    if(!dayState[d]) return sum;
     const v = schedule[d] || 'normal';
     if(v === 'normal') return sum + dayBase;
     if(v === 'half') return sum + 45;
@@ -740,25 +758,19 @@ function updateLeaveSchedule(name, day, value) {
   if(!op) return;
   if(!op.leaveSchedule) op.leaveSchedule = {mon:'normal',tue:'normal',wed:'normal',thu:'normal',fri:'normal'};
   op.leaveSchedule[day] = value;
-  // 합계 셀만 즉시 갱신
+
+  // CTR/STEADY 즉시 자동 계산 (작업 요일 기준 하루 단위로 계산)
+  const total = parseInt(document.getElementById('totalCount').value)||850;
+  const active = Object.values(dayState).filter(Boolean).length;
+  const dayBase = active > 0 ? Math.round(total * active / 5 / active) : 0; // 하루 기준 = total/5
+  const tot = calcLeaveTotal(op.leaveSchedule, Math.round(total / 5));
+  op.ctrCount = Math.floor(tot / 2);
+  op.steadyCount = tot - op.ctrCount;
+
   renderLeaveCalc();
+  updateTotalDistInfo();
 }
 
-function applyLeaveCalc() {
-  const total = parseInt(document.getElementById('totalCount').value)||850;
-  const dayBase = Math.round(total / 5);
-  operators.forEach(op => {
-    const schedule = op.leaveSchedule || {mon:'normal',tue:'normal',wed:'normal',thu:'normal',fri:'normal'};
-    const totalCount = calcLeaveTotal(schedule, dayBase);
-    op.ctrCount = Math.floor(totalCount / 2);
-    op.steadyCount = totalCount - op.ctrCount;
-  });
-  renderOpCards();
-  updateTotalDistInfo();
-  // 적용 완료 피드백
-  const btn = document.querySelector('.leave-calc-panel button');
-  if(btn){ const orig=btn.textContent; btn.textContent='✅ 적용 완료!'; btn.style.background='#16a34a'; setTimeout(()=>{btn.textContent=orig;btn.style.background='#2563eb';},1500); }
-}
 
 function updateTotalDistInfo() {
   const info=document.getElementById('totalDistInfo');
@@ -850,8 +862,8 @@ function goStep(n) {
   document.getElementById('step-'+n).classList.add('active');
   document.querySelectorAll('.step-btn').forEach((b,i)=>{b.classList.remove('active');if(i+1<n)b.classList.add('done');else b.classList.remove('done');});
   document.getElementById('nav-'+n).classList.add('active');
-  // STEP 4 진입 시 CTR 가용량 기준 자동 재계산
-  if(n===4) recalcCounts();
+  // STEP 4 진입 시 CTR 가용량 기준 자동 재계산 + 달력 초기화
+  if(n===4) { recalcCounts(); weekCalInit(); }
 }
 function addLog(id,msg,type='info') {
   const el=document.getElementById(id);
@@ -1212,6 +1224,105 @@ function exportJSON() {
   a.click();
   addLog('finalLog', `📥 JSON 내보내기 완료: ${out.length}개 (Python 스크립트로 처리하세요)`, 'success');
 }
+// ===== 주간 달력 피커 =====
+let weekCalDate = new Date(); // 현재 표시 중인 월
+weekCalDate.setDate(1);
+
+function weekCalInit() {
+  const head = document.getElementById('weekCalHead');
+  if(!head) return;
+  head.innerHTML = ['일','월','화','수','목','금','토'].map(d=>
+    `<th style="padding:3px;text-align:center;color:${d==='일'?'#ef4444':d==='토'?'#2563eb':'#374151'};font-weight:600;">${d}</th>`
+  ).join('');
+  weekCalRender();
+}
+
+function weekCalRender() {
+  const y = weekCalDate.getFullYear();
+  const m = weekCalDate.getMonth();
+  document.getElementById('weekCalMonthLabel').textContent =
+    `${y}년 ${m+1}월`;
+
+  const firstDay = new Date(y, m, 1).getDay();
+  const lastDate = new Date(y, m+1, 0).getDate();
+  const selectedPeriod = document.getElementById('opPeriod').value;
+
+  let rows = '', day = 1 - firstDay;
+  for(let w = 0; w < 6; w++) {
+    // 이 주에 날짜가 하나도 없으면 생략
+    if(day > lastDate) break;
+    // 이 주의 월~금 계산
+    const weekDays = [];
+    for(let d = 0; d < 7; d++, day++) {
+      weekDays.push(day);
+    }
+    // 월요일(인덱스1)~금요일(인덱스5) 중 이번 달에 속하는 날
+    const monDay = weekDays[1], friDay = weekDays[5];
+    const monValid = monDay >= 1 && monDay <= lastDate;
+    const friValid = friDay >= 1 && friDay <= lastDate;
+    // 실제 월~금 (달 경계 클램프)
+    const monActual = Math.max(1, monDay);
+    const friActual = Math.min(lastDate, friDay);
+
+    const periodStr = fmtPeriod(y, m+1, monActual, friActual);
+    const isSelected = selectedPeriod === periodStr;
+
+    const rowStyle = isSelected
+      ? 'background:#dbeafe;cursor:pointer;'
+      : 'cursor:pointer;';
+
+    rows += `<tr style="${rowStyle}" onclick="selectWeek(${y},${m+1},${monActual},${friActual})"
+      onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='${isSelected?'#dbeafe':''}'">`;
+    day -= 7; // 되감기
+    for(let d = 0; d < 7; d++, day++) {
+      const inMonth = day >= 1 && day <= lastDate;
+      const isWeekday = d >= 1 && d <= 5; // 월~금
+      const textColor = d===0?'#fca5a5':d===6?'#93c5fd':'#374151';
+      const opacity = inMonth ? '1' : '0.25';
+      const fw = isWeekday && isSelected ? '700' : '400';
+      rows += `<td style="padding:4px 2px;text-align:center;color:${textColor};opacity:${opacity};font-weight:${fw};font-size:11px;">${inMonth?day:''}</td>`;
+    }
+    rows += '</tr>';
+  }
+  document.getElementById('weekCalBody').innerHTML = rows;
+}
+
+function fmtPeriod(y, m, monD, friD) {
+  const yy = String(y).slice(2);
+  const mm = String(m).padStart(2,'0');
+  const dd1 = String(monD).padStart(2,'0');
+  const dd2 = String(friD).padStart(2,'0');
+  return `${yy}${mm}${dd1}_${yy}${mm}${dd2}`;
+}
+
+function selectWeek(y, m, monD, friD) {
+  const period = fmtPeriod(y, m, monD, friD);
+  document.getElementById('opPeriod').value = period;
+
+  // 수집일 자동 채우기 (n월 n주차)
+  const week = Math.ceil(monD / 7);
+  const collectDate = `${m}월 ${week}주차`;
+  const cdEl = document.getElementById('opCollectDate');
+  cdEl.value = collectDate;
+
+  // 결과 표시
+  const result = document.getElementById('weekPickerResult');
+  result.style.display = 'block';
+  result.innerHTML = `✅ ${y}.${String(m).padStart(2,'0')}.${String(monD).padStart(2,'0')} ~ ${String(friD).padStart(2,'0')} <span style="color:#64748b;font-weight:400;margin-left:6px;">${period}</span>`;
+
+  weekCalRender();
+  validateStep4();
+}
+
+function weekCalPrev() {
+  weekCalDate.setMonth(weekCalDate.getMonth() - 1);
+  weekCalRender();
+}
+function weekCalNext() {
+  weekCalDate.setMonth(weekCalDate.getMonth() + 1);
+  weekCalRender();
+}
+
 function validateStep4() {
   const cd = document.getElementById('opCollectDate').value.trim();
   const pd = document.getElementById('opPeriod').value.trim();
@@ -1347,11 +1458,10 @@ function exportAppendedExcel() {
     d.rank          != null ? Number(d.rank)          : ''
   ]);
 
-  // 기존 데이터 개수 재번호
+  // 기존 데이터 개수 재번호 (1번부터 독립적으로)
   const existingRenumbered = existingRows.map((row, idx) => {
     const newRow = [...row];
-    // A열(개수) 재번호
-    newRow[0] = {v: newRows.length + idx + 1, s: newRow[0].s, t: 'n'};
+    newRow[0] = {v: idx + 1, s: newRow[0]?.s, t: 'n'};
     return newRow;
   });
 
@@ -1363,6 +1473,15 @@ function exportAppendedExcel() {
     }
   }
 
+  // 공통 서식: 가운데 정렬(가로+세로) + 글씨 9pt
+  const applyStyle = (cell, refStyle) => {
+    const base = refStyle ? JSON.parse(JSON.stringify(refStyle)) : {};
+    base.alignment = { horizontal: 'center', vertical: 'center', wrapText: false };
+    base.font = Object.assign(base.font || {}, { sz: 9 });
+    cell.s = base;
+    return cell;
+  };
+
   // 새 데이터 쓰기 (10행부터)
   newRows.forEach((rv, ri) => {
     const tr = 9 + ri;
@@ -1371,8 +1490,7 @@ function exportAppendedExcel() {
       const isEmpty = val==='' || val===null || val===undefined;
       const isNum   = !isEmpty && typeof val==='number' && !isNaN(val);
       const cell = isEmpty ? {v:'',t:'s'} : isNum ? {v:val,t:'n'} : {v:String(val),t:'s'};
-      if(refRowStyle[ci]) cell.s = JSON.parse(JSON.stringify(refRowStyle[ci]));
-      ws[addr] = cell;
+      ws[addr] = applyStyle(cell, refRowStyle[ci]);
     });
   });
 
@@ -1384,13 +1502,42 @@ function exportAppendedExcel() {
       const isEmpty = cell.v==='' || cell.v===null || cell.v===undefined;
       const isNum   = !isEmpty && typeof cell.v==='number' && !isNaN(cell.v);
       const newCell = isEmpty ? {v:'',t:'s'} : isNum ? {v:cell.v,t:'n'} : {v:String(cell.v),t:'s'};
-      if(cell.s) newCell.s = cell.s;
-      ws[addr] = newCell;
+      ws[addr] = applyStyle(newCell, cell.s);
     });
   });
 
   const totalRows = newRows.length + existingRenumbered.length;
   ws['!ref'] = XLSX.utils.encode_range({s:{r:0,c:0}, e:{r:9+totalRows-1, c:Math.max(range.e.c,22)}});
+
+  // 열 너비 설정 (A~W, 23개)
+  // A:개수 B:운영자 C:작업일 D:수집일 E:키워드 F:키워드유형 G:카테고리
+  // H:키워드속성 I:타사비교 J:리포트유형 K:처리내용 L:내용 M:코멘트
+  // N~P:검색횟수 Q~S:상품클릭수 T~V:유입률 W:순위
+  ws['!cols'] = [
+    {wch:5},  // A 개수
+    {wch:8},  // B 운영자
+    {wch:10}, // C 작업일
+    {wch:10}, // D 수집일
+    {wch:22}, // E 키워드
+    {wch:8},  // F 키워드유형
+    {wch:12}, // G 카테고리
+    {wch:10}, // H 키워드속성
+    {wch:8},  // I 타사비교
+    {wch:10}, // J 리포트유형
+    {wch:10}, // K 처리내용
+    {wch:12}, // L 내용
+    {wch:12}, // M 코멘트
+    {wch:10}, // N 검색횟수(전체)
+    {wch:10}, // O 검색횟수(PC)
+    {wch:10}, // P 검색횟수(Mobile)
+    {wch:10}, // Q 상품클릭수(전체)
+    {wch:10}, // R 상품클릭수(PC)
+    {wch:10}, // S 상품클릭수(Mobile)
+    {wch:8},  // T 유입률(전체)
+    {wch:8},  // U 유입률(PC)
+    {wch:8},  // V 유입률(Mobile)
+    {wch:6},  // W 순위
+  ];
 
   addLog('finalLog', `✅ 새 데이터 ${newRows.length}개(위) + 기존 데이터 ${existingRenumbered.length}개(아래) 합계 ${totalRows}개`, 'success');
 
