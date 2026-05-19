@@ -190,6 +190,7 @@ input[type="file"] { display: none; }
     <button class="step-btn" onclick="goStep(3)" id="nav-3"><span class="step-num">③</span><span class="step-label">CTR/Steady<br>유형 분류</span></button>
     <button class="step-btn" onclick="goStep(4)" id="nav-4"><span class="step-num">④</span><span class="step-label">배분 설정<br>운영자</span></button>
     <button class="step-btn" onclick="goStep(5)" id="nav-5"><span class="step-num">⑤</span><span class="step-label">최종 배분<br>&amp; 다운로드</span></button>
+    <button class="step-btn" onclick="goStep(6)" id="nav-6"><span class="step-num">⑥</span><span class="step-label">검토필요<br>누적 변환</span></button>
   </div>
 
   <!-- STEP 1 -->
@@ -441,6 +442,56 @@ input[type="file"] { display: none; }
       </div>
     </div>
   </div>
+
+  <!-- STEP 6 -->
+  <div class="section-page" id="step-6">
+    <div class="card">
+      <button class="help-btn" onclick="openHelp(6)" title="도움말">?</button>
+      <h2>🔍 검토필요 → 누적시트 변환 <span class="badge">STEP 6</span></h2>
+      <div class="alert alert-info">ℹ️ search_eval 결과의 <strong>검토필요</strong> 키워드를 인기_키워드_검수 배분 데이터에서 찾아 누적시트 형식(23컬럼)으로 변환합니다.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px;">
+        <div>
+          <p style="font-size:12px;font-weight:700;color:#1a3a6e;margin-bottom:8px;">1. search_eval 결과</p>
+          <label for="s6EvalInput">
+            <div class="file-upload-area" id="s6EvalArea" style="padding:20px;">
+              <div class="icon" style="font-size:28px;">📊</div>
+              <p><strong>search_eval_results.xlsx</strong></p>
+              <p style="font-size:11px;color:#999;margin-top:4px;">"검토필요" 시트 포함 파일</p>
+            </div>
+          </label>
+          <input type="file" id="s6EvalInput" accept=".xlsx,.xls" onchange="s6HandleEval(event)">
+        </div>
+        <div>
+          <p style="font-size:12px;font-weight:700;color:#1a3a6e;margin-bottom:8px;">2. 인기_키워드_검수 엑셀</p>
+          <label for="s6SourceInput">
+            <div class="file-upload-area" id="s6SourceArea" style="padding:20px;">
+              <div class="icon" style="font-size:28px;">📋</div>
+              <p><strong>인기_키워드_검수_*.xlsx</strong></p>
+              <p style="font-size:11px;color:#999;margin-top:4px;">배분 결과 파일</p>
+            </div>
+          </label>
+          <input type="file" id="s6SourceInput" accept=".xlsx,.xls" onchange="s6HandleSource(event)">
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:14px;">
+        <div class="form-group">
+          <label>수집일</label>
+          <input type="text" id="s6CollectDate" style="width:140px;">
+        </div>
+        <button class="btn btn-primary" id="s6BtnConvert" disabled onclick="s6RunConvert()">🔄 변환 실행</button>
+      </div>
+    </div>
+    <div class="card" id="s6ResultCard" style="display:none;">
+      <h2>📋 변환 결과</h2>
+      <div class="stat-row" id="s6Stats"></div>
+      <div class="log" id="s6Log"></div>
+      <div class="table-wrap mt-8" id="s6Preview"></div>
+      <div class="export-options">
+        <button class="btn btn-success" onclick="s6Download()">📥 누적시트용 엑셀 다운로드</button>
+        <button class="btn btn-danger" onclick="s6Reset()">🔄 처음부터 다시</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -543,6 +594,22 @@ const HELP_DATA = {
           <div class="help-step-row"><div class="help-step-num">4</div><div class="help-step-text">다운로드 방식을 선택합니다.<br>· <strong>배분파일에 이어붙이기 (권장)</strong> — 기존 엑셀 형식 그대로 유지<br>· <strong>새 엑셀로 다운로드</strong> — 전체 시트 + 운영자별 시트 포함<br>· <strong>CSV 다운로드</strong> — 간단한 텍스트 형식</div></div>
         </div>
         <div class="help-note">📌 이어붙이기 기능을 쓰려면 반드시 <strong>기존 배분 파일을 먼저 업로드</strong>해야 합니다.</div>
+      </div>`
+  },
+  6: {
+    title: '검토필요 → 누적시트 변환',
+    label: 'STEP 6 — search_eval 검토필요 키워드를 누적시트 형식으로 변환합니다',
+    content: `
+      <div class="help-section">
+        <div class="help-section-title">📋 사용 방법</div>
+        <div class="help-step-list">
+          <div class="help-step-row"><div class="help-step-num">1</div><div class="help-step-text"><strong>search_eval_results.xlsx</strong>를 업로드합니다. "검토필요" 시트가 포함된 파일이어야 합니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">2</div><div class="help-step-text"><strong>인기_키워드_검수 엑셀</strong>을 업로드합니다. STEP 5에서 배분한 결과 파일입니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">3</div><div class="help-step-text"><strong>수집일</strong>을 확인합니다 (자동 계산됨). 필요시 수정하세요.</div></div>
+          <div class="help-step-row"><div class="help-step-num">4</div><div class="help-step-text"><strong>🔄 변환 실행</strong>을 클릭하면 검토필요 키워드를 배분 데이터에서 찾아 23컬럼 형식으로 변환합니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">5</div><div class="help-step-text">미리보기를 확인한 후 <strong>📥 누적시트용 엑셀 다운로드</strong>를 클릭합니다.</div></div>
+        </div>
+        <div class="help-note">📌 검토필요 키워드의 검색횟수·클릭수·유입률·순위는 인기_키워드_검수 배분 데이터에서 가져옵니다.</div>
       </div>`
   }
 };
@@ -1549,6 +1616,171 @@ function exportAppendedExcel() {
   } catch(err) {
     addLog('finalLog', `❌ 저장 오류: ${err.message}`, 'error');
   }
+}
+
+// ===== STEP 6: 검토필요 → 누적시트 변환 =====
+let s6Eval=null, s6Source=null, s6Result=null, s6EvalOk=false, s6SourceOk=false;
+
+const S6_COLUMNS = [
+  "개수","운영자","작업일","수집일","키워드","키워드 유형","카테고리",
+  "penalty_notes","리포트 유형","처리내용","내용","코멘트",
+  "검색 횟수(전체)","검색 횟수(PC)","검색 횟수(Mobile)",
+  "상품 클릭수(전체)","상품 클릭수(PC)","상품 클릭수(Mobile)",
+  "유입률(전체)","유입률(PC)","유입률(Mobile)","순위"
+];
+
+(function(){
+  const now=new Date(), wk=Math.ceil(now.getDate()/7);
+  setTimeout(()=>{
+    const el=document.getElementById('s6CollectDate');
+    if(el) el.value=`${now.getMonth()+1}월 ${wk}주차`;
+    // 드래그앤드롭
+    ['s6EvalArea','s6SourceArea'].forEach(id=>{
+      const a=document.getElementById(id);
+      if(!a) return;
+      a.addEventListener('dragover',e=>{e.preventDefault();a.classList.add('dragover');});
+      a.addEventListener('dragleave',()=>a.classList.remove('dragover'));
+    });
+    const ea=document.getElementById('s6EvalArea');
+    if(ea) ea.addEventListener('drop',e=>{e.preventDefault();ea.classList.remove('dragover');if(e.dataTransfer.files.length) s6ProcessEval(e.dataTransfer.files[0]);});
+    const sa=document.getElementById('s6SourceArea');
+    if(sa) sa.addEventListener('drop',e=>{e.preventDefault();sa.classList.remove('dragover');if(e.dataTransfer.files.length) s6ProcessSource(e.dataTransfer.files[0]);});
+  },100);
+})();
+
+function s6HandleEval(e){if(e.target.files.length)s6ProcessEval(e.target.files[0]);}
+function s6HandleSource(e){if(e.target.files.length)s6ProcessSource(e.target.files[0]);}
+
+function s6ProcessEval(file){
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const wb=XLSX.read(e.target.result,{type:'binary'});
+      if(!wb.SheetNames.includes('검토필요')){alert('"검토필요" 시트가 없습니다.');return;}
+      s6Eval=XLSX.utils.sheet_to_json(wb.Sheets['검토필요']);
+      s6EvalOk=true;
+      const a=document.getElementById('s6EvalArea');
+      a.classList.add('loaded');
+      a.innerHTML=`<div class="icon" style="font-size:28px;">✅</div><p><strong>${file.name}</strong></p><p style="font-size:11px;color:#166534;margin-top:4px;">검토필요 ${s6Eval.length}개 키워드</p>`;
+      s6CheckReady();
+    }catch(err){alert('파일 오류: '+err.message);}
+  };
+  reader.readAsBinaryString(file);
+}
+
+function s6ProcessSource(file){
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const wb=XLSX.read(e.target.result,{type:'binary'});
+      if(!wb.SheetNames.includes('배분')){alert('"배분" 시트가 없습니다.');return;}
+      const allRows=XLSX.utils.sheet_to_json(wb.Sheets['배분'],{header:1});
+      let hIdx=-1, hRow=null;
+      for(let r=0;r<Math.min(allRows.length,20);r++){
+        const row=allRows[r];
+        if(row&&row.some(c=>String(c).trim()==='키워드')){hIdx=r;hRow=row.map(c=>c!=null?String(c).trim():'');break;}
+      }
+      if(hIdx===-1){alert('배분 시트에서 "키워드" 컬럼을 찾을 수 없습니다.');return;}
+      s6Source=[];
+      for(let r=hIdx+1;r<allRows.length;r++){
+        const row=allRows[r];if(!row||!row.length)continue;
+        const obj={};hRow.forEach((h,ci)=>{if(h)obj[h]=row[ci];});
+        if(obj['키워드'])s6Source.push(obj);
+      }
+      s6SourceOk=true;
+      const dates=[...new Set(s6Source.map(d=>d['수집일']).filter(Boolean))];
+      const a=document.getElementById('s6SourceArea');
+      a.classList.add('loaded');
+      a.innerHTML=`<div class="icon" style="font-size:28px;">✅</div><p><strong>${file.name}</strong></p><p style="font-size:11px;color:#166534;margin-top:4px;">${s6Source.length.toLocaleString()}행 (${dates.length}주차)</p>`;
+      s6CheckReady();
+    }catch(err){alert('파일 오류: '+err.message);}
+  };
+  reader.readAsBinaryString(file);
+}
+
+function s6CheckReady(){document.getElementById('s6BtnConvert').disabled=!(s6EvalOk&&s6SourceOk);}
+
+function s6RunConvert(){
+  const cd=document.getElementById('s6CollectDate').value.trim();
+  if(!cd){alert('수집일을 입력하세요');return;}
+  const lookup={};
+  s6Source.forEach(row=>{const kw=String(row['키워드']||'').trim();if(kw&&!lookup[kw])lookup[kw]=row;});
+
+  s6Result=[];
+  let matched=0;const unmatched=[];
+  const logs=[`▶ 변환 시작 — 검토필요 ${s6Eval.length}개 × 배분시트 ${s6Source.length.toLocaleString()}개`];
+
+  s6Eval.forEach((ev,idx)=>{
+    const kw=String(ev.keyword||'').trim();
+    const src=lookup[kw];
+    const row=new Array(22).fill('');
+    row[0]=idx+1; row[3]=cd; row[4]=kw;
+    row[7]=ev.penalty_notes??'';  // penalty_notes from search_eval
+    if(src){
+      matched++;
+      row[5]=src['키워드 유형']||'steady';
+      row[6]=src['카테고리']??'';
+      row[12]=src['검색 횟수(전체)']??'';
+      row[13]=src['검색 횟수(PC)']??'';
+      row[14]=src['검색 횟수(Mobile)']??'';
+      row[15]=src['상품 클릭수(전체)']??'';
+      row[16]=src['상품 클릭수(PC)']??'';
+      row[17]=src['상품 클릭수(Mobile)']??'';
+      row[18]=src['유입률(전체)']??'';
+      row[19]=src['유입률(PC)']??'';
+      row[20]=src['유입률(Mobile)']??'';
+      row[21]=src['순위']??'';
+    } else { unmatched.push(kw); row[5]='steady'; }
+    s6Result.push(row);
+  });
+
+  logs.push(`✅ 매칭 성공: ${matched}개`);
+  if(unmatched.length) logs.push(`⚠️ 미매칭: ${unmatched.length}개 — ${unmatched.slice(0,10).join(', ')}${unmatched.length>10?'...':''}`);
+  logs.push(`📊 결과: ${s6Result.length}행 × 23컬럼`);
+
+  document.getElementById('s6ResultCard').style.display='block';
+  document.getElementById('s6Stats').innerHTML=`
+    <div class="stat-box"><div class="num">${s6Eval.length}</div><div class="label">검토필요</div></div>
+    <div class="stat-box" style="background:#f0fdf4;"><div class="num" style="color:#22c55e;">${matched}</div><div class="label">매칭 성공</div></div>
+    <div class="stat-box" ${unmatched.length?'style="background:#fef2f2;"':''}><div class="num" style="color:${unmatched.length?'#ef4444':'#2563eb'};">${unmatched.length}</div><div class="label">미매칭</div></div>
+  `;
+  document.getElementById('s6Log').innerHTML=logs.map(l=>{
+    if(l.startsWith('✅'))return`<span style="color:#a0f0a0">${l}</span>`;
+    if(l.startsWith('⚠️'))return`<span style="color:#f5e060">${l}</span>`;
+    return l;
+  }).join('<br>');
+
+  const preview=s6Result.slice(0,20);
+  const cols=['#','운영자','수집일','키워드','유형','카테고리','penalty_notes','검색(전체)','클릭(전체)','유입률(전체)','순위'];
+  const ci=[0,1,3,4,5,6,7,12,15,18,21];
+  let html='<table><thead><tr>'+cols.map(c=>`<th>${c}</th>`).join('')+'</tr></thead><tbody>';
+  preview.forEach(row=>{html+='<tr>'+ci.map(c=>`<td>${row[c]!==''&&row[c]!=null?row[c]:''}</td>`).join('')+'</tr>';});
+  if(s6Result.length>20) html+=`<tr><td colspan="${cols.length}" style="color:#94a3b8;text-align:center;">... 외 ${s6Result.length-20}행</td></tr>`;
+  html+='</tbody></table>';
+  document.getElementById('s6Preview').innerHTML=html;
+  document.getElementById('s6ResultCard').scrollIntoView({behavior:'smooth'});
+}
+
+function s6Download(){
+  if(!s6Result||!s6Result.length){alert('변환 데이터가 없습니다');return;}
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet([S6_COLUMNS,...s6Result]);
+  ws['!cols']=[{wch:5},{wch:8},{wch:10},{wch:10},{wch:22},{wch:8},{wch:12},{wch:30},{wch:10},{wch:10},{wch:12},{wch:12},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:8},{wch:8},{wch:8},{wch:6}];
+  XLSX.utils.book_append_sheet(wb,ws,'검토필요_누적형식');
+  const d=new Date(),ds=String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+  XLSX.writeFile(wb,`검토필요_누적형식_${ds}.xlsx`);
+}
+
+function s6Reset(){
+  s6Eval=null;s6Source=null;s6Result=null;s6EvalOk=false;s6SourceOk=false;
+  document.getElementById('s6EvalArea').classList.remove('loaded');
+  document.getElementById('s6EvalArea').innerHTML='<div class="icon" style="font-size:28px;">📊</div><p><strong>search_eval_results.xlsx</strong></p><p style="font-size:11px;color:#999;margin-top:4px;">"검토필요" 시트 포함 파일</p>';
+  document.getElementById('s6SourceArea').classList.remove('loaded');
+  document.getElementById('s6SourceArea').innerHTML='<div class="icon" style="font-size:28px;">📋</div><p><strong>인기_키워드_검수_*.xlsx</strong></p><p style="font-size:11px;color:#999;margin-top:4px;">배분 결과 파일</p>';
+  document.getElementById('s6EvalInput').value='';
+  document.getElementById('s6SourceInput').value='';
+  document.getElementById('s6BtnConvert').disabled=true;
+  document.getElementById('s6ResultCard').style.display='none';
 }
 </script>
 </body>
