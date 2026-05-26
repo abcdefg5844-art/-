@@ -447,8 +447,8 @@ input[type="file"] { display: none; }
   <div class="section-page" id="step-6">
     <div class="card">
       <button class="help-btn" onclick="openHelp(6)" title="도움말">?</button>
-      <h2>🔍 검토필요 → 누적시트 변환 <span class="badge">STEP 6</span></h2>
-      <div class="alert alert-info">ℹ️ search_eval 결과의 <strong>검토필요</strong> 키워드를 인기_키워드_검수 배분 데이터에서 찾아 누적시트 형식(23컬럼)으로 변환합니다.</div>
+      <h2>🔍 검토필요 → 모니터링 형식 변환 <span class="badge">STEP 6</span></h2>
+      <div class="alert alert-info">ℹ️ search_eval 결과의 <strong>검토필요</strong> 키워드를 인기_키워드_검수 배분 데이터에서 찾아 모니터링 형식(22컬럼)으로 변환합니다. 결과를 마스터 모니터링 파일의 검수내역 시트에 붙여넣으세요.</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px;">
         <div>
           <p style="font-size:12px;font-weight:700;color:#1a3a6e;margin-bottom:8px;">1. search_eval 결과</p>
@@ -475,7 +475,7 @@ input[type="file"] { display: none; }
       </div>
       <div class="form-row" style="margin-top:14px;">
         <div class="form-group">
-          <label>수집일</label>
+          <label>수집일2 (예: 5월 3주차)</label>
           <input type="text" id="s6CollectDate" style="width:140px;">
         </div>
         <button class="btn btn-primary" id="s6BtnConvert" disabled onclick="s6RunConvert()">🔄 변환 실행</button>
@@ -487,7 +487,7 @@ input[type="file"] { display: none; }
       <div class="log" id="s6Log"></div>
       <div class="table-wrap mt-8" id="s6Preview"></div>
       <div class="export-options">
-        <button class="btn btn-success" onclick="s6Download()">📥 누적시트용 엑셀 다운로드</button>
+        <button class="btn btn-success" onclick="s6Download()">📥 검수내역 엑셀 다운로드</button>
         <button class="btn btn-danger" onclick="s6Reset()">🔄 처음부터 다시</button>
       </div>
     </div>
@@ -606,8 +606,8 @@ const HELP_DATA = {
           <div class="help-step-row"><div class="help-step-num">1</div><div class="help-step-text"><strong>search_eval_results.xlsx</strong>를 업로드합니다. "검토필요" 시트가 포함된 파일이어야 합니다.</div></div>
           <div class="help-step-row"><div class="help-step-num">2</div><div class="help-step-text"><strong>인기_키워드_검수 엑셀</strong>을 업로드합니다. STEP 5에서 배분한 결과 파일입니다.</div></div>
           <div class="help-step-row"><div class="help-step-num">3</div><div class="help-step-text"><strong>수집일</strong>을 확인합니다 (자동 계산됨). 필요시 수정하세요.</div></div>
-          <div class="help-step-row"><div class="help-step-num">4</div><div class="help-step-text"><strong>🔄 변환 실행</strong>을 클릭하면 검토필요 키워드를 배분 데이터에서 찾아 23컬럼 형식으로 변환합니다.</div></div>
-          <div class="help-step-row"><div class="help-step-num">5</div><div class="help-step-text">미리보기를 확인한 후 <strong>📥 누적시트용 엑셀 다운로드</strong>를 클릭합니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">4</div><div class="help-step-text"><strong>🔄 변환 실행</strong>을 클릭하면 검토필요 키워드를 배분 데이터에서 찾아 22컬럼 모니터링 형식으로 변환합니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">5</div><div class="help-step-text">미리보기 확인 후 <strong>📥 엑셀 다운로드</strong> 클릭 → 다운받은 파일의 검수내역 데이터를 마스터 모니터링 파일에 복사·붙여넣기.</div></div>
         </div>
         <div class="help-note">📌 검토필요 키워드의 검색횟수·클릭수·유입률·순위는 인기_키워드_검수 배분 데이터에서 가져옵니다.</div>
       </div>`
@@ -1621,12 +1621,13 @@ function exportAppendedExcel() {
 // ===== STEP 6: 검토필요 → 누적시트 변환 =====
 let s6Eval=null, s6Source=null, s6Result=null, s6EvalOk=false, s6SourceOk=false;
 
+// 모니터링 파일 헤더 형식 (22컬럼)
 const S6_COLUMNS = [
-  "개수","운영자","작업일","수집일","키워드","키워드 유형","카테고리",
-  "penalty_notes","리포트 유형","처리내용","내용","코멘트",
-  "검색 횟수(전체)","검색 횟수(PC)","검색 횟수(Mobile)",
-  "상품 클릭수(전체)","상품 클릭수(PC)","상품 클릭수(Mobile)",
-  "유입률(전체)","유입률(PC)","유입률(Mobile)","순위"
+  "개수","운영자","수집일","수집일2","키워드","키워드유형_id","카테고리_id",
+  "penalty_notes","리포트유형_id","처리내용","내용","코멘트",
+  "검색 횟수(전체)","검색 횟수(pc)","검색 횟수(Mobile)",
+  "상품 클릭수(전체)","상품 클릭수(pc)","상품 클릭수((Mobile)",
+  "유입률(전체)","유입률(pc)","유입률(mobile)","순위"
 ];
 
 (function(){
@@ -1710,16 +1711,28 @@ function s6RunConvert(){
   let matched=0;const unmatched=[];
   const logs=[`▶ 변환 시작 — 검토필요 ${s6Eval.length}개 × 배분시트 ${s6Source.length.toLocaleString()}개`];
 
+  // 수집일 (datetime → 텍스트 "yyyy-mm-dd")
+  const today=new Date();
+  const collectDate=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
   s6Eval.forEach((ev,idx)=>{
     const kw=String(ev.keyword||'').trim();
     const src=lookup[kw];
     const row=new Array(22).fill('');
-    row[0]=idx+1; row[3]=cd; row[4]=kw;
+    row[0]=idx+1;          // 개수
+    row[2]=collectDate;    // 수집일 (텍스트 "2026-05-20")
+    row[3]=cd;             // 수집일2 (예: "5월 3주차")
+    row[4]=kw;             // 키워드
     row[7]=ev.penalty_notes??'';  // penalty_notes from search_eval
     if(src){
       matched++;
-      row[5]=src['키워드 유형']||'steady';
-      row[6]=src['카테고리']??'';
+      row[5]=src['키워드 유형']||'steady';                          // 키워드유형_id
+      // 카테고리_id: 정수로 (12.0 → 12)
+      const cat=src['카테고리'];
+      if(cat!==undefined && cat!==null && cat!==''){
+        const n=Number(cat);
+        row[6]=Number.isFinite(n) ? Math.trunc(n) : cat;
+      }
       row[12]=src['검색 횟수(전체)']??'';
       row[13]=src['검색 횟수(PC)']??'';
       row[14]=src['검색 횟수(Mobile)']??'';
@@ -1736,7 +1749,7 @@ function s6RunConvert(){
 
   logs.push(`✅ 매칭 성공: ${matched}개`);
   if(unmatched.length) logs.push(`⚠️ 미매칭: ${unmatched.length}개 — ${unmatched.slice(0,10).join(', ')}${unmatched.length>10?'...':''}`);
-  logs.push(`📊 결과: ${s6Result.length}행 × 23컬럼`);
+  logs.push(`📊 결과: ${s6Result.length}행 × 22컬럼 (모니터링 형식)`);
 
   document.getElementById('s6ResultCard').style.display='block';
   document.getElementById('s6Stats').innerHTML=`
@@ -1751,8 +1764,8 @@ function s6RunConvert(){
   }).join('<br>');
 
   const preview=s6Result.slice(0,20);
-  const cols=['#','운영자','수집일','키워드','유형','카테고리','penalty_notes','검색(전체)','클릭(전체)','유입률(전체)','순위'];
-  const ci=[0,1,3,4,5,6,7,12,15,18,21];
+  const cols=['#','운영자','수집일','수집일2','키워드','유형','카테고리','penalty_notes','검색(전체)','클릭(전체)','유입률(전체)','순위'];
+  const ci=[0,1,2,3,4,5,6,7,12,15,18,21];
   let html='<table><thead><tr>'+cols.map(c=>`<th>${c}</th>`).join('')+'</tr></thead><tbody>';
   preview.forEach(row=>{html+='<tr>'+ci.map(c=>`<td>${row[c]!==''&&row[c]!=null?row[c]:''}</td>`).join('')+'</tr>';});
   if(s6Result.length>20) html+=`<tr><td colspan="${cols.length}" style="color:#94a3b8;text-align:center;">... 외 ${s6Result.length-20}행</td></tr>`;
@@ -1765,10 +1778,30 @@ function s6Download(){
   if(!s6Result||!s6Result.length){alert('변환 데이터가 없습니다');return;}
   const wb=XLSX.utils.book_new();
   const ws=XLSX.utils.aoa_to_sheet([S6_COLUMNS,...s6Result]);
-  ws['!cols']=[{wch:5},{wch:8},{wch:10},{wch:10},{wch:22},{wch:8},{wch:12},{wch:30},{wch:10},{wch:10},{wch:12},{wch:12},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:8},{wch:8},{wch:8},{wch:6}];
-  XLSX.utils.book_append_sheet(wb,ws,'검토필요_누적형식');
-  const d=new Date(),ds=String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
-  XLSX.writeFile(wb,`검토필요_누적형식_${ds}.xlsx`);
+  ws['!cols']=[{wch:5},{wch:10},{wch:12},{wch:11},{wch:22},{wch:12},{wch:11},{wch:35},{wch:13},{wch:10},{wch:14},{wch:14},{wch:11},{wch:11},{wch:11},{wch:11},{wch:11},{wch:11},{wch:10},{wch:10},{wch:10},{wch:8}];
+
+  // 리포트유형_id 열(I열, 인덱스 8)을 텍스트 포맷으로 강제 (5-3, 2-4 같은 값이 날짜로 변환되는 것 방지)
+  const reportColIdx=8;  // 0-based: I열
+  const maxRows=Math.max(s6Result.length+1, 2000);
+  for(let r=1; r<=maxRows; r++){
+    const addr=XLSX.utils.encode_cell({r:r, c:reportColIdx});
+    if(!ws[addr]) ws[addr]={t:'s', v:''};
+    ws[addr].z='@';
+  }
+  // 범위 확장 (텍스트 포맷 셀 포함되도록)
+  ws['!ref']=XLSX.utils.encode_range({s:{r:0,c:0}, e:{r:maxRows, c:21}});
+
+  XLSX.utils.book_append_sheet(wb,ws,'검수내역');
+
+  // 이번 주 월요일~금요일을 YYMMDD_YYMMDD 형식으로
+  const d=new Date();
+  const dow=d.getDay()===0?7:d.getDay();  // 일요일=7
+  const monday=new Date(d); monday.setDate(d.getDate()-(dow-1));
+  const friday=new Date(monday); friday.setDate(monday.getDate()+4);
+  const fmt=x=>String(x.getFullYear()).slice(2)+String(x.getMonth()+1).padStart(2,'0')+String(x.getDate()).padStart(2,'0');
+  const weekRange=`${fmt(monday)}_${fmt(friday)}`;
+
+  XLSX.writeFile(wb,`인기_키워드_검수_${weekRange}.xlsx`);
 }
 
 function s6Reset(){
