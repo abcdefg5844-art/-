@@ -101,47 +101,18 @@ input[type="file"] { display: none; }
 .total-badge { background: linear-gradient(135deg, #1a3a6e, #2563eb); color: white; border-radius: 10px; padding: 10px 20px; font-size: 15px; font-weight: 800; display: flex; flex-direction: column; align-items: center; min-width: 100px; }
 .total-badge .badge-sub { font-size: 10px; opacity: 0.8; margin-top: 3px; font-weight: 400; }
 
-/* 요일 칩 */
-.day-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.day-label-txt { font-size: 12px; font-weight: 700; color: #444; white-space: nowrap; }
-.day-chip { width: 38px; height: 38px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; user-select: none; border: 2px solid #bfdbfe; background: white; color: #1d4ed8; }
-.day-chip.on { background: #2563eb; border-color: #2563eb; color: white; box-shadow: 0 2px 6px rgba(37,99,235,0.3); }
-.day-chip.off { background: #f1f5f9; border-color: #cbd5e1; color: #94a3b8; }
-.day-summary { font-size: 12px; color: #444; margin-left: 6px; }
-.day-summary strong { color: #2563eb; font-size: 13px; }
-.adj-highlight { display: inline-flex; align-items: center; background: #fef3c7; border: 1px solid #fcd34d; border-radius: 6px; padding: 3px 10px; font-size: 12px; font-weight: 700; color: #92400e; }
-
-/* ===== 운영자 카드 리스트 ===== */
-.op-card-list { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; max-width: 600px; }
-.op-card-item { display: flex; align-items: center; gap: 10px; background: #fff; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; transition: box-shadow 0.15s; flex-wrap: wrap; }
-.op-card-item:hover { box-shadow: 0 2px 8px rgba(37,99,235,0.10); border-color: #bfdbfe; }
-.op-card-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: white; flex-shrink: 0; }
-.op-card-name { font-size: 14px; font-weight: 700; color: #1e3a8a; min-width: 60px; }
-.op-card-counts { display: flex; align-items: center; gap: 6px; flex: 1; }
+/* 운영자 표 */
 .op-cnt-input { width: 70px; padding: 4px 8px; border: 1.5px solid #d0d8e8; border-radius: 6px; font-size: 12px; font-family: inherit; text-align: center; background: #f8faff; outline: none; transition: border 0.15s; }
 .op-cnt-input:focus { border-color: #2563eb; background: white; }
-.op-cnt-label { font-size: 11px; color: #64748b; white-space: nowrap; }
-.op-cnt-total { font-size: 12px; font-weight: 700; color: #1d4ed8; background: #eff6ff; border-radius: 6px; padding: 3px 10px; white-space: nowrap; }
-.op-card-del { background: none; border: none; cursor: pointer; color: #cbd5e1; font-size: 16px; line-height: 1; padding: 2px 4px; border-radius: 4px; transition: color 0.15s; margin-left: auto; }
-.op-card-del:hover { color: #ef4444; }
-
-/* ===== 휴가 계산표 ===== */
-.leave-calc-panel { background: #f8faff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 12px 14px; width: 100%; box-sizing: border-box; }
-.leave-calc-title { font-size: 11px; font-weight: 700; color: #1d4ed8; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
-.leave-calc-legend { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
-.leave-legend-item { font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 600; }
-.leave-calc-table { width: 100%; border-collapse: collapse; font-size: 11px; }
-.leave-calc-table th { background: #e8edf8; color: #374151; padding: 4px 4px; text-align: center; font-weight: 700; font-size: 10px; }
-.leave-calc-table td { padding: 3px 3px; text-align: center; border-bottom: 1px solid #f0f4ff; }
-.leave-calc-table tr:last-child td { border-bottom: none; }
-.leave-calc-table td:first-child { font-weight: 700; color: #1e3a8a; text-align: left; padding-left: 6px; white-space: nowrap; }
-.leave-day-sel { font-size: 10px; padding: 2px 2px; border: 1px solid #d0d8e8; border-radius: 4px; background: white; cursor: pointer; width: 52px; }
-.leave-calc-result { margin-top: 8px; padding: 6px 10px; background: white; border: 1.5px solid #bfdbfe; border-radius: 7px; font-size: 11px; font-weight: 700; color: #1d4ed8; text-align: center; }
+.op-table-panel { background: #f8faff; border: 1.5px solid #e2e8f0; border-radius: 12px; width: 100%; box-sizing: border-box; overflow: hidden; }
+.op-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.op-table th { background: #e8edf8; color: #374151; padding: 6px 6px; text-align: center; font-weight: 700; font-size: 10px; }
+.op-table td { padding: 4px 4px; text-align: center; border-bottom: 1px solid #f0f4ff; }
+.op-table tr:last-child td { border-bottom: none; }
+.op-table td:first-child { font-weight: 700; color: #1e3a8a; text-align: left; padding-left: 10px; white-space: nowrap; }
 
 /* 운영자 추가 행 */
 .op-add-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
-.op-add-row select { padding: 8px 12px; border: 1.5px solid #d0d8e8; border-radius: 7px; font-size: 13px; font-family: inherit; background: #fafbfe; outline: none; }
-.op-add-row select:focus { border-color: #2563eb; }
 .btn-add-op { padding: 8px 18px; background: white; border: 1.5px solid #f59e0b; border-radius: 7px; color: #b45309; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 5px; }
 .btn-add-op:hover { background: #fffbeb; border-color: #d97706; }
 
@@ -288,91 +259,61 @@ input[type="file"] { display: none; }
 
       <!-- 배분 개수 설정 -->
       <div class="config-box">
-        <div class="box-title">📊 인당 배분 개수 설정 <small style="color:#888;font-weight:400;">(주 5일 풀타임 기준)</small></div>
+        <div class="box-title">📊 배분 개수 설정</div>
 
         <div style="display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:12px;">
           <div class="form-group">
-            <label>인당 총 배분 개수 <small style="color:#888;">(5일 기준)</small></label>
-            <input type="number" id="totalCount" value="850" min="1" style="width:110px;" oninput="recalcCounts()">
+            <label>총 배분 개수 <small style="color:#888;">(전체)</small></label>
+            <input type="number" id="totalCount" value="10000" min="1" style="width:110px;" oninput="recalcCounts()">
           </div>
           <div style="padding-bottom:6px;font-size:11px;color:#64748b;line-height:1.6;">
-            CTR이 충분하면 <strong>절반씩 고정</strong><br>
-            CTR이 부족하면 <strong>가용량 기준 자동조정</strong>
+            총 개수 ÷ 운영자 수 = <strong>인당 배분 개수</strong><br>
+            CTR이 충분하면 <strong>절반씩</strong>, 부족하면 <strong>가용량 기준 자동조정</strong>
           </div>
         </div>
 
         <div class="count-inputs">
           <div class="form-group">
-            <label>CTR 개수 <small style="color:#888;">(인당·5일 기준)</small></label>
-            <input type="number" id="ctrCount" value="425" min="0" oninput="onManualCtrChange()" style="background:#f0f6ff;border-color:#bfdbfe;">
+            <label>CTR 개수 <small style="color:#888;">(인당)</small></label>
+            <input type="number" id="ctrCount" value="0" min="0" oninput="onManualCtrChange()" style="background:#f0f6ff;border-color:#bfdbfe;">
           </div>
           <div style="padding-bottom:10px;color:#94a3b8;font-size:18px;font-weight:300;">+</div>
           <div class="form-group">
-            <label>STEADY 개수 <small style="color:#888;">(인당·5일 기준)</small></label>
-            <input type="number" id="steadyCount" value="425" min="0" readonly
+            <label>STEADY 개수 <small style="color:#888;">(인당)</small></label>
+            <input type="number" id="steadyCount" value="0" min="0" readonly
               style="background:#f0fdf4;border-color:#86efac;color:#166534;cursor:default;">
           </div>
           <div style="padding-bottom:10px;color:#94a3b8;font-size:18px;font-weight:300;">=</div>
           <div class="total-badge">
-            <div id="totalBadgeNum">850개</div>
-            <div class="badge-sub">5일 기준 인당 합계</div>
+            <div id="totalBadgeNum">0개</div>
+            <div class="badge-sub">인당 배분 개수</div>
           </div>
         </div>
         <div id="autoCalcNote" style="margin-top:8px;font-size:11px;"></div>
       </div>
 
-      <!-- 요일 설정 -->
-      <div class="config-box" style="margin-top:0;">
-        <div class="box-title">📅 작업 요일 설정 <small style="color:#888;font-weight:400;">— 쉬는 날 클릭하여 해제하면 개수 자동 조정</small></div>
-        <div class="day-row">
-          <span class="day-label-txt">작업 요일 :</span>
-          <div class="day-chip on" id="chip-mon" onclick="toggleDay('mon')">월</div>
-          <div class="day-chip on" id="chip-tue" onclick="toggleDay('tue')">화</div>
-          <div class="day-chip on" id="chip-wed" onclick="toggleDay('wed')">수</div>
-          <div class="day-chip on" id="chip-thu" onclick="toggleDay('thu')">목</div>
-          <div class="day-chip on" id="chip-fri" onclick="toggleDay('fri')">금</div>
-          <span class="day-summary" id="daySummary"></span>
-        </div>
-      </div>
-
-      <!-- 통합 운영자 & 휴가 계산표 -->
+      <!-- 운영자 관리 -->
       <div style="margin-top:16px;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-          <span style="font-size:12px;font-weight:700;color:#444;">👤 운영자 & 휴가 계산표</span>
-          <button onclick="resetOperators()" style="padding:3px 10px;background:#f1f5f9;border:1.5px solid #cbd5e1;border-radius:6px;font-size:11px;font-weight:600;color:#64748b;cursor:pointer;">↺ 초기화</button>
+          <span style="font-size:12px;font-weight:700;color:#444;">👤 운영자 목록</span>
+          <button onclick="resetOperators()" style="padding:3px 10px;background:#f1f5f9;border:1.5px solid #cbd5e1;border-radius:6px;font-size:11px;font-weight:600;color:#64748b;cursor:pointer;">↺ 전체 삭제</button>
         </div>
-        <div class="leave-calc-legend" style="margin-bottom:8px;">
-          <span class="leave-legend-item" style="background:#dcfce7;color:#166534;">정상 = 하루 기준</span>
-          <span class="leave-legend-item" style="background:#fef9c3;color:#854d0e;">반차 = 45개</span>
-          <span class="leave-legend-item" style="background:#ede9fe;color:#5b21b6;">반반차 = 90개</span>
-          <span class="leave-legend-item" style="background:#fee2e2;color:#991b1b;">연차 = 0개</span>
-        </div>
-        <div class="leave-calc-panel" style="padding:0;overflow:hidden;">
-          <table class="leave-calc-table">
+        <div class="op-table-panel" style="max-width:520px;">
+          <table class="op-table">
             <thead>
               <tr>
                 <th style="padding:7px 10px;text-align:left;">운영자</th>
-                <th>월</th><th>화</th><th>수</th><th>목</th><th>금</th>
                 <th>CTR</th><th>STEADY</th><th>합계</th><th></th>
               </tr>
             </thead>
-            <tbody id="leaveCalcBody"></tbody>
+            <tbody id="opTableBody"></tbody>
           </table>
         </div>
         <!-- 추가 행 -->
         <div class="op-add-row" id="opAddRow" style="margin-top:10px;">
-          <select id="opNameSelect" onchange="onOpSelectChange(this)">
-            <option value="">-- 운영자 선택 --</option>
-            <option value="장혁준">장혁준</option>
-            <option value="하장훈">하장훈</option>
-            <option value="신대환">신대환</option>
-            <option value="__custom__">✏️ 직접 입력...</option>
-          </select>
-          <input type="text" id="opNameCustom" placeholder="이름 직접 입력" style="display:none;padding:8px 12px;border:1.5px solid #f59e0b;border-radius:7px;font-size:13px;width:130px;font-family:inherit;outline:none;">
+          <input type="text" id="opNameInput" placeholder="운영자 이름 입력" style="padding:8px 12px;border:1.5px solid #d0d8e8;border-radius:7px;font-size:13px;width:150px;font-family:inherit;outline:none;" onkeydown="if(event.key==='Enter')addOperator()">
           <button class="btn-add-op" onclick="addOperator()">+ 추가</button>
         </div>
-        <!-- 숨겨진 opCardList (배분 로직 호환용) -->
-        <div id="opCardList" style="display:none;"></div>
       </div>
 
       <div class="alert alert-warning mt-8" id="totalDistInfo" style="display:none;"></div>
@@ -500,9 +441,7 @@ let rawData=[], dedupData=[], classifiedData=[], finalData=[], operators=[];
 let currentPage=1;
 const PAGE_SIZE=100;
 let prevKeywordsSet=new Set();
-let dayState={mon:true,tue:true,wed:true,thu:true,fri:true};
 
-const DEFAULT_OPERATORS=['김태현','김종현','이승연','김다안'];
 const OP_COLORS=['#818cf8','#f472b6','#34d399','#fb923c','#60a5fa','#a78bfa','#f87171'];
 
 const CATEGORY_ID_MAP={
@@ -561,22 +500,22 @@ const HELP_DATA = {
   },
   4: {
     title: '배분 설정',
-    label: 'STEP 4 — 운영자별 배분 개수와 작업 요일을 설정합니다',
+    label: 'STEP 4 — 총 배분 개수와 운영자를 설정합니다',
     content: `
       <div class="help-section">
         <div class="help-section-title">📊 배분 개수 설정</div>
         <div class="help-step-list">
-          <div class="help-step-row"><div class="help-step-num">1</div><div class="help-step-text"><strong>CTR 개수 / STEADY 개수</strong>에 주 5일 풀타임 기준 인당 배분량을 입력합니다 (기본 각 425개 = 합계 850개).</div></div>
-          <div class="help-step-row"><div class="help-step-num">2</div><div class="help-step-text">작업 요일에서 <strong>쉬는 날 버튼을 클릭해 OFF</strong>하면 개수가 자동 계산됩니다.<br>예) 4일 근무 시 → 425 × 4/5 = 340개로 자동 조정</div></div>
+          <div class="help-step-row"><div class="help-step-num">1</div><div class="help-step-text"><strong>총 배분 개수</strong>에 이번에 배분할 전체 키워드 수를 입력합니다 (예: 10,000개).</div></div>
+          <div class="help-step-row"><div class="help-step-num">2</div><div class="help-step-text">운영자 이름을 입력하고 <strong>+ 추가</strong>를 클릭합니다. <strong>인당 개수 = 총 개수 ÷ 운영자 수</strong>로 자동 계산됩니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">3</div><div class="help-step-text">CTR/STEADY는 인당 개수의 <strong>절반씩</strong> 자동 설정되며, CTR 가용량이 부족하면 자동 조정됩니다.</div></div>
         </div>
       </div>
       <div class="help-section">
         <div class="help-section-title">👤 운영자 관리</div>
         <div class="help-step-list">
-          <div class="help-step-row"><div class="help-step-num">3</div><div class="help-step-text">김태현·김종현·이승연·김다안 4명이 기본 등록되어 있습니다. <strong>↺ 초기화</strong> 버튼으로 언제든 복원할 수 있습니다.</div></div>
-          <div class="help-step-row"><div class="help-step-num">4</div><div class="help-step-text">각 운영자 카드의 <strong>CTR / STEADY 숫자 칸을 직접 수정</strong>할 수 있습니다. 반차 등 특수한 경우에 개별 조정하세요.</div></div>
-          <div class="help-step-row"><div class="help-step-num">5</div><div class="help-step-text">추가 운영자가 필요하면 드롭다운에서 선택하거나 <strong>✏️ 직접 입력</strong> 후 + 추가를 클릭합니다.</div></div>
-          <div class="help-step-row"><div class="help-step-num">6</div><div class="help-step-text">운영자 카드 오른쪽의 <strong>✕</strong> 버튼으로 개별 제거할 수 있습니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">4</div><div class="help-step-text">표에서 운영자별 <strong>CTR / STEADY 숫자 칸을 직접 수정</strong>할 수 있습니다. 특수한 경우에 개별 조정하세요.</div></div>
+          <div class="help-step-row"><div class="help-step-num">5</div><div class="help-step-text">운영자 오른쪽의 <strong>✕</strong> 버튼으로 개별 제거, <strong>↺ 전체 삭제</strong>로 모두 지울 수 있습니다.</div></div>
+          <div class="help-step-row"><div class="help-step-num">6</div><div class="help-step-text"><strong>수집일</strong>과 <strong>기간</strong>을 입력·선택한 뒤 다음 단계로 이동합니다.</div></div>
         </div>
         <div class="help-note-green">✅ 배분 방식: CTR 풀 추출 → 초과분 STEADY 전환 → STEADY 풀 추출 → steady→ctr 순 정렬 → 인당 개수씩 순서대로 슬라이싱</div>
       </div>`
@@ -607,9 +546,10 @@ const HELP_DATA = {
           <div class="help-step-row"><div class="help-step-num">2</div><div class="help-step-text"><strong>인기_키워드_검수 엑셀</strong>을 업로드합니다. STEP 5에서 배분한 결과 파일입니다.</div></div>
           <div class="help-step-row"><div class="help-step-num">3</div><div class="help-step-text"><strong>수집일</strong>을 확인합니다 (자동 계산됨). 필요시 수정하세요.</div></div>
           <div class="help-step-row"><div class="help-step-num">4</div><div class="help-step-text"><strong>🔄 변환 실행</strong>을 클릭하면 검토필요 키워드를 배분 데이터에서 찾아 22컬럼 모니터링 형식으로 변환합니다.</div></div>
-          <div class="help-step-row"><div class="help-step-num">5</div><div class="help-step-text">미리보기 확인 후 <strong>📥 엑셀 다운로드</strong> 클릭 → 다운받은 파일의 검수내역 데이터를 마스터 모니터링 파일에 복사·붙여넣기.</div></div>
+          <div class="help-step-row"><div class="help-step-num">5</div><div class="help-step-text">운영자 칸은 <strong>STEP 4에서 설정한 운영자들에게 자동 배분</strong>됩니다. 예: 2,315개 ÷ 3명 → 772 / 772 / 771개씩 순서대로.</div></div>
+          <div class="help-step-row"><div class="help-step-num">6</div><div class="help-step-text">미리보기 확인 후 <strong>📥 엑셀 다운로드</strong> 클릭 → 다운받은 파일의 검수내역 데이터를 마스터 모니터링 파일에 복사·붙여넣기.</div></div>
         </div>
-        <div class="help-note">📌 검토필요 키워드의 검색횟수·클릭수·유입률·순위는 인기_키워드_검수 배분 데이터에서 가져옵니다.</div>
+        <div class="help-note">📌 검토필요 키워드의 검색횟수·클릭수·유입률·순위는 인기_키워드_검수 배분 데이터에서 가져옵니다.<br>📌 운영자 배분을 쓰려면 변환 실행 전에 STEP 4에서 운영자를 먼저 추가해두세요.</div>
       </div>`
   }
 };
@@ -623,70 +563,44 @@ function openHelp(step) {
 }
 function closeHelp() { document.getElementById('helpModal').classList.remove('open'); }
 
-document.addEventListener('DOMContentLoaded',()=>{ setupDrop(); initDefaultOperators(); recalcCounts(); weekCalInit(); });
-
-// ===== 디폴트 운영자 =====
-function initDefaultOperators() {
-  const {ac,as_}=getAdj();
-  operators=DEFAULT_OPERATORS.map(name=>({name,ctrCount:ac,steadyCount:as_,collectDate:''}));
-  renderOpCards();
-}
-
-// ===== 요일 토글 =====
-function toggleDay(day) {
-  dayState[day]=!dayState[day];
-  const chip=document.getElementById('chip-'+day);
-  chip.className='day-chip '+(dayState[day]?'on':'off');
-  recalcCounts();
-}
+document.addEventListener('DOMContentLoaded',()=>{ setupDrop(); recalcCounts(); weekCalInit(); });
 
 // ===== 개수 계산 =====
+// 총 배분 개수 ÷ 운영자 수 = 인당 배분 개수
+// CTR 가용량이 충분하면 인당 개수의 절반씩, 부족하면 가용량 기준 자동조정
 function getAdj() {
-  const total = parseInt(document.getElementById('totalCount').value)||850;
-  const active = Object.values(dayState).filter(Boolean).length;
-  const opCount = operators.length || DEFAULT_OPERATORS.length;
+  const total = parseInt(document.getElementById('totalCount').value)||10000;
+  const opCount = operators.length;
+  const per = opCount ? Math.floor(total / opCount) : 0;
+  const baseCtr = Math.round(per / 2);
 
-  // 기준 CTR (5일 풀타임 인당)
-  const baseCtr = Math.round(total / 2); // total의 절반이 기본 CTR 기준 (기본 425)
+  let bc = baseCtr, bs = per - baseCtr, autoMode = false;
 
-  let bc, bs, autoMode = false;
-
-  if(classifiedData.length > 0) {
+  if(opCount && classifiedData.length > 0) {
     const ctrAvail = classifiedData.filter(d=>d.type==='ctr').length;
-    const ctrNeeded = baseCtr * opCount; // 총 필요 CTR (예: 425 × 4 = 1700)
-
+    const ctrNeeded = baseCtr * opCount;
     if(ctrAvail >= ctrNeeded) {
-      // CTR 충분 → 고정값 사용
       bc = baseCtr;
-      bs = total - bc;
-      autoMode = false;
     } else {
-      // CTR 부족 → 가용량 기준 자동계산
       bc = Math.floor(ctrAvail / opCount);
-      bs = total - bc;
       autoMode = true;
     }
-  } else {
-    // 분류 전 → 입력값 그대로
-    bc = parseInt(document.getElementById('ctrCount').value) || baseCtr;
-    bs = total - bc;
-    if(bs < 0) bs = 0;
+    bs = per - bc;
   }
+  if(bs < 0) bs = 0;
 
-  const ac = Math.floor(bc * active / 5);
-  const as_ = Math.floor(bs * active / 5);
-  return {bc, bs, total, active, ac, as_, autoMode};
+  return {bc, bs, total, per, opCount, autoMode};
 }
 
 function recalcCounts() {
-  const {bc, bs, total, active, ac, as_, autoMode} = getAdj();
+  const {bc, bs, total, per, opCount, autoMode} = getAdj();
 
   const ctrInput = document.getElementById('ctrCount');
   const steadyInput = document.getElementById('steadyCount');
 
   ctrInput.value = bc;
   steadyInput.value = bs;
-  document.getElementById('totalBadgeNum').textContent = (ac + as_) + '개';
+  document.getElementById('totalBadgeNum').textContent = per + '개';
 
   // CTR 입력창: 자동모드면 잠금
   ctrInput.readOnly = autoMode;
@@ -695,167 +609,73 @@ function recalcCounts() {
 
   // 안내 메시지
   const noteEl = document.getElementById('autoCalcNote');
-  if(classifiedData.length > 0) {
+  if(!opCount) {
+    noteEl.innerHTML = `<span style="color:#94a3b8">운영자를 추가하면 인당 개수가 자동 계산됩니다.</span>`;
+    noteEl.style.color = '#94a3b8';
+  } else if(classifiedData.length > 0) {
     const ctrAvail = classifiedData.filter(d=>d.type==='ctr').length;
-    const opCount = operators.length || DEFAULT_OPERATORS.length;
-    const baseCtr = Math.round(total / 2);
+    const baseCtr = Math.round(per / 2);
     const ctrNeeded = baseCtr * opCount;
-
     if(autoMode) {
       noteEl.innerHTML = `⚠️ <strong>CTR 부족 — 자동조정:</strong> CTR ${ctrAvail}개 &lt; 필요 ${ctrNeeded}개 (${baseCtr}×${opCount}명) → 인당 CTR <strong style="color:#ea580c">${bc}개</strong> / STEADY <strong>${bs}개</strong>`;
       noteEl.style.color = '#ea580c';
     } else {
-      noteEl.innerHTML = `✅ <strong>CTR 충분:</strong> CTR ${ctrAvail}개 ≥ 필요 ${ctrNeeded}개 → 인당 CTR <strong style="color:#166534">${bc}개</strong> / STEADY <strong>${bs}개</strong> (고정값 유지)`;
+      noteEl.innerHTML = `✅ <strong>CTR 충분:</strong> CTR ${ctrAvail}개 ≥ 필요 ${ctrNeeded}개 → 인당 CTR <strong style="color:#166534">${bc}개</strong> / STEADY <strong>${bs}개</strong>`;
       noteEl.style.color = '#166534';
     }
   } else {
-    noteEl.innerHTML = `<span style="color:#94a3b8">STEP 3 분류 후 CTR 가용량을 자동 판단합니다.</span>`;
+    noteEl.innerHTML = `<span style="color:#94a3b8">총 ${total.toLocaleString()}개 ÷ ${opCount}명 = 인당 ${per.toLocaleString()}개 (STEP 3 분류 후 CTR 가용량을 자동 판단합니다)</span>`;
+    noteEl.style.color = '#94a3b8';
   }
 
-  // 요일 요약
-  const adjTotal = ac + as_, changed = active < 5;
-  document.getElementById('daySummary').innerHTML =
-    '작업일 <strong>' + active + '일</strong> / 기준 <strong>' + total + '개</strong> → 실제 인당 '
-    + (changed ? '<span class="adj-highlight">' : ' <strong>') + adjTotal + '개' + (changed ? '</span>' : '</strong>')
-    + ' <span style="color:#888;font-size:11px;">(CTR ' + ac + ' + STEADY ' + as_ + ')</span>';
-
+  // 수동 수정하지 않은 운영자만 자동값 적용
   operators.forEach(op => {
-    if(op.leaveSchedule && Object.values(op.leaveSchedule).some(v=>v!=='normal')) {
-      const tot = calcLeaveTotal(op.leaveSchedule, Math.round(total / 5));
-      op.ctrCount = Math.floor(tot / 2);
-      op.steadyCount = tot - op.ctrCount;
-    } else {
-      op.ctrCount = ac; op.steadyCount = as_;
-    }
+    if(!op.manual) { op.ctrCount = bc; op.steadyCount = bs; }
   });
-  renderOpCards();
+  renderOpTable();
 }
 
 // CTR 수동 변경 시 STEADY 자동 보정
 function onManualCtrChange() {
-  const total = parseInt(document.getElementById('totalCount').value)||850;
+  const {per} = getAdj();
   const ctr = parseInt(document.getElementById('ctrCount').value)||0;
-  const steady = Math.max(0, total - ctr);
+  const steady = Math.max(0, per - ctr);
   document.getElementById('steadyCount').value = steady;
-  document.getElementById('totalBadgeNum').textContent = (ctr + steady) + '개';
-  const active = Object.values(dayState).filter(Boolean).length;
-  const ac = Math.floor(ctr * active / 5);
-  const as_ = Math.floor(steady * active / 5);
-  const changed = active < 5;
-  document.getElementById('daySummary').innerHTML =
-    '작업일 <strong>' + active + '일</strong> / 기준 <strong>' + total + '개</strong> → 실제 인당 '
-    + (changed ? '<span class="adj-highlight">' : ' <strong>') + (ac+as_) + '개' + (changed ? '</span>' : '</strong>')
-    + ' <span style="color:#888;font-size:11px;">(CTR ' + ac + ' + STEADY ' + as_ + ')</span>';
+  document.getElementById('totalBadgeNum').textContent = per + '개';
   operators.forEach(op => {
-    if(op.leaveSchedule && Object.values(op.leaveSchedule).some(v=>v!=='normal')) {
-      const tot = calcLeaveTotal(op.leaveSchedule, Math.round(total / 5));
-      op.ctrCount = Math.floor(tot / 2);
-      op.steadyCount = tot - op.ctrCount;
-    } else {
-      op.ctrCount = ac; op.steadyCount = as_;
-    }
+    if(!op.manual) { op.ctrCount = ctr; op.steadyCount = steady; }
   });
-  renderOpCards();
+  renderOpTable();
 }
 
-// ===== 운영자 카드 렌더 (통합 계산표로 대체) =====
-function renderOpCards() {
-  renderLeaveCalc();
-}
-
-function renderLeaveCalc() {
-  const tbody = document.getElementById('leaveCalcBody');
+// ===== 운영자 표 렌더 =====
+function renderOpTable() {
+  const tbody = document.getElementById('opTableBody');
   if(!tbody) return;
   if(!operators.length){
-    tbody.innerHTML='<tr><td colspan="10" style="color:#94a3b8;font-size:11px;padding:10px;">운영자를 추가하면 표가 나타납니다</td></tr>';
+    tbody.innerHTML='<tr><td colspan="5" style="color:#94a3b8;font-size:11px;padding:12px;text-align:left;">운영자 이름을 입력하고 + 추가를 눌러주세요</td></tr>';
+    updateTotalDistInfo();
     return;
   }
 
-  const total = parseInt(document.getElementById('totalCount').value)||850;
-  const dayBase = Math.round(total / 5);
-  const days = ['mon','tue','wed','thu','fri'];
-  const leaveOptions = (sel) => ['normal','half','quarter','off'].map(v =>
-    `<option value="${v}"${sel===v?' selected':''}>${v==='normal'?'정상':v==='half'?'반차':v==='quarter'?'반반차':'연차'}</option>`
-  ).join('');
-
-  tbody.innerHTML = operators.map((op, i) => {
-    const schedule = op.leaveSchedule || {mon:'normal',tue:'normal',wed:'normal',thu:'normal',fri:'normal'};
-    const tot = calcLeaveTotal(schedule, dayBase);
-    // 항상 tot 기준으로 CTR/STEADY 동기화
-    op.ctrCount = Math.floor(tot / 2);
-    op.steadyCount = tot - op.ctrCount;
-    const hasLeave = Object.values(schedule).some(v=>v!=='normal');
-    const rowBg = hasLeave ? 'background:#fffbeb;' : '';
-    return `<tr style="${rowBg}">
-      <td style="padding:5px 10px;font-weight:700;color:${OP_COLORS[i%OP_COLORS.length]};white-space:nowrap;">${op.name}</td>
-      ${days.map(d=>`<td style="padding:3px 2px;"><select class="leave-day-sel" onchange="updateLeaveSchedule('${op.name}','${d}',this.value)">${leaveOptions(schedule[d])}</select></td>`).join('')}
-      <td style="padding:3px 4px;"><input class="op-cnt-input" type="number" min="0" value="${op.ctrCount}" style="width:54px;" oninput="updateOpCount('${op.name}','ctr',this.value)"></td>
-      <td style="padding:3px 4px;"><input class="op-cnt-input" type="number" min="0" value="${op.steadyCount}" style="width:54px;" oninput="updateOpCount('${op.name}','steady',this.value)"></td>
-      <td style="padding:3px 8px;font-weight:700;color:${hasLeave?'#f59e0b':'#1d4ed8'};white-space:nowrap;">${tot}개</td>
-      <td style="padding:3px 6px;"><button onclick="removeOperator('${op.name}')" style="background:none;border:none;cursor:pointer;color:#cbd5e1;font-size:15px;line-height:1;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#cbd5e1'">✕</button></td>
-    </tr>`;
-  }).join('');
-
-  // 드롭다운 비활성화
-  const sel = document.getElementById('opNameSelect');
-  if(sel) Array.from(sel.options).forEach(opt=>{
-    if(!opt.value||opt.value==='__custom__') return;
-    opt.disabled=!!operators.find(o=>o.name===opt.value);
-  });
+  tbody.innerHTML = operators.map((op, i) => `<tr>
+    <td style="padding:6px 10px;font-weight:700;color:${OP_COLORS[i%OP_COLORS.length]};white-space:nowrap;">${op.name}${op.manual?' <span style="font-size:9px;color:#f59e0b;">✎수정됨</span>':''}</td>
+    <td style="padding:4px 6px;"><input class="op-cnt-input" type="number" min="0" value="${op.ctrCount}" style="width:64px;" oninput="updateOpCount('${op.name}','ctr',this.value)"></td>
+    <td style="padding:4px 6px;"><input class="op-cnt-input" type="number" min="0" value="${op.steadyCount}" style="width:64px;" oninput="updateOpCount('${op.name}','steady',this.value)"></td>
+    <td style="padding:4px 8px;font-weight:700;color:#1d4ed8;white-space:nowrap;" id="op-total-${i}">${op.ctrCount+op.steadyCount}개</td>
+    <td style="padding:4px 6px;"><button onclick="removeOperator('${op.name}')" style="background:none;border:none;cursor:pointer;color:#cbd5e1;font-size:15px;line-height:1;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#cbd5e1'">✕</button></td>
+  </tr>`).join('');
 
   updateTotalDistInfo();
 }
-
-function calcLeaveTotal(schedule, dayBase) {
-  const dayMap = {mon:'mon', tue:'tue', wed:'wed', thu:'thu', fri:'fri'};
-  const days = ['mon','tue','wed','thu','fri'];
-  return days.reduce((sum, d) => {
-    // 작업요일에서 해제된 날은 0개
-    if(!dayState[d]) return sum;
-    const v = schedule[d] || 'normal';
-    if(v === 'normal') return sum + dayBase;
-    if(v === 'half') return sum + 45;
-    if(v === 'quarter') return sum + 90;
-    return sum; // off = 0
-  }, 0);
-}
-
-function updateLeaveSchedule(name, day, value) {
-  const op = operators.find(o=>o.name===name);
-  if(!op) return;
-  if(!op.leaveSchedule) op.leaveSchedule = {mon:'normal',tue:'normal',wed:'normal',thu:'normal',fri:'normal'};
-  op.leaveSchedule[day] = value;
-
-  // CTR/STEADY 즉시 자동 계산 (작업 요일 기준 하루 단위로 계산)
-  const total = parseInt(document.getElementById('totalCount').value)||850;
-  const active = Object.values(dayState).filter(Boolean).length;
-  const dayBase = active > 0 ? Math.round(total * active / 5 / active) : 0; // 하루 기준 = total/5
-  const tot = calcLeaveTotal(op.leaveSchedule, Math.round(total / 5));
-  op.ctrCount = Math.floor(tot / 2);
-  op.steadyCount = tot - op.ctrCount;
-
-  renderLeaveCalc();
-  updateTotalDistInfo();
-}
-
 
 function updateTotalDistInfo() {
   const info=document.getElementById('totalDistInfo');
+  if(!operators.length){ info.style.display='none'; return; }
   const tc=operators.reduce((s,o)=>s+o.ctrCount,0),ts=operators.reduce((s,o)=>s+o.steadyCount,0);
   const ca=classifiedData.filter(d=>d.type==='ctr').length,sa=classifiedData.filter(d=>d.type==='steady').length;
-  const offCount = operators.filter(o=>o.leave==='off').length;
-  const halfCount = operators.filter(o=>o.leave==='half').length;
-  const quarterCount = operators.filter(o=>o.leave==='quarter').length;
-  let leaveNote = '';
-  if(offCount||halfCount||quarterCount) {
-    const parts = [];
-    if(offCount) parts.push(`연차 ${offCount}명`);
-    if(halfCount) parts.push(`반차 ${halfCount}명`);
-    if(quarterCount) parts.push(`반반차 ${quarterCount}명`);
-    leaveNote = ` <span style="color:#f59e0b;font-size:11px;">(${parts.join(', ')} 반영)</span>`;
-  }
   info.style.display='flex';
-  info.innerHTML=`📊 운영자 <strong>${operators.length}명</strong>${leaveNote} | 총 필요: <strong>CTR ${tc} + STEADY ${ts} = ${tc+ts}개</strong> | CTR 가용: <strong style="color:${ca>=tc?'#166534':'#dc2626'}">${ca}개</strong> | STEADY 가용: <strong>${sa}개</strong>`;
+  info.innerHTML=`📊 운영자 <strong>${operators.length}명</strong> | 총 필요: <strong>CTR ${tc.toLocaleString()} + STEADY ${ts.toLocaleString()} = ${(tc+ts).toLocaleString()}개</strong> | CTR 가용: <strong style="color:${ca>=tc?'#166534':'#dc2626'}">${ca.toLocaleString()}개</strong> | STEADY 가용: <strong>${sa.toLocaleString()}개</strong>`;
 }
 
 function updateOpCount(name, field, val) {
@@ -864,57 +684,34 @@ function updateOpCount(name, field, val) {
   const v = parseInt(val)||0;
   if(field==='ctr') op.ctrCount=v;
   else op.steadyCount=v;
-  op.leave = 'normal'; // 수동 수정 시 근무상태 초기화
+  op.manual = true;
   const idx = operators.indexOf(op);
   const totalEl = document.getElementById('op-total-'+idx);
   if(totalEl) totalEl.textContent=(op.ctrCount+op.steadyCount)+'개';
   updateTotalDistInfo();
 }
 
-function onOpSelectChange(sel) {
-  const customInput = document.getElementById('opNameCustom');
-  if(sel.value === '__custom__') {
-    customInput.style.display = 'inline-block';
-    customInput.focus();
-  } else {
-    customInput.style.display = 'none';
-    customInput.value = '';
-  }
-}
-
 function addOperator() {
-  const sel = document.getElementById('opNameSelect');
-  const customInput = document.getElementById('opNameCustom');
-  let name = '';
-  if(sel.value === '__custom__') {
-    name = customInput.value.trim();
-    if(!name){ alert('이름을 입력하세요'); customInput.focus(); return; }
-  } else {
-    name = sel.value;
-    if(!name){ alert('운영자를 선택하거나 직접 입력하세요'); return; }
-  }
+  const input = document.getElementById('opNameInput');
+  const name = input.value.trim();
+  if(!name){ alert('운영자 이름을 입력하세요'); input.focus(); return; }
   if(operators.find(o=>o.name===name)){ alert('이미 추가된 운영자입니다'); return; }
-  const {ac,as_}=getAdj();
   const cd=document.getElementById('opCollectDate').value.trim();
-  operators.push({name,ctrCount:ac,steadyCount:as_,collectDate:cd});
-  sel.value='';
-  customInput.style.display='none';
-  customInput.value='';
-  recalcCounts(); // 운영자 수 변경 → CTR 재계산
+  operators.push({name,ctrCount:0,steadyCount:0,collectDate:cd,manual:false});
+  input.value='';
+  input.focus();
+  recalcCounts(); // 운영자 수 변경 → 인당 개수 재계산
 }
 
 function removeOperator(name) {
   operators=operators.filter(o=>o.name!==name);
-  recalcCounts(); // 운영자 수 변경 → CTR 재계산
+  recalcCounts(); // 운영자 수 변경 → 인당 개수 재계산
 }
 
 function resetOperators() {
-  const {ac,as_}=getAdj();
-  operators=DEFAULT_OPERATORS.map(name=>({name,ctrCount:ac,steadyCount:as_,collectDate:''}));
-  document.getElementById('opNameSelect').value='';
-  document.getElementById('opNameCustom').style.display='none';
-  document.getElementById('opNameCustom').value='';
-  recalcCounts(); // 운영자 수 변경 → CTR 재계산
+  operators=[];
+  document.getElementById('opNameInput').value='';
+  recalcCounts();
 }
 
 // ===== 공통 =====
@@ -1022,85 +819,12 @@ function processData() {
 // ===== STEP 2 =====
 function switchPrevTab(tab) {
   document.querySelectorAll('#step-2 .tab').forEach((t,i)=>{
-    t.classList.toggle('active',
-      (i===0&&tab==='text')||(i===1&&tab==='file')||(i===2&&tab==='txt'));
+    t.classList.toggle('active',(i===0&&tab==='text')||(i===1&&tab==='file'));
   });
   document.getElementById('prevTabText').style.display=tab==='text'?'block':'none';
   document.getElementById('prevTabFile').style.display=tab==='file'?'block':'none';
-  document.getElementById('prevTabTxt').style.display=tab==='txt'?'block':'none';
 }
 
-function handlePrevTxtFile(event) {
-  const file=event.target.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=(e)=>{
-    const lines=e.target.result.split('\n').map(l=>l.trim()).filter(Boolean);
-    // 중복 제거된 고유 키워드만
-    const unique=[...new Set(lines)];
-    document.getElementById('prevKeywords').value=unique.join('\n');
-    document.getElementById('prevTxtInfo').style.display='flex';
-    document.getElementById('prevTxtInfo').innerHTML=`✅ ${file.name} 로드 완료 — 키워드 <strong>${unique.length}개</strong> 불러옴`;
-  };
-  reader.readAsText(file,'utf-8');
-}
-
-// 이어쓰기 모드 토글
-document.addEventListener('DOMContentLoaded',()=>{
-  const cb=document.getElementById('appendTxtMode');
-  if(cb) cb.addEventListener('change',()=>{
-    document.getElementById('appendTxtUploadArea').style.display=cb.checked?'flex':'none';
-  });
-});
-
-let existingTxtKeywords=[]; // 기존 이력 파일 내용
-
-function loadExistingTxt(event) {
-  const file=event.target.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=(e)=>{
-    existingTxtKeywords=e.target.result.split('\n').map(l=>l.trim()).filter(Boolean);
-    document.getElementById('appendTxtName').textContent=`${file.name} (${existingTxtKeywords.length}개)`;
-  };
-  reader.readAsText(file,'utf-8');
-}
-
-function exportKeywordHistory() {
-  if(!finalData.length){alert('먼저 최종 배분을 실행하세요.');return;}
-
-  // 이번 주 배분된 키워드
-  const distributedKeywords = finalData.map(d=>d.keyword);
-
-  // STEP 2에서 직접 입력/업로드한 검수 키워드 (중복 제거 때 썼던 것들)
-  const prevText = document.getElementById('prevKeywords').value.trim();
-  const manualKeywords = prevText ? prevText.split('\n').map(k=>k.trim()).filter(Boolean) : [];
-
-  const appendMode = document.getElementById('appendTxtMode').checked;
-
-  let allKeywords;
-  if(appendMode && existingTxtKeywords.length > 0) {
-    // 기존 이력 + STEP2 입력 키워드 + 이번 주 배분 키워드
-    allKeywords = [...new Set([...existingTxtKeywords, ...manualKeywords, ...distributedKeywords])];
-    addLog('finalLog',
-      `✅ 이력 이어쓰기: 기존 ${existingTxtKeywords.length}개 + 검수입력 ${manualKeywords.length}개 + 배분 ${distributedKeywords.length}개 → 총 ${allKeywords.length}개 (중복 제거 후)`,
-      'success');
-  } else {
-    // STEP2 입력 키워드 + 이번 주 배분 키워드
-    allKeywords = [...new Set([...manualKeywords, ...distributedKeywords])];
-    const note = manualKeywords.length > 0
-      ? `검수입력 ${manualKeywords.length}개 + 배분 ${distributedKeywords.length}개 → 총 ${allKeywords.length}개`
-      : `배분 키워드 ${allKeywords.length}개`;
-    addLog('finalLog', `✅ 키워드 이력 저장: ${note}`, 'success');
-  }
-
-  const content = allKeywords.join('\n');
-  const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
-  const filename = `키워드_이력_누적_${today}.txt`;
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob(['\uFEFF'+content],{type:'text/plain;charset=utf-8'}));
-  a.download = filename;
-  a.click();
-  addLog('finalLog', `📥 다운로드: ${filename}`, 'success');
-}
 function handlePrevFile(event) {
   const file=event.target.files[0];if(!file)return;
   const reader=new FileReader();
@@ -1121,7 +845,6 @@ function applyDedup() {
   prevKeywordsSet=new Set();
   if(prevText)prevText.split('\n').forEach(kw=>{const k=kw.trim();if(k)prevKeywordsSet.add(k.toLowerCase());});
   addLog('dedupLog',`검수 이력 키워드: ${prevKeywordsSet.size}개 로드됨`,'info');
-  const removed = rawData.length - (prevKeywordsSet.size ? rawData.filter(d=>!prevKeywordsSet.has(d.keyword.toLowerCase())).length : rawData.length);
   if(!prevKeywordsSet.size){
     dedupData=[...rawData];
     addLog('dedupLog','검수 이력 없음 — 중복 제거 없이 진행','warn');
@@ -1168,7 +891,7 @@ function runCtrClassify() {
       <tbody>${smp.map(d=>`<tr><td>${d.keyword}</td><td>${d.inflow_total}</td><td>${d.search_total.toLocaleString()}</td><td>${d.category}</td><td><span class="badge-ctr">ctr</span></td></tr>`).join('')}</tbody>
     </table></div>`;
   document.getElementById('nav-3').classList.add('done');
-  renderOpCards();
+  recalcCounts();
 }
 
 // ===== STEP 5 배분 =====
@@ -1256,41 +979,10 @@ function exportCSV() {
   if(!finalData.length){alert('배분 데이터가 없습니다');return;}
   const h=['번호','운영자','배분개수','키워드','키워드유형','카테고리ID','카테고리','검색횟수(전체)','검색횟수(PC)','검색횟수(Mobile)','상품클릭수(전체)','상품클릭수(PC)','상품클릭수(Mobile)','유입률(전체)','유입률(PC)','유입률(Mobile)','순위'];
   const rows=[h,...finalData.map(d=>[d.row_num,d.operator,d.ctrCount+d.steadyCount,`"${d.keyword}"`,d.type,d.category_id,`"${d.category}"`,d.search_total,d.search_pc,d.search_mobile,d.click_total,d.click_pc,d.click_mobile,d.inflow_total,d.inflow_pc,d.inflow_mobile,d.rank])];
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+rows.map(r=>r.join(',')).join('\n')],{type:'text/csv;charset=utf-8'}));
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([String.fromCharCode(0xFEFF)+rows.map(r=>r.join(',')).join('\n')],{type:'text/csv;charset=utf-8'}));
   a.download=`키워드배분_${new Date().toISOString().slice(0,10).replace(/-/g,'')}.csv`;a.click();
 }
 
-function exportJSON() {
-  if(!finalData.length){alert('배분 데이터가 없습니다');return;}
-  const cd = document.getElementById('opCollectDate').value.trim();
-  const period = document.getElementById('opPeriod').value.trim();
-  // steady → ctr 내림차순 정렬
-  const sorted = [...finalData].sort((a,b) => a.type===b.type?0:a.type==='steady'?-1:1);
-  const out = sorted.map((d,i) => ({
-    row_num: i+1,
-    operator: d.operator,
-    collect_date: d.collectDate || cd,
-    keyword: d.keyword,
-    type: d.type,
-    category_id: d.category_id || '',
-    category: d.category || '',
-    search_total: d.search_total,
-    search_pc: d.search_pc,
-    search_mobile: d.search_mobile,
-    click_total: d.click_total,
-    click_pc: d.click_pc,
-    click_mobile: d.click_mobile,
-    inflow_total: d.inflow_total,
-    inflow_pc: d.inflow_pc,
-    inflow_mobile: d.inflow_mobile,
-    rank: d.rank
-  }));
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 2)], {type:'application/json'}));
-  a.download = `배분데이터_${period||'data'}.json`;
-  a.click();
-  addLog('finalLog', `📥 JSON 내보내기 완료: ${out.length}개 (Python 스크립트로 처리하세요)`, 'success');
-}
 // ===== 주간 달력 피커 =====
 let weekCalDate = new Date(); // 현재 표시 중인 월
 weekCalDate.setDate(1);
@@ -1406,6 +1098,7 @@ function goStep5WithValidation() {
       document.getElementById('opPeriod').value.trim() ? 'none' : 'block';
     return;
   }
+  if(!operators.length) { alert('운영자를 1명 이상 추가해주세요.'); return; }
   goStep(5);
 }
 
@@ -1711,6 +1404,15 @@ function s6RunConvert(){
   let matched=0;const unmatched=[];
   const logs=[`▶ 변환 시작 — 검토필요 ${s6Eval.length}개 × 배분시트 ${s6Source.length.toLocaleString()}개`];
 
+  // STEP 4 운영자들에게 순서대로 배분
+  // 예: 2315개 ÷ 3명 = 771.67 → 반올림 772개씩, 마지막 한 명은 나머지 771개
+  const opNames = operators.map(o=>o.name);
+  let opAssign = null;
+  if(opNames.length){
+    const per = Math.max(1, Math.round(s6Eval.length / opNames.length));
+    opAssign = idx => opNames[Math.min(Math.floor(idx / per), opNames.length - 1)];
+  }
+
   // 수집일 (datetime → 텍스트 "yyyy-mm-dd")
   const today=new Date();
   const collectDate=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
@@ -1720,6 +1422,7 @@ function s6RunConvert(){
     const src=lookup[kw];
     const row=new Array(22).fill('');
     row[0]=idx+1;          // 개수
+    row[1]=opAssign?opAssign(idx):'';  // 운영자 (STEP 4 설정 기준 배분)
     row[2]=collectDate;    // 수집일 (텍스트 "2026-05-20")
     row[3]=cd;             // 수집일2 (예: "5월 3주차")
     row[4]=kw;             // 키워드
@@ -1749,6 +1452,13 @@ function s6RunConvert(){
 
   logs.push(`✅ 매칭 성공: ${matched}개`);
   if(unmatched.length) logs.push(`⚠️ 미매칭: ${unmatched.length}개 — ${unmatched.slice(0,10).join(', ')}${unmatched.length>10?'...':''}`);
+  if(opNames.length){
+    const opCnt={};
+    s6Result.forEach(r=>{opCnt[r[1]]=(opCnt[r[1]]||0)+1;});
+    logs.push(`👥 운영자 배분: ${opNames.map(n=>`${n} ${opCnt[n]||0}개`).join(' / ')}`);
+  } else {
+    logs.push(`⚠️ STEP 4에 운영자가 없어 운영자 칸을 비워두었습니다 — STEP 4에서 운영자 추가 후 다시 변환하세요`);
+  }
   logs.push(`📊 결과: ${s6Result.length}행 × 22컬럼 (모니터링 형식)`);
 
   document.getElementById('s6ResultCard').style.display='block';
