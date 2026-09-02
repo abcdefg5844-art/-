@@ -758,6 +758,8 @@ function processFile(file) {
           info.innerHTML=`✅ 파일 로드 완료: <strong>${file.name}</strong> (${(file.size/1024/1024).toFixed(1)}MB, ${jsonData.length}행)`;
           document.getElementById('filterSettingCard').style.display='block';
           window._rawJsonData=jsonData;
+          window._rawFileName=file.name;
+          if(typeof scheduleSave==='function') scheduleSave(); // 업로드 직후 자동 저장
           addLog('processLog',`파일 로드: ${file.name}, 총 ${jsonData.length}행`,'success');
           const dm=file.name.match(/_(\d{6})_(\d{6})/)||file.name.match(/_(\d{2})(\d{2})(\d{2})[_\.]/i);
           if(dm){
@@ -1550,31 +1552,60 @@ function collectState() {
     savedAt: new Date().toLocaleString('ko-KR'),
     step: activeStep ? parseInt(activeStep.id.replace('step-',''),10) : 1,
     navDone, inputs, operators,
-    rawData, dedupData, classifiedData, finalData
+    rawData, dedupData, classifiedData, finalData,
+    rawJson: window._rawJsonData || null,   // STEP 1 업로드 원본 (파싱된 데이터)
+    fileName: window._rawFileName || ''
   };
 }
 
-function saveState() {
-  const s = collectState();
-  // 아무 작업도 안 했으면 저장 안 함
-  if(!s.rawData.length && !s.classifiedData.length && !s.operators.length && !s.finalData.length) return;
-  const attempts = [
-    () => s,                                             // 전체 저장
-    () => ({...s, rawData: [], _dropped:'rawData'}),     // 용량 초과 시 원본 제외
-    () => ({...s, rawData: [], dedupData: [], _dropped:'rawData+dedupData'})
-  ];
-  for(const make of attempts) {
+// IndexedDB 사용: localStorage(약 5MB)보다 용량이 훨씬 커서 업로드 원본까지 저장 가능
+function idbOpen() {
+  return new Promise((res, rej) => {
+    const rq = indexedDB.open('kdist_db', 1);
+    rq.onupgradeneeded = () => rq.result.createObjectStore('state');
+    rq.onsuccess = () => res(rq.result);
+    rq.onerror = () => rej(rq.error);
+  });
+}
+function idbPut(val) {
+  return idbOpen().then(db => new Promise((res, rej) => {
+    const tx = db.transaction('state','readwrite');
+    tx.objectStore('state').put(val,'v1');
+    tx.oncomplete = () => { db.close(); res(); };
+    tx.onerror = () => { db.close(); rej(tx.error); };
+  }));
+}
+function idbGet() {
+  return idbOpen().then(db => new Promise((res, rej) => {
+    const tx = db.transaction('state','readonly');
+    const rq = tx.objectStore('state').get('v1');
+    rq.onsuccess = () => { db.close(); res(rq.result); };
+    rq.onerror = () => { db.close(); rej(rq.error); };
+  }));
+}
+
+let _saving = false;
+async function saveState() {
+  if(_saving) return;
+  _saving = true;
+  try {
+    const s = collectState();
+    // 아무 작업도 안 했으면 저장 안 함
+    if(!s.rawJson && !s.rawData.length && !s.classifiedData.length && !s.operators.length && !s.finalData.length) return;
+    const badge = document.getElementById('saveBadge');
     try {
-      const data = make();
-      localStorage.setItem(SAVE_KEY, JSON.stringify(data));
-      const badge = document.getElementById('saveBadge');
-      if(badge) badge.textContent = '💾 자동저장됨 ' + new Date().toLocaleTimeString('ko-KR')
-        + (data._dropped ? ' (용량 초과로 일부 원본 제외)' : '');
-      return;
-    } catch(e) { /* 용량 초과 → 다음 단계로 축소 재시도 */ }
-  }
-  const badge = document.getElementById('saveBadge');
-  if(badge) badge.textContent = '⚠️ 저장 실패 (브라우저 용량 초과)';
+      await idbPut(s);
+      if(badge) badge.textContent = '💾 자동저장됨 ' + new Date().toLocaleTimeString('ko-KR');
+    } catch(e) {
+      // 저장 공간 부족 시 업로드 원본만 빼고 재시도
+      try {
+        await idbPut({...s, rawJson: null, _dropped: true});
+        if(badge) badge.textContent = '💾 자동저장됨 (용량 문제로 업로드 원본 제외)';
+      } catch(e2) {
+        if(badge) badge.textContent = '⚠️ 저장 실패';
+      }
+    }
+  } finally { _saving = false; }
 }
 
 function scheduleSave() {
@@ -1582,10 +1613,25 @@ function scheduleSave() {
   _saveTimer = setTimeout(saveState, 400);
 }
 
-function restoreState() {
+async function restoreState() {
   let s = null;
-  try { s = JSON.parse(localStorage.getItem(SAVE_KEY)); } catch(e) { return; }
+  try { s = await idbGet(); } catch(e) {}
+  if(!s) {
+    // 구버전(localStorage) 저장분 호환
+    try { s = JSON.parse(localStorage.getItem(SAVE_KEY)); } catch(e) {}
+  }
   if(!s) return;
+
+  // STEP 1 업로드 원본 복원 (파일을 다시 올릴 필요 없음)
+  if(s.rawJson && s.rawJson.length) {
+    window._rawJsonData = s.rawJson;
+    window._rawFileName = s.fileName || '';
+    const info = document.getElementById('fileInfo');
+    info.style.display = 'flex';
+    info.innerHTML = '💾 복원된 파일: <strong>' + (s.fileName || '이전 업로드 파일') + '</strong> ('
+      + s.rawJson.length.toLocaleString() + '행) — 다시 업로드하지 않아도 됩니다';
+    document.getElementById('filterSettingCard').style.display = 'block';
+  }
 
   rawData = s.rawData || [];
   dedupData = s.dedupData || [];
@@ -1600,6 +1646,17 @@ function restoreState() {
   (s.navDone || []).forEach(n => document.getElementById('nav-'+n)?.classList.add('done'));
 
   recalcCounts();
+
+  // STEP 1 처리 결과 복원
+  if(rawData.length) {
+    document.getElementById('step1Result').style.display = 'block';
+    document.getElementById('step1Stats').innerHTML =
+      '<div class="stat-box"><span class="num" style="color:#22c55e">' + rawData.length.toLocaleString()
+      + '</span><span class="label">복원된 키워드</span></div>';
+    document.getElementById('processLog').innerHTML = '';
+    addLog('processLog','💾 저장된 1단계 처리 결과를 복원했습니다 ('+s.savedAt+')','success');
+    document.getElementById('toStep2Btn').style.display = 'inline-flex';
+  }
 
   // 기간 선택 복원 표시
   const period = s.inputs && s.inputs.opPeriod;
@@ -1637,6 +1694,7 @@ function restoreState() {
 
   // 상단 복원 안내 배너
   const parts = [];
+  if(s.rawJson && s.rawJson.length) parts.push('업로드 파일('+(s.fileName||'원본')+')');
   if(rawData.length) parts.push('1단계 키워드 '+rawData.length.toLocaleString()+'개');
   if(dedupData.length) parts.push('배분 대상 '+dedupData.length.toLocaleString()+'개');
   if(classifiedData.length) parts.push('분류 완료 '+classifiedData.length.toLocaleString()+'개');
@@ -1676,10 +1734,14 @@ function clearSavedState() {
   document.getElementById('resetConfirmNo').onclick = () => ov.remove();
   ov.onclick = (e) => { if(e.target === ov) ov.remove(); };
   document.getElementById('resetConfirmYes').onclick = () => {
-    localStorage.removeItem(SAVE_KEY);
     // beforeunload 재저장 방지
     window.removeEventListener('beforeunload', saveState);
-    location.reload();
+    clearTimeout(_saveTimer);
+    localStorage.removeItem(SAVE_KEY);
+    window._rawJsonData = null;
+    const rq = indexedDB.deleteDatabase('kdist_db');
+    rq.onsuccess = rq.onerror = rq.onblocked = () => location.reload();
+    setTimeout(() => location.reload(), 800); // 안전망
   };
 }
 
