@@ -152,7 +152,12 @@ input[type="file"] { display: none; }
     <h1>🔑 인기 키워드 자동 배분 시스템</h1>
     <div class="sub">엑셀 업로드 → 자동 필터/분류 → CTR/Steady 배분 → 운영자별 엑셀 다운로드</div>
   </div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+    <span id="saveBadge" style="font-size:11px;background:rgba(255,255,255,0.15);border-radius:14px;padding:5px 12px;">💾 자동저장 대기 중</span>
+    <button onclick="clearSavedState()" style="padding:7px 14px;background:rgba(239,68,68,0.9);border:none;border-radius:8px;color:white;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">🗑 초기화</button>
+  </div>
 </div>
+<div id="restoreBanner" style="display:none;max-width:1400px;margin:12px auto -8px;padding:0 20px;"></div>
 
 <div class="container">
   <div class="steps-nav">
@@ -1525,6 +1530,175 @@ function s6Reset(){
   document.getElementById('s6BtnConvert').disabled=true;
   document.getElementById('s6ResultCard').style.display='none';
 }
+
+// ===================================================================
+// ===== 자동 저장 / 복원 =====
+// 브라우저 localStorage에 작업 상태를 저장 → 페이지를 닫거나 PC를 꺼도 유지
+// ===================================================================
+const SAVE_KEY = 'kdist_autosave_v1';
+const SAVE_INPUT_IDS = ['maxKeyLen','prevKeywords','inflowMax','searchMin','sortSearch',
+  'totalCount','ctrCount','steadyCount','opCollectDate','opPeriod','s6CollectDate'];
+let _saveTimer = null;
+
+function collectState() {
+  const inputs = {};
+  SAVE_INPUT_IDS.forEach(id => { const el = document.getElementById(id); if(el) inputs[id] = el.value; });
+  const navDone = [];
+  for(let n = 1; n <= 6; n++) if(document.getElementById('nav-'+n)?.classList.contains('done')) navDone.push(n);
+  const activeStep = document.querySelector('.section-page.active');
+  return {
+    savedAt: new Date().toLocaleString('ko-KR'),
+    step: activeStep ? parseInt(activeStep.id.replace('step-',''),10) : 1,
+    navDone, inputs, operators,
+    rawData, dedupData, classifiedData, finalData
+  };
+}
+
+function saveState() {
+  const s = collectState();
+  // 아무 작업도 안 했으면 저장 안 함
+  if(!s.rawData.length && !s.classifiedData.length && !s.operators.length && !s.finalData.length) return;
+  const attempts = [
+    () => s,                                             // 전체 저장
+    () => ({...s, rawData: [], _dropped:'rawData'}),     // 용량 초과 시 원본 제외
+    () => ({...s, rawData: [], dedupData: [], _dropped:'rawData+dedupData'})
+  ];
+  for(const make of attempts) {
+    try {
+      const data = make();
+      localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+      const badge = document.getElementById('saveBadge');
+      if(badge) badge.textContent = '💾 자동저장됨 ' + new Date().toLocaleTimeString('ko-KR')
+        + (data._dropped ? ' (용량 초과로 일부 원본 제외)' : '');
+      return;
+    } catch(e) { /* 용량 초과 → 다음 단계로 축소 재시도 */ }
+  }
+  const badge = document.getElementById('saveBadge');
+  if(badge) badge.textContent = '⚠️ 저장 실패 (브라우저 용량 초과)';
+}
+
+function scheduleSave() {
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(saveState, 400);
+}
+
+function restoreState() {
+  let s = null;
+  try { s = JSON.parse(localStorage.getItem(SAVE_KEY)); } catch(e) { return; }
+  if(!s) return;
+
+  rawData = s.rawData || [];
+  dedupData = s.dedupData || [];
+  classifiedData = s.classifiedData || [];
+  finalData = s.finalData || [];
+  operators = s.operators || [];
+
+  Object.entries(s.inputs || {}).forEach(([id,v]) => {
+    const el = document.getElementById(id);
+    if(el && v != null && v !== '') el.value = v;
+  });
+  (s.navDone || []).forEach(n => document.getElementById('nav-'+n)?.classList.add('done'));
+
+  recalcCounts();
+
+  // 기간 선택 복원 표시
+  const period = s.inputs && s.inputs.opPeriod;
+  if(period) {
+    const result = document.getElementById('weekPickerResult');
+    if(result) { result.style.display='block'; result.innerHTML = '✅ 복원된 기간: <strong>'+period+'</strong>'; }
+    weekCalRender();
+  }
+
+  // STEP 3 결과 화면 복원
+  if(classifiedData.length) {
+    const cc = classifiedData.filter(d=>d.type==='ctr').length, sc = classifiedData.length - cc;
+    document.getElementById('ctrResult').style.display = 'block';
+    document.getElementById('ctrStats').innerHTML = `
+      <div class="stat-box"><span class="num">${classifiedData.length.toLocaleString()}</span><span class="label">전체</span></div>
+      <div class="stat-box"><span class="num" style="color:#f59e0b">${cc.toLocaleString()}</span><span class="label">CTR</span></div>
+      <div class="stat-box"><span class="num" style="color:#22c55e">${sc.toLocaleString()}</span><span class="label">Steady</span></div>`;
+    document.getElementById('ctrLog').innerHTML = '';
+    addLog('ctrLog','💾 저장된 분류 결과를 복원했습니다 ('+s.savedAt+')','success');
+  }
+
+  // STEP 5 결과 화면 복원
+  if(finalData.length) {
+    const tc = finalData.filter(d=>d.type==='ctr').length, ts = finalData.length - tc;
+    document.getElementById('finalResult').style.display = 'block';
+    document.getElementById('finalStats').innerHTML = `
+      <div class="stat-box"><span class="num">${finalData.length.toLocaleString()}</span><span class="label">총 배분</span></div>
+      <div class="stat-box"><span class="num" style="color:#f59e0b">${tc.toLocaleString()}</span><span class="label">CTR</span></div>
+      <div class="stat-box"><span class="num" style="color:#22c55e">${ts.toLocaleString()}</span><span class="label">STEADY</span></div>
+      <div class="stat-box"><span class="num" style="color:#7c3aed">${operators.length}</span><span class="label">운영자 수</span></div>`;
+    document.getElementById('finalLog').innerHTML = '';
+    addLog('finalLog','💾 저장된 배분 결과를 복원했습니다 ('+s.savedAt+')','success');
+    renderFinalTable(); renderByOpResults();
+  }
+
+  // 상단 복원 안내 배너
+  const parts = [];
+  if(rawData.length) parts.push('1단계 키워드 '+rawData.length.toLocaleString()+'개');
+  if(dedupData.length) parts.push('배분 대상 '+dedupData.length.toLocaleString()+'개');
+  if(classifiedData.length) parts.push('분류 완료 '+classifiedData.length.toLocaleString()+'개');
+  if(operators.length) parts.push('운영자 '+operators.length+'명');
+  if(finalData.length) parts.push('최종 배분 '+finalData.length.toLocaleString()+'개');
+  const banner = document.getElementById('restoreBanner');
+  if(banner && parts.length) {
+    banner.style.display = 'block';
+    banner.innerHTML = '<div class="alert alert-success" style="margin:0;">💾 <strong>'+s.savedAt+'</strong>에 저장된 작업을 복원했습니다 — '
+      + parts.join(' · ')
+      + (s._dropped ? ' <span style="color:#b45309;">(용량 문제로 일부 원본 데이터는 제외 저장됨)</span>' : '')
+      + ' &nbsp;<span style="color:#64748b;">이어서 작업하시거나, 새로 시작하려면 오른쪽 위 🗑 초기화를 누르세요.</span></div>';
+  }
+
+  if(s.step) goStep(s.step);
+  const badge = document.getElementById('saveBadge');
+  if(badge) badge.textContent = '💾 복원됨 (' + s.savedAt + ' 저장분)';
+}
+
+function clearSavedState() {
+  // 자체 확인창 (브라우저 confirm은 환경에 따라 차단될 수 있어 사용하지 않음)
+  if(document.getElementById('resetConfirmOverlay')) return;
+  const ov = document.createElement('div');
+  ov.id = 'resetConfirmOverlay';
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:2000;display:flex;align-items:center;justify-content:center;';
+  ov.innerHTML = `
+    <div style="background:white;border-radius:14px;padding:26px 30px;max-width:380px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.25);text-align:center;">
+      <div style="font-size:34px;margin-bottom:10px;">🗑</div>
+      <div style="font-size:15px;font-weight:800;color:#1a3a6e;margin-bottom:8px;">저장된 작업을 모두 삭제할까요?</div>
+      <div style="font-size:12px;color:#64748b;line-height:1.7;margin-bottom:18px;">자동 저장된 키워드·분류·배분 내용이 삭제되고<br>처음부터 다시 시작합니다. 되돌릴 수 없습니다.</div>
+      <div style="display:flex;gap:10px;justify-content:center;">
+        <button id="resetConfirmNo" style="padding:9px 22px;border:1.5px solid #cbd5e1;border-radius:8px;background:white;color:#64748b;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">취소</button>
+        <button id="resetConfirmYes" style="padding:9px 22px;border:none;border-radius:8px;background:#ef4444;color:white;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">삭제하고 초기화</button>
+      </div>
+    </div>`;
+  document.body.appendChild(ov);
+  document.getElementById('resetConfirmNo').onclick = () => ov.remove();
+  ov.onclick = (e) => { if(e.target === ov) ov.remove(); };
+  document.getElementById('resetConfirmYes').onclick = () => {
+    localStorage.removeItem(SAVE_KEY);
+    // beforeunload 재저장 방지
+    window.removeEventListener('beforeunload', saveState);
+    location.reload();
+  };
+}
+
+// 주요 함수 실행 후 자동 저장되도록 후킹
+['processData','applyDedup','skipDedup','runCtrClassify','runFinalDistribution',
+ 'addOperator','removeOperator','resetOperators','updateOpCount',
+ 'recalcCounts','onManualCtrChange','selectWeek','goStep'].forEach(fn => {
+  const orig = window[fn];
+  if(typeof orig !== 'function') return;
+  window[fn] = function(...args) { const r = orig.apply(this, args); scheduleSave(); return r; };
+});
+SAVE_INPUT_IDS.forEach(id => {
+  document.addEventListener('DOMContentLoaded', () => {
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('input', scheduleSave);
+  });
+});
+window.addEventListener('beforeunload', saveState);
+document.addEventListener('DOMContentLoaded', () => setTimeout(restoreState, 50));
 </script>
 </body>
 </html>
