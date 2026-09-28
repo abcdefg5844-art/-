@@ -847,11 +847,23 @@ function buildCp949Rev() {
 }
 
 function isSuspectBroken(kw) {
+  // 정상 키워드(正官庄, 특大활전복, 커피믹스? 등)는 잡지 않고, 진짜 깨짐 지문만 감지한다
   if(kw.includes('�')) return true;
-  // 한자·괄호숫자 등 쇼핑 검색어에 나올 수 없는 문자 = 인코딩 깨짐 지문
-  if(/[①-⓿㈀-㋿一-鿿豈-﫿]/.test(kw)) return true;
-  // '?'가 비ASCII 문자와 붙어 있는 경우
-  if(/[^\x00-\x7F]\?|\?[^\x00-\x7F]/.test(kw)) return true;
+  // 호환 한자(U+F900~) — 키보드로는 입력되지 않고 인코딩 깨짐에서만 나옴 (예: 李⑤웾의 李)
+  if(/[豈-﫿]/.test(kw)) return true;
+  // '?' 바로 뒤에 비ASCII 문자가 붙은 경우 (문장 끝 물음표는 제외됨)
+  if(/\?[^\x00-\x7F]/.test(kw)) return true;
+  // 원문자(①⑺)·괄호문자가 한글/한자와 바로 붙은 경우 (예: ⑺뭹)
+  if(/[①-⓿㈀-㋿][^\x00-\x7F]|[^\x00-\x7F][①-⓿㈀-㋿]/.test(kw)) return true;
+  // 희귀 한글(완성형 2350자 밖) 포함 — 깨짐에서 나오는 뺤·떎·냼·섎 같은 글자 (일상 검색어엔 안 씀)
+  const rev = buildCp949Rev();
+  for(const ch of kw) {
+    const cp = ch.codePointAt(0);
+    if(cp >= 0xAC00 && cp <= 0xD7A3) {
+      const b = rev[ch];
+      if(!b || b[0] < 0xB0 || b[0] > 0xC8 || b[1] < 0xA1 || b[1] > 0xFE) return true;
+    }
+  }
   return false;
 }
 
@@ -957,17 +969,43 @@ function renderBrokenPanel() {
     return {broken: bk, cands: ranked.map(r=>r.c)};
   });
 
+  const delBtn = (i) => `<button onclick="removeBrokenKeyword(${i})" style="margin-left:4px;padding:2px 10px;background:white;border:1.5px solid #ef4444;border-radius:5px;color:#dc2626;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">제거</button>`;
   panel.innerHTML = `<div class="alert alert-warning" style="display:block;">
     ⚠️ <strong>깨진 키워드(인코딩 오류) ${brokenSet.length}개 감지</strong>
-    <span style="color:#92400e;font-weight:400;"> — 원본 검색로그에서부터 깨져 들어온 키워드입니다. 추정값을 확인하고 교체하세요.</span>
+    <span style="color:#92400e;font-weight:400;"> — 원본 검색로그에서부터 깨져 들어온 키워드입니다. 추정값으로 교체하거나 제거하세요.</span>
+    <button onclick="removeAllBroken()" style="margin-left:8px;padding:3px 12px;background:#ef4444;border:none;border-radius:5px;color:white;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">🗑 모두 제거</button>
     ${window._brokenList.map((b,i)=>{
       const best = b.cands[0];
-      if(!best) return `<div style="margin-top:6px;">· <code>${escapeHtmlKw(b.broken)}</code> → 복원 후보를 찾지 못했습니다 (수동 확인 필요)</div>`;
+      if(!best) return `<div style="margin-top:6px;">· <code>${escapeHtmlKw(b.broken)}</code> → 복원 후보 없음 ${delBtn(i)}</div>`;
       const others = b.cands.slice(1,3);
       return `<div style="margin-top:6px;">· <code>${escapeHtmlKw(b.broken)}</code> → <strong>${escapeHtmlKw(best)}</strong> <span style="font-size:11px;">(추정${others.length?', 기타 후보: '+others.map(escapeHtmlKw).join(', '):''})</span>
-        <button onclick="applyBrokenFix(${i})" style="margin-left:6px;padding:2px 10px;background:#f59e0b;border:none;border-radius:5px;color:white;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">추정값으로 교체</button></div>`;
+        <button onclick="applyBrokenFix(${i})" style="margin-left:6px;padding:2px 10px;background:#f59e0b;border:none;border-radius:5px;color:white;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">추정값으로 교체</button>${delBtn(i)}</div>`;
     }).join('')}
   </div>`;
+}
+
+function removeBrokenKeyword(i) {
+  const b = window._brokenList && window._brokenList[i];
+  if(!b) return;
+  let cnt = 0;
+  [rawData, dedupData, classifiedData, finalData].forEach(arr => {
+    for(let j=arr.length-1; j>=0; j--) if(arr[j].keyword === b.broken) { arr.splice(j,1); cnt++; }
+  });
+  addLog('processLog', `🗑 깨진 키워드 제거: ${b.broken} (${cnt}건)`, 'warn');
+  renderBrokenPanel();
+  if(typeof scheduleSave === 'function') scheduleSave();
+}
+
+function removeAllBroken() {
+  if(!window._brokenList || !window._brokenList.length) return;
+  const names = new Set(window._brokenList.map(b => b.broken));
+  let cnt = 0;
+  [rawData, dedupData, classifiedData, finalData].forEach(arr => {
+    for(let j=arr.length-1; j>=0; j--) if(names.has(arr[j].keyword)) { arr.splice(j,1); cnt++; }
+  });
+  addLog('processLog', `🗑 깨진 키워드 ${names.size}종 모두 제거 (${cnt}건)`, 'warn');
+  renderBrokenPanel();
+  if(typeof scheduleSave === 'function') scheduleSave();
 }
 
 function applyBrokenFix(i) {
