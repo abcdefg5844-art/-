@@ -796,7 +796,8 @@ function processData() {
   const fc=(kws)=>{for(const k of kws){const i=h.findIndex(x=>String(x).includes(k));if(i>=0)return i;}return -1;};
   const cR=fc(['순위']),cK=fc(['키워드']),cST=fc(['검색 횟수(전체)','검색횟수(전체)']),cSP=fc(['검색 횟수(PC)','검색횟수(PC)']),cSM=fc(['검색 횟수(Mobile)','검색횟수(Mobile)']),cCat=fc(['대분류 카테고리','대분류카테고리']),cRes=fc(['결과 유무','결과유무']),cCT=fc(['상품 클릭수(전체)','상품클릭수(전체)']),cCP=fc(['상품 클릭수(PC)','상품클릭수(PC)']),cCM=fc(['상품 클릭수(Mobile)','상품클릭수(Mobile)']),cIT=fc(['유입률(전체)']),cIP=fc(['유입률(PC)']),cIM=fc(['유입률(Mobile)','유입률(mobile)']);
   addLog('processLog',`헤더 ${hRow+1}행 | 키워드=${cK} 검색(전체)=${cST} 결과유무=${cRes}`,'info');
-  let total=0,filtered=0,longKw=0,noResult=0,skip6=0;
+  let total=0,filtered=0,longKw=0,noResult=0,skip6=0,brokenKw=0;
+  const brokenRemoved=[];
   rawData=[];
   const ds=hRow+1;
   for(let i=ds;i<jsonData.length;i++){
@@ -804,6 +805,7 @@ function processData() {
     if(i===ds){skip6++;continue;}
     const kw=String(row[cK]||'').trim();if(!kw)continue;
     if(kw.length>maxLen){longKw++;continue;}
+    if(isSuspectBroken(kw)){brokenKw++;brokenRemoved.push(kw);continue;} // 인코딩 오류 키워드 자동 제거
     if(String(row[cRes]||'').trim().toUpperCase()!=='O'){noResult++;}
     const n=v=>(v===''||v===null||v===undefined)?0:(parseFloat(v)||0);
     rawData.push({keyword:kw,type:'steady',category:String(row[cCat]||'').trim(),
@@ -813,16 +815,19 @@ function processData() {
       rank:n(row[cR]),category_id:CATEGORY_ID_MAP[String(row[cCat]||'').trim()]||''});
     filtered++;
   }
-  addLog('processLog',`전체:${total} / 6행제거:${skip6} / 긴키워드:${longKw} / 결과X:${noResult}`,'warn');
+  addLog('processLog',`전체:${total} / 6행제거:${skip6} / 긴키워드:${longKw} / 깨진키워드:${brokenKw} / 결과X:${noResult}`,'warn');
+  if(brokenKw) addLog('processLog',`🗑 인코딩 오류 키워드 ${brokenKw}개 자동 제거: ${brokenRemoved.slice(0,10).join(', ')}${brokenRemoved.length>10?' 외':''}`,'warn');
   addLog('processLog',`✅ 최종 추출: ${filtered}개 키워드`,'success');
   document.getElementById('step1Stats').innerHTML=`
     <div class="stat-box"><span class="num">${total.toLocaleString()}</span><span class="label">전체 행</span></div>
     <div class="stat-box"><span class="num" style="color:#f59e0b">${longKw.toLocaleString()}</span><span class="label">긴 키워드 제거</span></div>
+    <div class="stat-box"><span class="num" style="color:#dc2626">${brokenKw.toLocaleString()}</span><span class="label">깨진 키워드 제거</span></div>
     <div class="stat-box"><span class="num" style="color:#ef4444">${noResult.toLocaleString()}</span><span class="label">결과없음 제거</span></div>
     <div class="stat-box"><span class="num" style="color:#22c55e">${filtered.toLocaleString()}</span><span class="label">최종 키워드</span></div>`;
+  const bp=document.getElementById('brokenKwPanel');
+  if(bp) bp.innerHTML = brokenKw ? `<div class="alert alert-warning" style="display:block;">🗑 <strong>인코딩 오류로 깨진 키워드 ${brokenKw}개를 자동 제거했습니다</strong><span style="font-weight:400;"> — ${brokenRemoved.slice(0,20).map(escapeHtmlKw).join(', ')}${brokenRemoved.length>20?` 외 ${brokenRemoved.length-20}개`:''}</span></div>` : '';
   document.getElementById('toStep2Btn').style.display='inline-flex';
   document.getElementById('nav-1').classList.add('done');
-  renderBrokenPanel();
 }
 
 // ===== 깨진 키워드(인코딩 오류) 자동 감지 · 복원 =====
@@ -1854,7 +1859,6 @@ async function restoreState() {
     document.getElementById('processLog').innerHTML = '';
     addLog('processLog','💾 저장된 1단계 처리 결과를 복원했습니다 ('+s.savedAt+')','success');
     document.getElementById('toStep2Btn').style.display = 'inline-flex';
-    renderBrokenPanel();
   }
 
   // 기간 선택 복원 표시
